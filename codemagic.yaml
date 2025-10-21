@@ -1,0 +1,47 @@
+workflows:
+
+  android-workflow:
+
+    name: Android Workflow
+
+    max_build_duration: 120
+
+    environment:
+
+      flutter: stable
+
+    scripts:
+
+      - name: Set up local.properties
+
+        script: | 
+
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+
+      - name: Get Flutter packages
+
+        script: | 
+
+          flutter pub get
+
+      - name: Flutter analyze
+
+        script: | 
+
+          flutter analyze
+
+      - name: Build AAB with Flutter
+
+        script: | 
+
+          BUILD_NUMBER=1      
+
+          flutter build apk --release
+
+    artifacts:
+
+      - build/**/outputs/**/*.apk
+
+      - build/**/outputs/**/mapping.txt
+
+      - flutter_drive.log
