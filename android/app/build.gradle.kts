@@ -19,6 +19,7 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 val properties = Properties()
 properties.load(FileInputStream(rootProject.file("local.properties")))
 val appid = properties.getProperty("appid")
+val gmid = properties.getProperty("gmid")
 
 android {
     namespace = "com.droidapks.flayingbird"
@@ -44,6 +45,7 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         manifestPlaceholders["appid"]=appid
+        manifestPlaceholders["gmid"]=gmid
     }
     signingConfigs {
         create("config") {
