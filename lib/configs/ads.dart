@@ -5,7 +5,6 @@ import 'package:game/main.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-
 class AdmobAds {
   AdmobAds() {
     createInterstitialAd();

@@ -22,7 +22,7 @@ void main() async {
   MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
-  await dotenv.load(fileName:".env");
+  await dotenv.load();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
@@ -93,6 +93,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   void gameOver() {
+    Functions.addScore(scorePoint);
     audio.playHit();
     Functions.vibration(isStarted);
     checkHighest();

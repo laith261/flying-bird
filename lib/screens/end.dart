@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
+import 'package:game/configs/functions.dart';
 import 'package:game/main.dart';
 
 import 'Widgets/hieh_score.dart';
@@ -59,6 +60,12 @@ class _EndState extends State<EndWidget> {
                   game.sound ? Icons.volume_up : Icons.volume_off,
                   color: Colors.orangeAccent,
                 ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Functions.showScores();
+                },
+                icon: Icon(Icons.leaderboard, color: Colors.orangeAccent),
               ),
             ],
           ),
