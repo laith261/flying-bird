@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:game/main.dart';
-import 'package:games_services/games_services.dart';
 
+import '../configs/functions.dart';
 import 'Widgets/hieh_score.dart';
 import 'Widgets/start_button.dart';
 
@@ -46,9 +46,7 @@ class _StartWidgetState extends State<StartWidget> {
               ),
               IconButton(
                 onPressed: () {
-                  Leaderboards.showLeaderboards(
-                    androidLeaderboardID: "CgkImPHUmYwKEAIQAQ",
-                  );
+                  Functions.showScores();
                 },
                 icon: Icon(Icons.leaderboard, color: Colors.orangeAccent),
               ),
