@@ -17,14 +17,7 @@ class Functions {
     if (await singIn()) {
       Leaderboards.showLeaderboards(androidLeaderboardID: Consts.leaderBoard);
     } else {
-      Fluttertoast.showToast(
-        msg: "you need to sign in first",
-        toastLength: Toast.LENGTH_SHORT, // or Toast.LENGTH_LONG
-        gravity: ToastGravity.BOTTOM, // or TOP, CENTER
-        backgroundColor: Colors.black54,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      singInToast();
     }
   }
 
@@ -33,11 +26,34 @@ class Functions {
     Leaderboards.submitScore(
       score: Score(androidLeaderboardID: Consts.leaderBoard, value: scorePoint),
     );
+    Achievements.increment(achievement: Achievement(
+      androidID: Consts.achievements,
+      steps: scorePoint,
+    ));
   }
 
   static Future<bool> singIn() async {
     if (await GameAuth.isSignedIn == true) return true;
     await GameAuth.signIn();
     return await GameAuth.isSignedIn;
+  }
+
+  static Future<void> showAchievements() async {
+    if (await singIn()) {
+      Achievements.showAchievements();
+    } else {
+      singInToast();
+    }
+  }
+
+  static void singInToast() {
+    Fluttertoast.showToast(
+      msg: "you need to sign in first",
+      toastLength: Toast.LENGTH_SHORT, // or Toast.LENGTH_LONG
+      gravity: ToastGravity.BOTTOM, // or TOP, CENTER
+      backgroundColor: Colors.black54,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 }

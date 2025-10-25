@@ -8,4 +8,5 @@ class Consts {
   static const pipeAddAt = 150.0;
   static const pipeMoveSpeed = 75;
   static String leaderBoard = dotenv.env['leaderBoard']!;
+  static String achievements = dotenv.env['achievements']!;
 }

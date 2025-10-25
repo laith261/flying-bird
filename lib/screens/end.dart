@@ -62,10 +62,12 @@ class _EndState extends State<EndWidget> {
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  Functions.showScores();
-                },
+                onPressed: () => Functions.showScores(),
                 icon: Icon(Icons.leaderboard, color: Colors.orangeAccent),
+              ),
+              IconButton(
+                onPressed: () => Functions.showAchievements(),
+                icon: Icon(Icons.star_rounded, color: Colors.orangeAccent),
               ),
             ],
           ),
