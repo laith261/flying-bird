@@ -26,10 +26,30 @@ class Functions {
     Leaderboards.submitScore(
       score: Score(androidLeaderboardID: Consts.leaderBoard, value: scorePoint),
     );
-    Achievements.increment(achievement: Achievement(
-      androidID: Consts.achievements,
-      steps: scorePoint,
-    ));
+    Achievements.increment(
+      achievement: Achievement(
+        androidID: Consts.achievements50,
+        steps: scorePoint,
+      ),
+    );
+    // Achievements.increment(
+    //   achievement: Achievement(
+    //     androidID: Consts.achievements1000,
+    //     steps: scorePoint,
+    //   ),
+    // );
+    // Achievements.increment(
+    //   achievement: Achievement(
+    //     androidID: Consts.achievements5000,
+    //     steps: scorePoint,
+    //   ),
+    // );
+    // Achievements.increment(
+    //   achievement: Achievement(
+    //     androidID: Consts.achievements10000,
+    //     steps: scorePoint,
+    //   ),
+    // );
   }
 
   static Future<bool> singIn() async {
@@ -55,5 +75,18 @@ class Functions {
       textColor: Colors.white,
       fontSize: 16.0,
     );
+  }
+
+  static Future<void> saveScore(int scorePoint) async {
+    if (await GameAuth.isSignedIn == false) return;
+    SaveGame.saveGame(data: scorePoint.toString(), name: Consts.savedDataName);
+  }
+
+  static Future<String?> loadScore() async {
+    if (await GameAuth.isSignedIn == false) return null;
+    var savedGames = await SaveGame.getSavedGames();
+    return (savedGames == null || savedGames.isNotEmpty)
+        ? await SaveGame.loadGame(name: Consts.savedDataName)
+        : "0";
   }
 }

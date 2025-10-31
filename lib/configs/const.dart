@@ -8,5 +8,9 @@ class Consts {
   static const pipeAddAt = 150.0;
   static const pipeMoveSpeed = 75;
   static String leaderBoard = dotenv.env['leaderBoard']!;
-  static String achievements = dotenv.env['achievements']!;
+  static String achievements50 = dotenv.env['achievements50']!;
+  // static String achievements1000 = dotenv.env['achievements1000']!;
+  // static String achievements5000 = dotenv.env['achievements5000']!;
+  // static String achievements10000 = dotenv.env['achievements10000']!;
+  static String savedDataName = 'Highest';
 }
