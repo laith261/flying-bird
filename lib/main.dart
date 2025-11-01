@@ -51,8 +51,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   Future<void> onLoad() async {
     // debugMode = true;
     addAll({clouds, player, pipes, score});
-    await getHighest();
-    updateScore();
+    getHighest().then((_) => updateScore());
   }
 
   @override

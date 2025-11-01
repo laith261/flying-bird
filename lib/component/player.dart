@@ -1,27 +1,30 @@
+import 'dart:math';
+
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
-import 'package:flame/geometry.dart';
-import 'package:flutter/animation.dart';
 import 'package:game/component/pipe.dart';
 import 'package:game/main.dart';
 
 import '../configs/const.dart';
 
-class Player extends SpriteComponent
+class Player extends SpriteAnimationComponent
     with TapCallbacks, HasGameReference<MyWorld>, CollisionCallbacks {
   Player() : super(size: Vector2(46, 29), anchor: Anchor.center, priority: 2);
 
   final Vector2 gravity = Vector2(0, Consts.gravity);
   final Vector2 jump = Vector2(0, Consts.jump);
   Vector2 velocity = Vector2.zero();
-  double targetAngle = 0.0;
 
   @override
   Future<void> onLoad() async {
     setPlayerPosition();
-    sprite = await game.loadSprite("bird.png");
+   List<Sprite> redBirdSprites = [
+      await Sprite.load("bird/1.png"),
+      await Sprite.load("bird/2.png"),
+      await Sprite.load("bird/3.png"),
+    ];
+    animation = SpriteAnimation.spriteList(redBirdSprites, stepTime: 0.2);
     add(CircleHitbox());
   }
 
@@ -34,8 +37,8 @@ class Player extends SpriteComponent
     velocity += gravity * dt;
     position += velocity;
     gameOver();
-    if (velocity.y < 2) return;
-    rotate((tau / 13));
+    if ((angle * 180) / pi > 45) return;
+    rotate();
   }
 
   Future<void> goUp() async {
@@ -43,7 +46,7 @@ class Player extends SpriteComponent
 
     game.audio.playFly();
     velocity = jump;
-    await rotate(-(tau / 13));
+    rotate();
   }
 
   @override
@@ -54,16 +57,7 @@ class Player extends SpriteComponent
     }
   }
 
-  Future<void> rotate(double theAngle) async {
-    if (theAngle == targetAngle) return;
-
-    targetAngle = theAngle;
-    var effect = RotateEffect.to(
-      theAngle,
-      EffectController(duration: 0.1, curve: Curves.linear),
-    );
-    await add(effect);
-  }
+  rotate() => angle = (velocity.y * 10) * pi / 180;
 
   void gameOver() {
     if (game.isStarted && (y > game.size.y || y < 0)) {
@@ -73,7 +67,7 @@ class Player extends SpriteComponent
 
   void reset() {
     velocity = Vector2.zero();
-    rotate(0.0);
+    rotate();
     setPlayerPosition();
   }
 
