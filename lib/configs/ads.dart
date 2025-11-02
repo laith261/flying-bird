@@ -82,10 +82,11 @@ class AdmobAds {
         onUserEarnedReward: (ad, reward) {
           didGetRewarded = true;
           fun();
+          _rewardedAd = null;
+          loadRewardedAd(); // Preload next ad
         },
       );
-      _rewardedAd = null;
-      loadRewardedAd(); // Preload next ad
+     
     }
   }
 
