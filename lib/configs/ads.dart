@@ -71,7 +71,7 @@ class AdmobAds {
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => _rewardedAd = ad,
-        onAdFailedToLoad: (error) => loadRewardedAd(),
+        onAdFailedToLoad: (error) => Timer(Duration(seconds: 30), () => loadRewardedAd()),
       ),
     );
   }

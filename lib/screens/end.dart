@@ -22,9 +22,6 @@ class _EndState extends State<EndWidget> {
   @override
   void initState() {
     congress();
-    if (game.ads.rewardedAd == null) {
-      game.ads.loadRewardedAd();
-    }
     super.initState();
   }
 
