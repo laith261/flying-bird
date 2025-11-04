@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1090021448488",
+    "project_id": "jebel-ali",
+    "storage_bucket": "jebel-ali.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090021448488:android:372218731c7eac45b10e1d",
+        "android_client_info": {
+          "package_name": "com.droidapks.flayingbird"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCFXSqr5Zvm658Bi_E1DRzOTrxBLZD3FIk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

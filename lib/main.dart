@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
@@ -19,10 +20,19 @@ import 'screens/main_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
+  await Firebase.initializeApp(
+    options: FirebaseOptions(
+      apiKey: "AIzaSyCFXSqr5Zvm658Bi_E1DRzOTrxBLZD3FIk",
+      appId: '1:1090021448488:android:372218731c7eac45b10e1d',
+      messagingSenderId: dotenv.env["messagingSenderId"]!,
+      projectId: 'jebel-ali',
+      storageBucket: 'jebel-ali.firebasestorage.app',
+    ),
+  );
   MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
-  await dotenv.load();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
