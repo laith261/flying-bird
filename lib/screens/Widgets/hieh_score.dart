@@ -13,7 +13,7 @@ class HighestScore extends StatefulWidget {
 }
 
 class _HighestScoreState extends State<HighestScore> {
-  late int score = game.highest;
+  late ValueNotifier<int> score = game.highest;
   late MyWorld game = widget.game;
 
   @override
@@ -42,17 +42,22 @@ class _HighestScoreState extends State<HighestScore> {
           ),
           Flexible(
             flex: 1,
-            child: StrokeText(
-              textAlign: TextAlign.left,
-              text: "$score",
-              textStyle: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'game',
-                color: game.newHighest ? Colors.amberAccent : Colors.white,
-              ),
-              strokeColor: Colors.black,
-              strokeWidth: 2,
+            child: ValueListenableBuilder<int>(
+              builder: (context, value, child) {
+                return StrokeText(
+                  textAlign: TextAlign.left,
+                  text: "$value",
+                  textStyle: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'game',
+                    color: game.newHighest ? Colors.amberAccent : Colors.white,
+                  ),
+                  strokeColor: Colors.black,
+                  strokeWidth: 2,
+                );
+              },
+              valueListenable: score,
             ),
           ),
         ],

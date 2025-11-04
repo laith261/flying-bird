@@ -19,7 +19,7 @@ class Player extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     setPlayerPosition();
-   List<Sprite> redBirdSprites = [
+    List<Sprite> redBirdSprites = [
       await Sprite.load("bird/1.png"),
       await Sprite.load("bird/2.png"),
       await Sprite.load("bird/3.png"),
