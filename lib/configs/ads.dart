@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/main.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AdmobAds {
   AdmobAds() {
@@ -71,7 +71,8 @@ class AdmobAds {
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => _rewardedAd = ad,
-        onAdFailedToLoad: (error) => Timer(Duration(seconds: 30), () => loadRewardedAd()),
+        onAdFailedToLoad: (error) =>
+            Timer(Duration(seconds: 30), () => loadRewardedAd()),
       ),
     );
   }
@@ -86,7 +87,6 @@ class AdmobAds {
           loadRewardedAd(); // Preload next ad
         },
       );
-     
     }
   }
 

@@ -45,7 +45,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   int scorePoint = 0;
   bool sound = true;
   int deadTimes = 0;
-  int highest = 0;
+  ValueNotifier<int> highest = ValueNotifier<int>(0);
 
   @override
   Future<void> onLoad() async {
@@ -73,7 +73,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     );
   }
 
-  Future<void> getHighest() async => highest = await prefs.getDataInt();
+  Future<void> getHighest() async => highest.value = await prefs.getDataInt();
 
   void setHighest() => prefs.setDataInt(value: scorePoint);
 
@@ -102,10 +102,10 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   void checkHighest() {
-    if (scorePoint < highest) return;
+    if (scorePoint < highest.value) return;
 
     setHighest();
-    highest = scorePoint;
+    highest.value = scorePoint;
     newHighest = true;
   }
 
