@@ -61,6 +61,9 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works
             signingConfig = signingConfigs["config"]
         }
+        dependencies {
+           classpath 'com.google.gms:google-services:4.4.2'
+        }
     }
 }
 
