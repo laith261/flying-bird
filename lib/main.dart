@@ -27,6 +27,7 @@ void main() async {
   MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
+  await dotenv.load();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
