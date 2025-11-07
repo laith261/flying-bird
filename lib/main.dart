@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
@@ -10,6 +11,7 @@ import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
 import 'package:game/configs/data_mange.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'firebase_options.dart';
 
 import 'component/pipes.dart';
 import 'component/player.dart';
@@ -19,6 +21,9 @@ import 'screens/main_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
