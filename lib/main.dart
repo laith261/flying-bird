@@ -11,6 +11,7 @@ import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
 import 'package:game/configs/data_mange.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'firebase_options.dart';
 
 import 'component/pipes.dart';
 import 'component/player.dart';
@@ -20,15 +21,8 @@ import 'screens/main_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCFXSqr5Zvm658Bi_E1DRzOTrxBLZD3FIk",
-      appId: '1:1090021448488:android:372218731c7eac45b10e1d',
-      messagingSenderId: dotenv.env["messagingSenderId"]!,
-      projectId: 'jebel-ali',
-      storageBucket: 'jebel-ali.firebasestorage.app',
-    ),
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   MobileAds.instance.initialize();
   Flame.device.fullScreen();

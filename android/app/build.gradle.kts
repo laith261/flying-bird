@@ -6,6 +6,9 @@ plugins {
     id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+
+    // Add the Google services Gradle plugin
+    id("com.google.gms.google-services")
 }
 val keystorePropertiesFile = rootProject.file("key.properties")
 
@@ -66,4 +69,9 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation("com.google.firebase:firebase-analytics")
 }

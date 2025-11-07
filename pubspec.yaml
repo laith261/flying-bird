@@ -22,6 +22,7 @@ dependencies:
   flutter_dotenv: any
   games_services: ^4.1.0
   fluttertoast: ^9.0.0
+  firebase_analytics: ^12.0.4
   firebase_core: ^4.2.1
 
 dev_dependencies:
