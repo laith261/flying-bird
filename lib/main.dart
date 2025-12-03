@@ -13,15 +13,24 @@ import 'package:game/configs/data_mange.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'firebase_options.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'component/pipes.dart';
 import 'component/player.dart';
 import 'configs/audio_helper.dart';
 import 'configs/functions.dart';
 import 'screens/main_widget.dart';
 
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
   MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
