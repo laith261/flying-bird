@@ -1,5 +1,6 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 import '../main.dart';
 import 'banner.dart';
@@ -8,11 +9,11 @@ import 'start.dart';
 
 class MainWidget extends StatelessWidget {
   const MainWidget({super.key, required this.game});
-
   final MyWorld game;
 
   @override
   Widget build(BuildContext context) {
+    checkUpdate();
     return MaterialApp(
       home: SafeArea(
         child: Column(
@@ -40,5 +41,13 @@ class MainWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void checkUpdate() {
+    InAppUpdate.checkForUpdate().then((info) {
+      if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+        InAppUpdate.performImmediateUpdate();
+      }
+    });
   }
 }
