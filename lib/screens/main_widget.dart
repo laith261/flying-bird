@@ -8,6 +8,7 @@ import '../main.dart';
 import 'banner.dart';
 import 'end.dart';
 import 'start.dart';
+import 'Widgets/coin_display.dart';
 
 class MainWidget extends StatefulWidget {
   const MainWidget({super.key, required this.game});
@@ -40,29 +41,33 @@ class _MainWidgetState extends State<MainWidget> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: GameWidget(
-                game: widget.game,
-                initialActiveOverlays: const ["start"],
-                overlayBuilderMap: {
-                  'start': (context, _) => StartWidget(game: widget.game),
-                  'end': (context, _) => EndWidget(game: widget.game),
-                },
-                backgroundBuilder: (context) => Container(
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/bg.png"),
-                      fit: BoxFit.cover,
+      home: Scaffold(
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: GameWidget(
+                  game: widget.game,
+                  // initialActiveOverlays handled in MyWorld.onLoad
+                  overlayBuilderMap: {
+                    'start': (context, _) => StartWidget(game: widget.game),
+                    'end': (context, _) => EndWidget(game: widget.game),
+                    'coin_display': (context, _) =>
+                        CoinDisplay(game: widget.game),
+                  },
+                  backgroundBuilder: (context) => Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/bg.png"),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            BannerWidget(game: widget.game),
-          ],
+              BannerWidget(game: widget.game),
+            ],
+          ),
         ),
       ),
     );

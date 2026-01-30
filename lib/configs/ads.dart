@@ -79,14 +79,24 @@ class AdmobAds {
 
   void showRewardedAd(MyWorld game, Function fun) {
     if (_rewardedAd != null) {
+      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+        onAdDismissedFullScreenContent: (RewardedAd ad) {
+          ad.dispose();
+          loadRewardedAd();
+        },
+        onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+          ad.dispose();
+          loadRewardedAd();
+        },
+      );
+
       _rewardedAd!.show(
         onUserEarnedReward: (ad, reward) {
           didGetRewarded = true;
           fun();
-          _rewardedAd = null;
-          loadRewardedAd(); // Preload next ad
         },
       );
+      _rewardedAd = null;
     }
   }
 

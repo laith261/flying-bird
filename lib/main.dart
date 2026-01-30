@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
-import 'package:game/configs/data_mange.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'firebase_options.dart';
 
@@ -19,6 +19,7 @@ import 'component/pipes.dart';
 import 'component/player.dart';
 import 'configs/audio_helper.dart';
 import 'configs/functions.dart';
+import 'models/player_data.dart';
 import 'screens/main_widget.dart';
 
 @pragma('vm:entry-point')
@@ -35,6 +36,7 @@ void main() async {
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
   await dotenv.load();
+  await PlayerData.init();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
@@ -45,7 +47,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   // objects
   late TextComponent score = buildScore();
   final AudioHelper audio = AudioHelper();
-  final DataMange prefs = DataMange();
   final AdmobAds ads = AdmobAds();
   final Player player = Player();
   final Clouds clouds = Clouds();
@@ -57,13 +58,24 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   int scorePoint = 0;
   bool sound = true;
   int deadTimes = 0;
+  PlayerData playerData = PlayerData();
+  ValueNotifier<int> coins = ValueNotifier<int>(0);
   ValueNotifier<int> highest = ValueNotifier<int>(0);
 
   @override
   Future<void> onLoad() async {
     // debugMode = true;
+    playerData = await PlayerData.load();
+    coins.value = playerData.coins;
+    highest.value = playerData.highScore;
+    player.updateTrail(playerData.selectedTrail);
+
     addAll({clouds, player, pipes, score});
-    getHighest().then((_) => updateScore());
+    updateScore();
+
+    // Initial overlays
+    overlays.add('start');
+    overlays.add('coin_display');
   }
 
   @override
@@ -75,24 +87,24 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
       anchor: Anchor.center,
       priority: 2,
       textRenderer: TextPaint(
-        style: const TextStyle(
-          color: Colors.orangeAccent,
-          fontSize: 40,
-          fontFamily: 'game',
-          fontWeight: FontWeight.bold,
+        style: GoogleFonts.luckiestGuy(
+          textStyle: const TextStyle(
+            color: Colors.orangeAccent,
+            fontSize: 40,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
   }
 
-  Future<void> getHighest() async => highest.value = await prefs.getDataInt();
+  Future<void> getHighest() async => highest.value = playerData.highScore;
 
-  void setHighest() => prefs.setDataInt(value: scorePoint);
+  void setHighest() {} // Deprecated, handled by PlayerData
 
   void startGame({bool withRewarded = false}) {
     player.reset();
     pipes.reset();
-    getHighest();
     newHighest = false;
     scorePoint = withRewarded ? scorePoint : 0;
     updateScore();
@@ -102,7 +114,14 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     ads.didGetRewarded = false;
   }
 
+  String? tempTrail;
+
   void gameOver() {
+    if (tempTrail != null) {
+      player.updateTrail(playerData.selectedTrail); // Use saved data
+      tempTrail = null;
+    }
+
     Functions.addScore(scorePoint);
     audio.playHit();
     Functions.vibration(isStarted);
@@ -114,9 +133,8 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   void checkHighest() {
-    if (scorePoint < highest.value) return;
-
-    setHighest();
+    if (scorePoint <= playerData.highScore) return;
+    playerData.updateHighScore(scorePoint);
     highest.value = scorePoint;
     newHighest = true;
   }

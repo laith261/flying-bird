@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:game/component/coin.dart';
 import 'package:game/component/pipe.dart';
 
 import '../configs/const.dart';
@@ -14,26 +15,57 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
   late Sprite pipePop;
   var isTwoWay = 0;
   late Sprite pipe;
+  late double lastGapY = game.size.y / 2;
 
   @override
   Future<void> onLoad() async {
     await initSprite();
-    addPipe();
+    addPipe(withCoin: false);
     return super.onLoad();
   }
 
-  Future<void> addPipe() async {
-    if (isTwoWay != 3) {
-      var isUp = Random().nextBool();
-      var space = getSize();
-      addAll([
-        Pipe(true, isUp, space, pipePop, false),
-        Pipe(false, isUp, space, pipe, false),
-      ]);
+  Future<void> addPipe({bool withCoin = true}) async {
+    // Calculate position for Coin (between columns)
+    double coinX = (Consts.pipeAddAt + game.size.x + 100) / 2;
+
+    // Prepare pipe data
+    bool isStandard = isTwoWay != 3;
+    bool isUp = Random().nextBool();
+    int spaceVal = getSize();
+
+    // Calculate current gap Y based on pipe type
+    double currentGapY;
+    if (isStandard) {
+      currentGapY = game.size.y / 2 + (isUp ? -spaceVal : spaceVal);
+    } else {
+      currentGapY = game.size.y / 2;
+    }
+
+    // Interpolate coinY
+    double coinY = (lastGapY + currentGapY) / 2;
+
+    // Update lastGapY for next pipe
+    lastGapY = currentGapY;
+
+    if (isStandard) {
+      List<Component> components = [
+        Pipe(true, isUp, spaceVal, pipePop, false),
+        Pipe(false, isUp, spaceVal, pipe, false),
+      ];
+
+      if (withCoin && Random().nextDouble() < 0.3) {
+        components.add(Coin(position: Vector2(coinX, coinY)));
+      }
+
+      addAll(components);
       isTwoWay += Random().nextBool() ? 1 : 0;
       return;
     }
+    // For TwoWay pipe, the gap is in the middle
     add(Pipe(false, false, 0, twoWayPipe, true));
+    if (withCoin && Random().nextDouble() < 0.3) {
+      add(Coin(position: Vector2(coinX, coinY)));
+    }
     isTwoWay = 0;
   }
 
@@ -61,14 +93,15 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
     if (firstChild<Pipe>()!.position.x > game.player.x) return;
     if (firstChild<Pipe>()!.gotPoint) return;
     firstChild<Pipe>()!.gotPoint = true;
-    game.audio.playPoint();
+
     game.scorePoint++;
     game.updateScore();
   }
 
   void reset() {
-    removeWhere((element) => element is Pipe);
-    addPipe();
+    removeWhere((element) => element is Pipe || element is Coin);
+    lastGapY = game.size.y / 2;
+    addPipe(withCoin: false);
   }
 
   int getSize() => Random().nextInt(space);

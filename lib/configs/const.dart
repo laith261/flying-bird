@@ -12,5 +12,5 @@ class Consts {
   // static String achievements1000 = dotenv.env['achievements1000']!;
   // static String achievements5000 = dotenv.env['achievements5000']!;
   // static String achievements10000 = dotenv.env['achievements10000']!;
-  static String savedDataName = 'Highest';
+  static String savedDataName = 'PlayerData';
 }

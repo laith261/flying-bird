@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:stroke_text/stroke_text.dart';
 
 import '../../main.dart';
@@ -29,11 +30,12 @@ class StartButton extends StatelessWidget {
         child: StrokeText(
           textAlign: TextAlign.center,
           text: text,
-          textStyle: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'game',
-            color: Colors.white,
+          textStyle: GoogleFonts.luckiestGuy(
+            textStyle: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
           ),
           strokeColor: Colors.black,
           strokeWidth: 2,

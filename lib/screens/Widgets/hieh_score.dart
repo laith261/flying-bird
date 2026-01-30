@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:stroke_text/stroke_text.dart';
 
 import '../../main.dart';
@@ -26,32 +27,20 @@ class _HighestScoreState extends State<HighestScore> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
-            flex: 2,
-            child: StrokeText(
-              textAlign: TextAlign.right,
-              text: "Highest Score: ",
-              textStyle: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'game',
-                color: Colors.white,
-              ),
-              strokeColor: Colors.black,
-              strokeWidth: 2,
-            ),
-          ),
-          Flexible(
             flex: 1,
             child: ValueListenableBuilder<int>(
               builder: (context, value, child) {
                 return StrokeText(
-                  textAlign: TextAlign.left,
-                  text: "$value",
-                  textStyle: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'game',
-                    color: game.newHighest ? Colors.amberAccent : Colors.white,
+                  textAlign: TextAlign.center,
+                  text: "Highest Score: $value",
+                  textStyle: GoogleFonts.luckiestGuy(
+                    textStyle: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: game.newHighest
+                          ? Colors.amberAccent
+                          : Colors.white,
+                    ),
                   ),
                   strokeColor: Colors.black,
                   strokeWidth: 2,

@@ -78,16 +78,15 @@ class Functions {
     );
   }
 
-  static Future<void> saveScore(int scorePoint) async {
+  static Future<void> saveScore(String playerData) async {
     if (await GameAuth.isSignedIn == false) return;
-    SaveGame.saveGame(data: scorePoint.toString(), name: Consts.savedDataName);
+    SaveGame.saveGame(data: playerData, name: Consts.savedDataName);
   }
 
   static Future<String?> loadScore() async {
     if (await GameAuth.isSignedIn == false) return null;
-    var savedGames = await SaveGame.getSavedGames();
-    return (savedGames == null || savedGames.isNotEmpty)
-        ? await SaveGame.loadGame(name: Consts.savedDataName)
-        : "0";
+    var savedGames = await SaveGame.loadGame(name:Consts.savedDataName);
+    if (savedGames == null || savedGames.isEmpty) return null;
+    return savedGames;
   }
 }
