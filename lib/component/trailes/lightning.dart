@@ -133,7 +133,7 @@ class LightningTrail extends PositionComponent {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4
       ..strokeCap = StrokeCap.round
-      ..color = Colors.orange.withValues(alpha: 0.6);
+      ..color = Colors.white.withValues(alpha: 0.6);
 
     final corePaint = Paint()
       ..style = PaintingStyle.stroke
@@ -144,7 +144,7 @@ class LightningTrail extends PositionComponent {
     for (final p in _particles) {
       double alpha = (1 - p.age / p.lifespan).clamp(0.0, 1.0);
 
-      glowPaint.color = Colors.orange.withValues(alpha: alpha * 0.6);
+      glowPaint.color = Colors.white.withValues(alpha: alpha * 0.6);
       corePaint.color = Colors.white.withValues(alpha: alpha);
 
       canvas.save();

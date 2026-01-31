@@ -133,7 +133,7 @@ class StarTrail extends PositionComponent {
     // Let's use Orange for standard to look "Fire-y"
     final paint = Paint()..style = PaintingStyle.fill;
     _particles.forEach((p) {
-      _drawStar(canvas, p, paint, Colors.orange);
+      _drawStar(canvas, p, paint, Colors.white);
     });
   }
 

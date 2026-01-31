@@ -61,7 +61,7 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -115,6 +115,7 @@ class _ShopScreenState extends State<ShopScreen> {
             labelStyle: GoogleFonts.luckiestGuy(fontSize: 18),
             tabs: const [
               Tab(text: "Trails"),
+              Tab(text: "Power Ups"),
               Tab(text: "Birds"),
             ],
           ),
@@ -410,6 +411,25 @@ class _ShopScreenState extends State<ShopScreen> {
                           ),
                         );
                       },
+                    ),
+                    // Power Ups Tab Placeholder
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.bolt, size: 60, color: Colors.grey[400]),
+                          const SizedBox(height: 20),
+                          Text(
+                            "Power Ups Coming Soon!",
+                            style: GoogleFonts.luckiestGuy(
+                              textStyle: TextStyle(
+                                fontSize: 24,
+                                color: Colors.grey[400],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                     // Birds Tab Placeholder
                     Center(

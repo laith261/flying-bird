@@ -85,39 +85,13 @@ class CircleTrail extends PositionComponent {
     for (final p in _particles) {
       double progress = p.age / p.lifespan;
       double alpha = (1 - progress).clamp(0.0, 1.0);
-      double radius = 7 * (1 - progress);
 
       glowPaint.color = currentColor.withValues(alpha: alpha * 0.5);
 
-      // Draw the 3 circles logic
-      // Center
-      canvas.drawCircle(p.position.toOffset(), radius + 4, glowPaint);
-      // Left
+      // Draw Center only
       canvas.drawCircle(
-        (p.position + Vector2(-25, 0)).toOffset(),
-        radius + 4,
-        glowPaint,
-      );
-      // Right (larger)
-      // Old logic: i=1 radius=10, others 7. i=0(-25), i=1(0), i=2(25).
-      // Wait, let's match exact old logic positions:
-      // i=0: -25, r=7
-      // i=1: 0, r=10
-      // i=2: 25, r=7
-
-      canvas.drawCircle(
-        (p.position + Vector2(0, 0)).toOffset(),
+        p.position.toOffset(),
         (10 * (1 - progress)) + 4,
-        glowPaint,
-      );
-      canvas.drawCircle(
-        (p.position + Vector2(-25, 0)).toOffset(),
-        radius + 4,
-        glowPaint,
-      );
-      canvas.drawCircle(
-        (p.position + Vector2(25, 0)).toOffset(),
-        radius + 4,
         glowPaint,
       );
     }
@@ -130,58 +104,21 @@ class CircleTrail extends PositionComponent {
 
       corePaint.color = Colors.white.withValues(alpha: alpha);
 
-      // Center (Left in loop order?)
-      // Old loop: 0(-25, r7), 1(0, r10), 2(25, r7)
-
-      canvas.drawCircle(
-        (p.position + Vector2(-25, 0)).toOffset(),
-        7 * (1 - progress),
-        corePaint,
-      );
-      canvas.drawCircle(
-        (p.position + Vector2(0, 0)).toOffset(),
-        10 * (1 - progress),
-        corePaint,
-      );
-      canvas.drawCircle(
-        (p.position + Vector2(25, 0)).toOffset(),
-        7 * (1 - progress),
-        corePaint,
-      );
+      // Draw Center only
+      canvas.drawCircle(p.position.toOffset(), 10 * (1 - progress), corePaint);
     }
   }
 
   void _renderStandard(Canvas canvas) {
     final paint = Paint()..style = PaintingStyle.fill;
-    final colors = [Colors.orange, Colors.orange, Colors.orange];
+    final colors = [Colors.white, Colors.white, Colors.white];
 
     for (final p in _particles) {
       double progress = p.age / p.lifespan;
 
-      // Draw 3 circles
-      // i=0
-      paint.color = colors[0].withValues(alpha: (1 - progress) * 0.5);
-      canvas.drawCircle(
-        (p.position + Vector2(-25, 0)).toOffset(),
-        7 * (1 - progress),
-        paint,
-      );
-
-      // i=1
+      // Draw 1 circle (Center)
       paint.color = colors[1].withValues(alpha: (1 - progress) * 0.8);
-      canvas.drawCircle(
-        (p.position + Vector2(0, 0)).toOffset(),
-        10 * (1 - progress),
-        paint,
-      );
-
-      // i=2
-      paint.color = colors[2].withValues(alpha: (1 - progress) * 0.5);
-      canvas.drawCircle(
-        (p.position + Vector2(25, 0)).toOffset(),
-        7 * (1 - progress),
-        paint,
-      );
+      canvas.drawCircle(p.position.toOffset(), 10 * (1 - progress), paint);
     }
   }
 }

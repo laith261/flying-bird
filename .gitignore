@@ -46,3 +46,4 @@ app.*.map.json
 
 
 *.env
+/android/build/reports/problems/problems-report.html

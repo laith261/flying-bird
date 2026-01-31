@@ -135,7 +135,7 @@ class RotateRectTrail extends PositionComponent {
   void _renderStandard(Canvas canvas) {
     final paint = Paint()..style = PaintingStyle.fill;
     // Matching orange style
-    Color color = Colors.orange;
+    Color color = Colors.white;
 
     for (final p in _particles) {
       double progress = p.age / p.lifespan;

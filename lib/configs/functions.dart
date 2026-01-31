@@ -33,12 +33,12 @@ class Functions {
         steps: scorePoint,
       ),
     );
-    // Achievements.increment(
-    //   achievement: Achievement(
-    //     androidID: Consts.achievements1000,
-    //     steps: scorePoint,
-    //   ),
-    // );
+    Achievements.increment(
+      achievement: Achievement(
+        androidID: Consts.achievements500,
+        steps: scorePoint,
+      ),
+    );
     // Achievements.increment(
     //   achievement: Achievement(
     //     androidID: Consts.achievements5000,
@@ -76,17 +76,5 @@ class Functions {
       textColor: Colors.white,
       fontSize: 16.0,
     );
-  }
-
-  static Future<void> saveScore(String playerData) async {
-    if (await GameAuth.isSignedIn == false) return;
-    SaveGame.saveGame(data: playerData, name: Consts.savedDataName);
-  }
-
-  static Future<String?> loadScore() async {
-    if (await GameAuth.isSignedIn == false) return null;
-    var savedGames = await SaveGame.loadGame(name:Consts.savedDataName);
-    if (savedGames == null || savedGames.isEmpty) return null;
-    return savedGames;
   }
 }
