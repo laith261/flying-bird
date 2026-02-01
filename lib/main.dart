@@ -12,6 +12,7 @@ import 'package:game/configs/ads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'firebase_options.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -51,6 +52,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   final Player player = Player();
   final Clouds clouds = Clouds();
   final Pipes pipes = Pipes();
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   // states
   bool newHighest = false;

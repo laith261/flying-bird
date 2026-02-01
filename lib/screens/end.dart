@@ -141,7 +141,6 @@ class _EndState extends State<EndWidget> {
 
   void congress() {
     if (!game.newHighest) return;
-
     game.newHighest = false;
     game.audio.playWin();
     Future.delayed(
@@ -151,5 +150,11 @@ class _EndState extends State<EndWidget> {
         options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
       ),
     );
+     game.analytics.logEvent(
+  name: 'new highest',
+  parameters: {
+    'score': game.score,
+  },
+);
   }
 }
