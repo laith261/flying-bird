@@ -80,7 +80,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     // Initial overlays
     overlays.add('start');
     overlays.add('coin_display');
-    playerData.addCoins(50);
   }
 
   @override
