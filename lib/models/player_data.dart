@@ -11,9 +11,13 @@ class PlayerData extends ChangeNotifier {
   String _selectedTrail;
   List<String> _purchasedTrails;
   int _lastModified;
+  int _shields;
+  int _luckyDay = 0;
 
   int get highScore => _highScore;
   int get coins => _coins;
+  int get shields => _shields;
+  int get luckyDay => _luckyDay;
   String get selectedTrail => _selectedTrail;
   List<String> get purchasedTrails => List.unmodifiable(_purchasedTrails);
   int get lastModified => _lastModified;
@@ -24,13 +28,53 @@ class PlayerData extends ChangeNotifier {
     String selectedTrail = 'none',
     List<String> purchasedTrails = const ['none'],
     int lastModified = 0,
+    int shields = 0,
+    int luckyDay = 0,
   }) : _highScore = highScore,
        _coins = coins,
        _selectedTrail = selectedTrail,
        _purchasedTrails = purchasedTrails,
-       _lastModified = lastModified;
+       _lastModified = lastModified,
+       _shields = shields,
+       _luckyDay = luckyDay;
 
   // --- Logic Methods ---
+
+  Future<void> addShield(int amount) async {
+    _shields += amount;
+    _lastModified = DateTime.now().millisecondsSinceEpoch;
+    notifyListeners();
+    await save();
+  }
+
+  Future<bool> useShield() async {
+    if (_shields > 0) {
+      _shields--;
+      _lastModified = DateTime.now().millisecondsSinceEpoch;
+      notifyListeners();
+      await save();
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> addLuckyDay(int amount) async {
+    _luckyDay += amount;
+    _lastModified = DateTime.now().millisecondsSinceEpoch;
+    notifyListeners();
+    await save();
+  }
+
+  Future<bool> useLuckyDay() async {
+    if (_luckyDay > 0) {
+      _luckyDay--;
+      _lastModified = DateTime.now().millisecondsSinceEpoch;
+      notifyListeners();
+      await save();
+      return true;
+    }
+    return false;
+  }
 
   Future<void> addCoins(int amount) async {
     _coins += amount;
@@ -157,6 +201,8 @@ class PlayerData extends ChangeNotifier {
               .toList() ??
           ['none'],
       lastModified: json['lastModified'] as int? ?? 0,
+      shields: json['shields'] as int? ?? 0,
+      luckyDay: json['luckyDay'] as int? ?? 0,
     );
   }
 
@@ -164,6 +210,8 @@ class PlayerData extends ChangeNotifier {
     return {
       'highScore': _highScore,
       'coins': _coins,
+      'shields': _shields,
+      'luckyDay': _luckyDay,
       'selectedTrail': _selectedTrail,
       'purchasedTrails': _purchasedTrails,
       'lastModified': _lastModified,
@@ -177,10 +225,14 @@ class PlayerData extends ChangeNotifier {
     String? selectedTrail,
     List<String>? purchasedTrails,
     int? lastModified,
+    int? shields,
+    int? luckyDay,
   }) {
     return PlayerData(
       highScore: highScore ?? _highScore,
       coins: coins ?? _coins,
+      shields: shields ?? _shields,
+      luckyDay: luckyDay ?? _luckyDay,
       selectedTrail: selectedTrail ?? _selectedTrail,
       purchasedTrails: purchasedTrails ?? _purchasedTrails,
       lastModified: lastModified ?? _lastModified,

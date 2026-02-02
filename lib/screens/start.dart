@@ -6,6 +6,7 @@ import '../configs/functions.dart';
 import 'Widgets/hieh_score.dart';
 import 'shop.dart';
 import 'Widgets/start_button.dart';
+import 'Widgets/power_up_toggles.dart';
 
 class StartWidget extends StatefulWidget {
   const StartWidget({super.key, required this.game});
@@ -18,6 +19,24 @@ class StartWidget extends StatefulWidget {
 
 class _StartWidgetState extends State<StartWidget> {
   late MyWorld game = widget.game;
+
+  @override
+  void initState() {
+    super.initState();
+    game.playerData.addListener(_onPlayerDataChanged);
+  }
+
+  @override
+  void dispose() {
+    game.playerData.removeListener(_onPlayerDataChanged);
+    super.dispose();
+  }
+
+  void _onPlayerDataChanged() {
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,15 +79,12 @@ class _StartWidgetState extends State<StartWidget> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(51),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.5),
-                width: 2,
-              ),
+              border: Border.all(color: Colors.white.withAlpha(128), width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withAlpha(26),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -113,6 +129,9 @@ class _StartWidgetState extends State<StartWidget> {
               ],
             ),
           ),
+          const SizedBox(height: 20),
+          // Power Up Toggles
+          PowerUpToggles(game: game),
         ],
       ),
     );
@@ -129,7 +148,7 @@ class _StartWidgetState extends State<StartWidget> {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withAlpha(77),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

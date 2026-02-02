@@ -7,6 +7,7 @@ import 'Widgets/hieh_score.dart';
 import 'Widgets/reword_ad.dart';
 import 'shop.dart';
 import 'Widgets/start_button.dart';
+import 'Widgets/power_up_toggles.dart';
 
 class EndWidget extends StatefulWidget {
   const EndWidget({super.key, required this.game});
@@ -56,15 +57,12 @@ class _EndState extends State<EndWidget> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
+              color: Colors.white.withAlpha(51),
               borderRadius: BorderRadius.circular(30),
-              border: Border.all(
-                color: Colors.white.withOpacity(0.5),
-                width: 2,
-              ),
+              border: Border.all(color: Colors.white.withAlpha(128), width: 2),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withAlpha(26),
                   blurRadius: 10,
                   offset: const Offset(0, 5),
                 ),
@@ -109,6 +107,9 @@ class _EndState extends State<EndWidget> {
               ],
             ),
           ),
+          const SizedBox(height: 20),
+          // Power Up Toggles
+          PowerUpToggles(game: game),
         ],
       ),
     );
@@ -125,7 +126,7 @@ class _EndState extends State<EndWidget> {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.3),
+            color: color.withAlpha(77),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -150,11 +151,9 @@ class _EndState extends State<EndWidget> {
         options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
       ),
     );
-     game.analytics.logEvent(
-  name: 'new highest',
-  parameters: {
-    'score': game.score,
-  },
-);
+    game.analytics.logEvent(
+      name: 'new highest',
+      parameters: {'score': game.highest},
+    );
   }
 }

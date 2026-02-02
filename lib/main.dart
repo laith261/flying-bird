@@ -57,6 +57,8 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   // states
   bool newHighest = false;
   bool isStarted = false;
+  ValueNotifier<bool> isLuckyDayActive = ValueNotifier<bool>(false);
+  bool isShieldEnabled = false;
   int scorePoint = 0;
   bool sound = true;
   int deadTimes = 0;
@@ -78,6 +80,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     // Initial overlays
     overlays.add('start');
     overlays.add('coin_display');
+    playerData.addCoins(50);
   }
 
   @override
@@ -111,6 +114,29 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     scorePoint = withRewarded ? scorePoint : 0;
     updateScore();
     isStarted = true;
+
+    // Check Lucky Day usage
+    if (isLuckyDayActive.value) {
+      if (playerData.luckyDay > 0) {
+        playerData.useLuckyDay();
+      } else {
+        isLuckyDayActive.value = false;
+      }
+    }
+
+    // Check Shield usage
+    if (isShieldEnabled) {
+      if (playerData.shields > 0) {
+        playerData.useShield();
+        player.hasActiveShield = true;
+      } else {
+        isShieldEnabled = false;
+        player.hasActiveShield = false;
+      }
+    } else {
+      player.hasActiveShield = false;
+    }
+
     audio.setStarted(isStarted);
     if (!withRewarded) return;
     ads.didGetRewarded = false;

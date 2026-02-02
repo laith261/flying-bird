@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
@@ -132,9 +131,9 @@ class StarTrail extends PositionComponent {
     // Old code: isPro ? white/amber mixed : Colors.white (actually code said Colors.white but in shop it was distinct)
     // Let's use Orange for standard to look "Fire-y"
     final paint = Paint()..style = PaintingStyle.fill;
-    _particles.forEach((p) {
+    for (var p in _particles) {
       _drawStar(canvas, p, paint, Colors.white);
-    });
+    }
   }
 
   void _drawStar(

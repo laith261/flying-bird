@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -31,6 +32,8 @@ class Player extends SpriteAnimationComponent
   String _selectedTrail = 'none';
   double _trailTimer = 0;
   final double _trailInterval = 0.05;
+  bool _isInvincible = false;
+  bool hasActiveShield = false;
 
   @override
   Future<void> onLoad() async {
@@ -105,6 +108,22 @@ class Player extends SpriteAnimationComponent
     if (!game.isStarted) return;
 
     if (other is Pipe) {
+      if (_isInvincible) return;
+
+      if (hasActiveShield) {
+        hasActiveShield = false; // Consume the active shield
+        _isInvincible = true;
+        add(
+          TimerComponent(
+            period: 1.0,
+            removeOnFinish: true,
+            onTick: () => _isInvincible = false,
+          ),
+        );
+        // other.removeFromParent();
+        game.audio.playPoint(); // Placeholder for shield break sound
+        return;
+      }
       game.gameOver();
     } else if (other is Coin) {
       if (other.collect()) {
@@ -130,6 +149,131 @@ class Player extends SpriteAnimationComponent
     rotate();
     setPlayerPosition();
     _resetAllTrails();
+    _isInvincible = false;
+    // hasActiveShield = false; // Logic handled in startGame
+  }
+
+  @override
+  void render(Canvas canvas) {
+    // Check if we should render (visibility toggle for flashing)
+    bool isVisible = true;
+    if (_isInvincible) {
+      isVisible =
+          (DateTime.now().millisecondsSinceEpoch / 100).floor() % 2 == 0;
+    }
+
+    if (!isVisible) return; // Don't render anything if flashing invisible
+
+    bool showShield =
+        hasActiveShield ||
+        (!game.isStarted &&
+            game.isShieldEnabled &&
+            game.playerData.shields > 0);
+
+    if (showShield) {
+      canvas.save();
+      // Counter-rotate the shield around the center of the bird
+      canvas.translate(width / 2, height / 2);
+      canvas.rotate(-angle);
+      canvas.translate(-width / 2, -height / 2);
+
+      // Enhanced "Orbiting Plasma" Shield with Trails
+      double time = DateTime.now().millisecondsSinceEpoch / 1000;
+      double orbitRadius = width * 0.75;
+
+      // Draw subtle rotating energy ring
+      final ringPaint = Paint()
+        ..color = Colors.cyan.withAlpha(38)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+
+      // Rotate the ring slowly opposite to satellites
+      canvas.save();
+      canvas.translate(width / 2, height / 2);
+      canvas.rotate(-time * 0.5);
+      // Draw a dashed ring (simulated by drawing arcs or just a circle for now)
+      canvas.drawCircle(Offset.zero, orbitRadius, ringPaint);
+      canvas.restore();
+
+      // Draw 3 orbiting satellites with trails
+      for (int i = 0; i < 3; i++) {
+        double angleVal = (time * 2.5) + (i * (2 * pi / 3));
+
+        // Draw Trail (multiple smaller circles fading out)
+        for (int j = 1; j <= 5; j++) {
+          double trailAngle = angleVal - (j * 0.15); // Lag behind
+          double trailX = (width / 2) + orbitRadius * cos(trailAngle);
+          double trailY = (height / 2) + orbitRadius * sin(trailAngle);
+
+          canvas.drawCircle(
+            Offset(trailX, trailY),
+            4.0 - (j * 0.6), // Shrinking size
+            Paint()
+              ..color = Colors.cyanAccent.withAlpha(
+                ((0.5 - (j * 0.08)) * 255).toInt(),
+              ),
+          );
+        }
+
+        // Main Satellite
+        double satelliteX = (width / 2) + orbitRadius * cos(angleVal);
+        double satelliteY = (height / 2) + orbitRadius * sin(angleVal);
+
+        canvas.drawCircle(
+          Offset(satelliteX, satelliteY),
+          5,
+          Paint()
+            ..color = Colors.white
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
+        );
+      }
+      canvas.restore(); // Restore counter-rotation
+    } else if (_isInvincible) {
+      canvas.save();
+      // Counter-rotate for invincibility effect
+      canvas.translate(width / 2, height / 2);
+      canvas.rotate(-angle);
+      canvas.translate(-width / 2, -height / 2);
+
+      // Invincible Mode: High Energy (Cyan/White) instead of Red
+      double time = DateTime.now().millisecondsSinceEpoch / 1000;
+      double orbitRadius = width * 0.9;
+
+      for (int i = 0; i < 3; i++) {
+        double angleVal = (time * 8) + (i * (2 * pi / 3)); // Fast spin
+
+        // Bright Cyan/White Trails
+        for (int j = 1; j <= 4; j++) {
+          double trailAngle = angleVal - (j * 0.1);
+          double trailX = (width / 2) + orbitRadius * cos(trailAngle);
+          double trailY = (height / 2) + orbitRadius * sin(trailAngle);
+
+          canvas.drawCircle(
+            Offset(trailX, trailY),
+            5.0 - (j * 0.8),
+            Paint()
+              ..color = Colors.cyanAccent.withAlpha(
+                ((0.8 - (j * 0.15)) * 255).toInt(),
+              ),
+          );
+        }
+
+        double satelliteX = (width / 2) + orbitRadius * cos(angleVal);
+        double satelliteY = (height / 2) + orbitRadius * sin(angleVal);
+
+        canvas.drawCircle(
+          Offset(satelliteX, satelliteY),
+          7,
+          Paint()
+            ..color = Colors.white
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
+        );
+      }
+      canvas.restore(); // Restore counter-rotation
+    }
+
+    super.render(canvas); // Draw bird on top
   }
 
   @override

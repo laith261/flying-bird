@@ -23,6 +23,11 @@ class _ShopScreenState extends State<ShopScreen> {
     {'id': 'lightning', 'name': 'Lighting', 'score': 100, 'price': 100},
   ];
 
+  final List<Map<String, dynamic>> powerUps = [
+    {'id': 'shield', 'name': 'Shield', 'price': 50, 'icon': Icons.security},
+    {'id': 'luckyDay', 'name': 'Lucky Day', 'price': 50, 'icon': Icons.stars},
+  ];
+
   String selectedTrail = 'none';
   List<String> purchasedTrails = ['none'];
 
@@ -131,7 +136,7 @@ class _ShopScreenState extends State<ShopScreen> {
                   vertical: 10,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.orange.withOpacity(0.1),
+                  color: Colors.orange.withAlpha(26),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.orange),
                 ),
@@ -216,6 +221,7 @@ class _ShopScreenState extends State<ShopScreen> {
                             }
 
                             if (!isOwned) {
+                              /*
                               if (widget.game.coins.value >= price) {
                                 _showPurchaseConfirmation(trailId, name, price);
                               } else {
@@ -226,6 +232,8 @@ class _ShopScreenState extends State<ShopScreen> {
                                   ),
                                 );
                               }
+                              */
+                              _showPurchaseConfirmation(trailId, name, price);
                               return;
                             }
 
@@ -241,14 +249,14 @@ class _ShopScreenState extends State<ShopScreen> {
                             decoration: BoxDecoration(
                               color: isSelected
                                   ? (isTemp
-                                        ? Colors.blue.withOpacity(0.1)
-                                        : Colors.orange.withOpacity(0.1))
+                                        ? Colors.blue.withAlpha(26)
+                                        : Colors.orange.withAlpha(26))
                                   : Colors.white,
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
                                 color: isSelected
                                     ? (isTemp ? Colors.blue : Colors.orange)
-                                    : Colors.grey.withOpacity(0.3),
+                                    : Colors.grey.withAlpha(77),
                                 width: isSelected ? 4 : 2,
                               ),
                               boxShadow: const [
@@ -360,7 +368,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     child: Container(
                                       padding: const EdgeInsets.all(15),
                                       decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.5),
+                                        color: Colors.black.withAlpha(128),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
@@ -375,7 +383,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                     child: Container(
                                       padding: const EdgeInsets.all(15),
                                       decoration: BoxDecoration(
-                                        color: Colors.green.withOpacity(0.8),
+                                        color: Colors.green.withAlpha(204),
                                         shape: BoxShape.circle,
                                       ),
                                       child: const Icon(
@@ -412,24 +420,151 @@ class _ShopScreenState extends State<ShopScreen> {
                         );
                       },
                     ),
-                    // Power Ups Tab Placeholder
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.bolt, size: 60, color: Colors.grey[400]),
-                          const SizedBox(height: 20),
-                          Text(
-                            "Power Ups Coming Soon!",
-                            style: GoogleFonts.luckiestGuy(
-                              textStyle: TextStyle(
-                                fontSize: 24,
-                                color: Colors.grey[400],
-                              ),
+                    // Power Ups Tab
+                    ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      itemCount: powerUps.length,
+                      itemBuilder: (context, index) {
+                        final powerUp = powerUps[index];
+                        final String id = powerUp['id'] as String;
+                        final String name = powerUp['name'] as String;
+                        final int price = powerUp['price'] as int;
+                        final IconData icon = powerUp['icon'] as IconData;
+                        final int count = id == 'shield'
+                            ? widget.game.playerData.shields
+                            : widget.game.playerData.luckyDay;
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 15, top: 10),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.blue.withAlpha(128),
+                              width: 2,
                             ),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue.withAlpha(26),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(icon, color: Colors.blue, size: 30),
+                              ),
+                              const SizedBox(width: 15),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      name,
+                                      style: GoogleFonts.luckiestGuy(
+                                        textStyle: const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      id == 'shield'
+                                          ? "Protect once from collision"
+                                          : "Spawn coin at every pipe",
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    "Owned: $count",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue[800],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      if (widget.game.playerData.coins >=
+                                          price) {
+                                        setState(() {
+                                          widget.game.playerData.subtractCoins(
+                                            price,
+                                          );
+                                          if (id == 'shield') {
+                                            widget.game.playerData.addShield(1);
+                                          } else if (id == 'luckyDay') {
+                                            widget.game.playerData.addLuckyDay(
+                                              1,
+                                            );
+                                          }
+                                        });
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text("Bought $name!"),
+                                            duration: const Duration(
+                                              seconds: 1,
+                                            ),
+                                          ),
+                                        );
+                                      } else {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text("Need $price coins!"),
+                                            duration: const Duration(
+                                              seconds: 1,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 20,
+                                        vertical: 5,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.monetization_on,
+                                          size: 16,
+                                          color: Colors.amber,
+                                        ),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          "$price",
+                                          style: GoogleFonts.luckiestGuy(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                     // Birds Tab Placeholder
                     Center(
@@ -531,11 +666,17 @@ class _ShopScreenState extends State<ShopScreen> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _buyTrail(trailId, price);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+            onPressed: widget.game.playerData.coins >= price
+                ? () {
+                    Navigator.of(context).pop();
+                    _buyTrail(trailId, price);
+                  }
+                : null, // Disable button if not enough coins
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.game.playerData.coins >= price
+                  ? Colors.orange
+                  : Colors.grey,
+            ),
             child: Text(
               "Buy",
               style: GoogleFonts.luckiestGuy(
@@ -561,6 +702,10 @@ class _ShopScreenState extends State<ShopScreen> {
       // _dataManage.savePlayerData(widget.game.playerData);
 
       _selectTrail(trailId);
+      widget.game.analytics.logEvent(
+        name: 'buy trail',
+        parameters: {'trail': trailId},
+      );
     });
   }
 }
@@ -584,7 +729,7 @@ class TrailPreviewPainter extends CustomPainter {
     void drawGlow(Path path, Color color) {
       if (!isPro) return;
       final glowPaint = Paint()
-        ..color = color.withOpacity(0.6)
+        ..color = color.withAlpha(153)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8)
         ..style = paint.style
         ..strokeWidth = paint.strokeWidth + 4
@@ -610,7 +755,7 @@ class TrailPreviewPainter extends CustomPainter {
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke
             // Reverting to basic glow color
-            ..color = Colors.orange.withOpacity(0.5)
+            ..color = Colors.orange.withAlpha(128)
             ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
 
           canvas.drawPath(path, glowPaint);
@@ -650,7 +795,7 @@ class TrailPreviewPainter extends CustomPainter {
               offset,
               radius + 4,
               Paint()
-                ..color = colors[i].withOpacity(0.5)
+                ..color = colors[i].withAlpha(128)
                 ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
             );
           }
@@ -659,20 +804,18 @@ class TrailPreviewPainter extends CustomPainter {
             offset,
             radius,
             paint
-              ..color = colors[i].withOpacity(
-                isPro ? 1.0 : (i == 1 ? 0.8 : 0.5),
-              ),
+              ..color = colors[i].withAlpha(isPro ? 255 : (i == 1 ? 204 : 128)),
           );
         }
         break;
       case 'rect':
         paint.style = PaintingStyle.fill;
-        Color c1 = Colors.orange.withOpacity(0.6);
-        Color c2 = Colors.orange.withOpacity(0.6);
+        Color c1 = Colors.orange.withAlpha(153);
+        Color c2 = Colors.orange.withAlpha(153);
         if (isPro) {
           // Revert to Purple/Teal
-          c1 = Colors.purple.withOpacity(0.6);
-          c2 = Colors.teal.withOpacity(0.6);
+          c1 = Colors.purple.withAlpha(153);
+          c2 = Colors.teal.withAlpha(153);
         }
 
         void drawRect(Offset offset, double angle, Color color) {
@@ -685,14 +828,14 @@ class TrailPreviewPainter extends CustomPainter {
             canvas.drawRect(
               Rect.fromCenter(center: Offset.zero, width: 14, height: 14),
               Paint()
-                ..color = color.withOpacity(0.6)
+                ..color = color.withAlpha(153)
                 ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8),
             );
           }
 
           canvas.drawRect(
             Rect.fromCenter(center: Offset.zero, width: 14, height: 14),
-            paint..color = color.withOpacity(isPro ? 1.0 : 0.6),
+            paint..color = color.withAlpha(isPro ? 255 : 153),
           );
           canvas.restore();
         }
@@ -740,9 +883,9 @@ class TrailPreviewPainter extends CustomPainter {
         canvas.drawPath(path, paint);
         break;
       case 'lightning':
-        Color glowColor = Colors.orange.withOpacity(0.6);
+        Color glowColor = Colors.orange.withAlpha(153);
         if (isPro) {
-          glowColor = Colors.purple.withOpacity(0.8); // Revert to Purple
+          glowColor = Colors.purple.withAlpha(204); // Revert to Purple
         }
 
         final glowPaint = Paint()
@@ -772,7 +915,7 @@ class TrailPreviewPainter extends CustomPainter {
         break;
       case 'none':
         paint
-          ..color = Colors.grey.withOpacity(0.5)
+          ..color = Colors.grey.withAlpha(128)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 3;
         canvas.drawCircle(center, 20, paint);
