@@ -310,7 +310,7 @@ class _ShopScreenState extends State<ShopScreen> {
                                           const SizedBox(height: 5),
                                           if (isLevelLocked)
                                             Text(
-                                              "Lvl: $requiredScore",
+                                              "Score: $requiredScore",
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.orange,

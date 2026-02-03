@@ -6,6 +6,7 @@ class AudioHelper {
   late AudioSource _hit;
   late AudioSource _point;
   late AudioSource _win;
+  late AudioSource _brake;
 
   bool isStarted = false;
   bool sound = true;
@@ -17,9 +18,10 @@ class AudioHelper {
   Future<void> init() async {
     await soloud.init();
     _fly = await soloud.loadAsset('assets/audio/fly.mp3');
-    _hit = await soloud.loadAsset('assets/audio/collision.mp3');
+    _hit = await soloud.loadAsset('assets/audio/hit.mp3');
     _point = await soloud.loadAsset('assets/audio/point.mp3');
     _win = await soloud.loadAsset('assets/audio/win.mp3');
+    _brake = await soloud.loadAsset('assets/audio/brake.mp3');
   }
 
   void playFly() => _playAudio(_fly);
@@ -27,6 +29,8 @@ class AudioHelper {
   void playHit() => _playAudio(_hit);
 
   void playPoint() => _playAudio(_point);
+
+  void playBrake() => _playAudio(_brake);
 
   void playWin() => _playAudio(_win, playSound: true);
 

@@ -121,7 +121,7 @@ class Player extends SpriteAnimationComponent
           ),
         );
         // other.removeFromParent();
-        game.audio.playPoint(); // Placeholder for shield break sound
+        game.audio.playBrake();
         return;
       }
       game.gameOver();
