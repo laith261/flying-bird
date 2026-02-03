@@ -127,8 +127,6 @@ class Player extends SpriteAnimationComponent
       game.gameOver();
     } else if (other is Coin) {
       if (other.collect()) {
-        game.scorePoint++;
-        game.updateScore();
         game.audio.playPoint();
         game.playerData.addCoins(1);
         game.coins.value = game.playerData.coins;
