@@ -15,7 +15,7 @@ class RewardedAd extends StatelessWidget {
       color: Colors.amberAccent,
       onPressed: () {
         game.ads.showRewardedAd(game, fun);
-        game.analytics.logEvent(name: 'revive ad');
+        game.analytics.logEvent(name: 'revive_ad');
       },
       child: SizedBox(
         width: 150,

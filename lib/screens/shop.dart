@@ -61,6 +61,10 @@ class _ShopScreenState extends State<ShopScreen> {
 
     // Update player immediately if game is running/ready
     widget.game.player.updateTrail(id);
+    widget.game.analytics.logEvent(
+      name: 'select_trail',
+      parameters: {'trail': id},
+    );
   }
 
   @override
@@ -504,13 +508,13 @@ class _ShopScreenState extends State<ShopScreen> {
                                           price) {
                                         setState(() {
                                           widget.game.playerData.subtractCoins(
-                                            price,
+                                            price
                                           );
                                           if (id == 'shield') {
                                             widget.game.playerData.addShield(1);
                                           } else if (id == 'luckyDay') {
                                             widget.game.playerData.addLuckyDay(
-                                              1,
+                                              1
                                             );
                                           }
                                         });
@@ -523,6 +527,10 @@ class _ShopScreenState extends State<ShopScreen> {
                                               seconds: 1,
                                             ),
                                           ),
+                                        );
+                                        widget.game.analytics.logEvent(
+                                          name: 'buy_power',
+                                          parameters: {'power': name},
                                         );
                                       } else {
                                         ScaffoldMessenger.of(
@@ -703,7 +711,7 @@ class _ShopScreenState extends State<ShopScreen> {
 
       _selectTrail(trailId);
       widget.game.analytics.logEvent(
-        name: 'buy trail',
+        name: 'buy_trail',
         parameters: {'trail': trailId},
       );
     });

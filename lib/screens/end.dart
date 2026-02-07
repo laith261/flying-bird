@@ -152,7 +152,7 @@ class _EndState extends State<EndWidget> {
       ),
     );
     game.analytics.logEvent(
-      name: 'new highest',
+      name: 'new_highest',
       parameters: {'score': game.highest},
     );
   }
