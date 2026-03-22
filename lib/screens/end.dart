@@ -146,10 +146,13 @@ class _EndState extends State<EndWidget> {
     game.audio.playWin();
     Future.delayed(
       Duration.zero,
-      () => Confetti.launch(
-        context,
-        options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
-      ),
+      () {
+        if (!mounted) return;
+        Confetti.launch(
+          context,
+          options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
+        );
+      },
     );
     game.analytics.logEvent(
       name: 'new_highest',

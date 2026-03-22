@@ -14,14 +14,16 @@ import 'package:game/component/trailes/star.dart';
 import 'package:game/main.dart';
 
 import '../configs/const.dart';
+import 'skins/skinEnum.dart';
 
-class Player extends SpriteAnimationComponent
+class Player extends SpriteComponent
     with TapCallbacks, HasGameReference<MyWorld>, CollisionCallbacks {
   Player() : super(size: Vector2(46, 29), anchor: Anchor.center, priority: 2);
 
   final Vector2 gravity = Vector2(0, Consts.gravity);
   final Vector2 jump = Vector2(0, Consts.jump);
   Vector2 velocity = Vector2.zero();
+  Skins skin = Skins.bird;
 
   final LineTrail _lineTrail = LineTrail();
   final CircleTrail _circleTrail = CircleTrail();
@@ -38,12 +40,7 @@ class Player extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     setPlayerPosition();
-    List<Sprite> redBirdSprites = [
-      await Sprite.load("bird/1.png"),
-      await Sprite.load("bird/2.png"),
-      await Sprite.load("bird/3.png"),
-    ];
-    animation = SpriteAnimation.spriteList(redBirdSprites, stepTime: 0.2);
+    sprite = await Sprite.load(skin.image);
     add(CircleHitbox());
 
     // Add all trails to game
@@ -62,6 +59,11 @@ class Player extends SpriteAnimationComponent
     _selectedTrail = trailId;
     _resetAllTrails();
     _updateTrailConfig(trailId);
+  }
+
+  Future<void> updateSkin(Skins newSkin) async {
+    skin = newSkin;
+    sprite = await Sprite.load(skin.image);
   }
 
   void _updateTrailConfig(String trailId) {
@@ -306,6 +308,8 @@ class Player extends SpriteAnimationComponent
         }
       }
     }
+
+    skin.skin.ability(this, dt);
 
     super.update(dt);
   }

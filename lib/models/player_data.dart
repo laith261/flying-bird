@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:game/component/skins/skinEnum.dart';
 import 'package:games_services/games_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -9,31 +10,39 @@ class PlayerData extends ChangeNotifier {
   int _highScore;
   int _coins;
   String _selectedTrail;
+  Skins _selectedSkin;
   List<String> _purchasedTrails;
   int _lastModified;
   int _shields;
   int _luckyDay = 0;
+  List<String> _purchasedSkins;
 
   int get highScore => _highScore;
   int get coins => _coins;
   int get shields => _shields;
   int get luckyDay => _luckyDay;
   String get selectedTrail => _selectedTrail;
+  Skins get selectedSkin => _selectedSkin;
   List<String> get purchasedTrails => List.unmodifiable(_purchasedTrails);
+  List<String> get purchasedSkins => List.unmodifiable(_purchasedSkins);
   int get lastModified => _lastModified;
 
   PlayerData({
     int highScore = 0,
     int coins = 0,
     String selectedTrail = 'none',
+    Skins selectedSkin = Skins.bird,
     List<String> purchasedTrails = const ['none'],
     int lastModified = 0,
     int shields = 0,
     int luckyDay = 0,
+    List<String> purchasedSkins = const ['bird'],
   }) : _highScore = highScore,
        _coins = coins,
        _selectedTrail = selectedTrail,
+       _selectedSkin = selectedSkin,
        _purchasedTrails = purchasedTrails,
+       _purchasedSkins = purchasedSkins,
        _lastModified = lastModified,
        _shields = shields,
        _luckyDay = luckyDay;
@@ -112,9 +121,27 @@ class PlayerData extends ChangeNotifier {
     }
   }
 
+  Future<void> unlockSkin(String skinName) async {
+    if (!_purchasedSkins.contains(skinName)) {
+      _purchasedSkins.add(skinName);
+      _lastModified = DateTime.now().millisecondsSinceEpoch;
+      notifyListeners();
+      await save();
+    }
+  }
+
   Future<void> equipTrail(String trailId) async {
     if (_selectedTrail != trailId) {
       _selectedTrail = trailId;
+      _lastModified = DateTime.now().millisecondsSinceEpoch;
+      notifyListeners();
+      await save();
+    }
+  }
+
+  Future<void> equipSkin(Skins skin) async {
+    if (_selectedSkin != skin) {
+      _selectedSkin = skin;
       _lastModified = DateTime.now().millisecondsSinceEpoch;
       notifyListeners();
       await save();
@@ -195,6 +222,10 @@ class PlayerData extends ChangeNotifier {
       highScore: json['highScore'] as int? ?? 0,
       coins: json['coins'] as int? ?? 0,
       selectedTrail: json['selectedTrail'] as String? ?? 'none',
+      selectedSkin: Skins.values.firstWhere(
+        (e) => e.name == (json['selectedSkin'] as String?),
+        orElse: () => Skins.bird,
+      ),
       purchasedTrails:
           (json['purchasedTrails'] as List<dynamic>?)
               ?.map((e) => e.toString())
@@ -203,6 +234,11 @@ class PlayerData extends ChangeNotifier {
       lastModified: json['lastModified'] as int? ?? 0,
       shields: json['shields'] as int? ?? 0,
       luckyDay: json['luckyDay'] as int? ?? 0,
+      purchasedSkins:
+          (json['purchasedSkins'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          ['bird'],
     );
   }
 
@@ -213,7 +249,9 @@ class PlayerData extends ChangeNotifier {
       'shields': _shields,
       'luckyDay': _luckyDay,
       'selectedTrail': _selectedTrail,
+      'selectedSkin': _selectedSkin.name,
       'purchasedTrails': _purchasedTrails,
+      'purchasedSkins': _purchasedSkins,
       'lastModified': _lastModified,
     };
   }
@@ -224,9 +262,11 @@ class PlayerData extends ChangeNotifier {
     int? coins,
     String? selectedTrail,
     List<String>? purchasedTrails,
+    List<String>? purchasedSkins,
     int? lastModified,
     int? shields,
     int? luckyDay,
+    Skins? selectedSkin,
   }) {
     return PlayerData(
       highScore: highScore ?? _highScore,
@@ -234,7 +274,9 @@ class PlayerData extends ChangeNotifier {
       shields: shields ?? _shields,
       luckyDay: luckyDay ?? _luckyDay,
       selectedTrail: selectedTrail ?? _selectedTrail,
+      selectedSkin: selectedSkin ?? _selectedSkin,
       purchasedTrails: purchasedTrails ?? _purchasedTrails,
+      purchasedSkins: purchasedSkins ?? _purchasedSkins,
       lastModified: lastModified ?? _lastModified,
     );
   }

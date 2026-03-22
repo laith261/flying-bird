@@ -11,7 +11,7 @@ import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'firebase_options.dart';
+import 'component/wing.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,6 +20,7 @@ import 'component/pipes.dart';
 import 'component/player.dart';
 import 'configs/audio_helper.dart';
 import 'configs/functions.dart';
+import 'firebase_options.dart';
 import 'models/player_data.dart';
 import 'screens/main_widget.dart';
 
@@ -52,6 +53,8 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   final Player player = Player();
   final Clouds clouds = Clouds();
   final Pipes pipes = Pipes();
+  final Wing wing = Wing();
+
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   // states
@@ -73,8 +76,9 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     coins.value = playerData.coins;
     highest.value = playerData.highScore;
     player.updateTrail(playerData.selectedTrail);
+    player.skin = playerData.selectedSkin;
 
-    addAll({clouds, player, pipes, score});
+    addAll({clouds, player, pipes, score,wing});
     updateScore();
 
     // Initial overlays
