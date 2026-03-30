@@ -6,7 +6,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../main.dart';
 import 'banner.dart';
-import 'end.dart';
 import 'start.dart';
 import 'Widgets/coin_display.dart';
 
@@ -51,7 +50,6 @@ class _MainWidgetState extends State<MainWidget> {
                   // initialActiveOverlays handled in MyWorld.onLoad
                   overlayBuilderMap: {
                     'start': (context, _) => StartWidget(game: widget.game),
-                    'end': (context, _) => EndWidget(game: widget.game),
                     'coin_display': (context, _) =>
                         CoinDisplay(game: widget.game),
                   },

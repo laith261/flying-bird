@@ -6,7 +6,7 @@ class Magnet extends Skin {
   const Magnet({required super.image, required super.name});
 
   @override
-  void ability(Player player, double dt) {
+  void ability(TheBird player, double dt) {
     final game = player.game;
     if (!game.isStarted) return;
 

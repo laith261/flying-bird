@@ -5,5 +5,10 @@ abstract class Skin {
   final String name;
 
   const Skin({required this.image, required this.name});
-  void ability(Player player, double dt);
+  void ability(TheBird player, double dt);
+  
+  bool get isGhost => false;
+  bool get hasWings => true;
 }
+
+

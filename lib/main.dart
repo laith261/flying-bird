@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
+import 'package:games_services/games_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'component/wing.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'component/pipes.dart';
@@ -23,6 +23,8 @@ import 'configs/functions.dart';
 import 'firebase_options.dart';
 import 'models/player_data.dart';
 import 'screens/main_widget.dart';
+import 'configs/leaderboard_helper.dart';
+import 'package:game/component/skins/skin_enum.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -34,11 +36,11 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  MobileAds.instance.initialize();
+  await MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
   await dotenv.load();
-  await PlayerData.init();
+  await PlayerInfo.init();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
@@ -50,7 +52,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   late TextComponent score = buildScore();
   final AudioHelper audio = AudioHelper();
   final AdmobAds ads = AdmobAds();
-  final Player player = Player();
+  final TheBird player = TheBird();
   final Clouds clouds = Clouds();
   final Pipes pipes = Pipes();
   final Wing wing = Wing();
@@ -65,20 +67,55 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   int scorePoint = 0;
   bool sound = true;
   int deadTimes = 0;
-  PlayerData playerData = PlayerData();
+  PlayerInfo playerData = PlayerInfo();
   ValueNotifier<int> coins = ValueNotifier<int>(0);
   ValueNotifier<int> highest = ValueNotifier<int>(0);
+  final ValueNotifier<ChallengeData?> leaderboardChallenge = ValueNotifier<ChallengeData?>(null);
+  bool hasShownChallengeAnimation = false;
 
   @override
   Future<void> onLoad() async {
     // debugMode = true;
-    playerData = await PlayerData.load();
+    playerData = await PlayerInfo.load();
     coins.value = playerData.coins;
     highest.value = playerData.highScore;
+
+    playerData.addListener(() {
+      coins.value = playerData.coins;
+      highest.value = playerData.highScore;
+    });
+
+    // Sync leaderboard score and fetch challenge once
+    LeaderboardHelper.syncHighScore(playerData);
+    LeaderboardHelper.fetchChallengeData(playerData.highScore).then((data) {
+      leaderboardChallenge.value = data;
+    });
+
     player.updateTrail(playerData.selectedTrail);
     player.skin = playerData.selectedSkin;
 
-    addAll({clouds, player, pipes, score,wing});
+
+    // Listen for account changes
+    GameAuth.player.listen((isAuthenticated) async {
+      if (isAuthenticated != null) {
+        final newData = await PlayerInfo.load();
+        if (playerData.playerId != newData.playerId) {
+          playerData.runBatched([() async => playerData.updateFrom(newData)]);
+          // Re-sync game state
+          LeaderboardHelper.syncHighScore(playerData);
+          player.updateTrail(playerData.selectedTrail);
+          await player.updateSkin(playerData.selectedSkin);
+          updateScore();
+          
+          // Re-fetch challenges for new account
+          LeaderboardHelper.fetchChallengeData(playerData.highScore).then((data) {
+            leaderboardChallenge.value = data;
+          });
+        }
+      }
+    });
+
+    addAll({clouds, player, pipes, score, wing});
     updateScore();
 
     // Initial overlays
@@ -121,7 +158,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     // Check Lucky Day usage
     if (isLuckyDayActive.value) {
       if (playerData.luckyDay > 0) {
-        playerData.useLuckyDay();
+        playerData.runBatched([() => playerData.useLuckyDay()]);
       } else {
         isLuckyDayActive.value = false;
       }
@@ -130,7 +167,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     // Check Shield usage
     if (isShieldEnabled) {
       if (playerData.shields > 0) {
-        playerData.useShield();
+        playerData.runBatched([() => playerData.useShield()]);
         player.hasActiveShield = true;
       } else {
         isShieldEnabled = false;
@@ -146,11 +183,16 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   String? tempTrail;
+  Skins? tempSkin;
 
   void gameOver() {
     if (tempTrail != null) {
       player.updateTrail(playerData.selectedTrail); // Use saved data
       tempTrail = null;
+    }
+    if (tempSkin != null) {
+      player.updateSkin(playerData.selectedSkin);
+      tempSkin = null;
     }
 
     Functions.addScore(scorePoint);
@@ -160,12 +202,12 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     showingAd();
     isStarted = false;
     audio.setStarted(isStarted);
-    overlays.add("end");
+    overlays.add("start");
   }
 
   void checkHighest() {
     if (scorePoint <= playerData.highScore) return;
-    playerData.updateHighScore(scorePoint);
+    playerData.runBatched([() => playerData.updateHighScore(scorePoint)]);
     highest.value = scorePoint;
     newHighest = true;
   }

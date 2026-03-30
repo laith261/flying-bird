@@ -6,6 +6,7 @@ import 'package:game/component/pipe.dart';
 
 import '../configs/const.dart';
 import '../main.dart';
+import 'helpers/ghost_helper.dart';
 
 class Pipes extends PositionComponent with HasGameReference<MyWorld> {
   Pipes();
@@ -98,6 +99,15 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
 
     game.scorePoint++;
     game.updateScore();
+
+    // Ghost Skin Ability: 1/10 chance when passing a pipe
+    if (game.player.skin.skin.isGhost &&
+        !game.player.isGhostMode &&
+        !game.player.isInvincible) {
+      if (Random().nextInt(7) == 0) {
+        GhostHelper.activateGhostMode(game.player);
+      }
+    }
   }
 
   void reset() {

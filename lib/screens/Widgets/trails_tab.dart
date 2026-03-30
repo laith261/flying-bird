@@ -1,10 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:game/main.dart';
 import 'package:game/component/trailes/trail_enum.dart';
-import 'package:game/screens/Widgets/shop_helper.dart';
+import 'package:game/configs/trail_painter_helper.dart';
+
+import '../../configs/shop_helper.dart';
 
 class TrailsTab extends StatelessWidget {
   final MyWorld game;
@@ -94,7 +94,7 @@ class TrailsTab extends StatelessWidget {
                     Expanded(
                       flex: 2,
                       child: Padding(
-                        padding: const EdgeInsets.all(10.0),
+                        padding: EdgeInsets.zero,
                         child: Opacity(
                           opacity: isLevelLocked || !isOwned ? 0.3 : 1.0,
                           child: CustomPaint(
@@ -129,6 +129,12 @@ class TrailsTab extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             )
+                          else if (isTemp)
+                            const Text("TEMP",
+                                style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12))
                           else if (!isOwned)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -145,12 +151,6 @@ class TrailsTab extends StatelessWidget {
                                 ),
                               ],
                             )
-                          else if (isTemp)
-                            const Text("TEMP",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12))
                           else if (isSelected)
                             const Text("EQUIPPED",
                                 style: TextStyle(
@@ -173,7 +173,7 @@ class TrailsTab extends StatelessWidget {
                       child: const Icon(Icons.lock, color: Colors.white, size: 40),
                     ),
                   )
-                else if (!isOwned)
+                else if (!isOwned && !isTemp)
                   Center(
                     child: Container(
                       padding: const EdgeInsets.all(15),
@@ -221,156 +221,26 @@ class TrailPreviewPainter extends CustomPainter {
         ? trailId.substring(0, trailId.length - 4)
         : trailId;
 
-    final paint = Paint()..color = Colors.orange;
-
-    // Helper to draw glow
-    void drawGlow(Path path, Color color) {
-      if (!isPro) return;
-      final glowPaint = Paint()
-        ..color = color.withAlpha(153)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8)
-        ..style = paint.style
-        ..strokeWidth = paint.strokeWidth + 4
-        ..strokeCap = paint.strokeCap;
-      canvas.drawPath(path, glowPaint);
-    }
+    // final paint = Paint()..color = Colors.orange;
 
     switch (baseId) {
       case 'line':
-        paint
-          ..strokeWidth = 6
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke;
-
-        if (isPro) {
-          // Glow for line
-          final path = Path();
-          path.moveTo(size.width * 0.1, center.dy);
-          path.lineTo(size.width * 0.9, center.dy);
-
-          final glowPaint = Paint()
-            ..strokeWidth = 10
-            ..strokeCap = StrokeCap.round
-            ..style = PaintingStyle.stroke
-            // Reverting to basic glow color
-            ..color = Colors.orange.withAlpha(128)
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
-
-          canvas.drawPath(path, glowPaint);
-
-          // Revert to Rainbow Shader from primaries (Pre-modern)
-          final shader = LinearGradient(
-            colors: Colors.primaries,
-          ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-          paint.shader = shader;
-        } else {
-          paint.color = Colors.orange;
-        }
-
-        canvas.drawLine(
-          Offset(size.width * 0.1, center.dy),
-          Offset(size.width * 0.9, center.dy),
-          paint,
-        );
-        paint.shader = null;
+        TrailPainterHelper.drawLineTrail(canvas, size, center, isPro);
         break;
       case 'circle':
-        paint.style = PaintingStyle.fill;
-        List<Color> colors = [Colors.orange, Colors.orange, Colors.orange];
-        if (isPro) {
-          // Revert to Red/Green/Blue
-          colors = [Colors.red, Colors.green, Colors.blue];
-        }
-
-        for (int i = 0; i < 3; i++) {
-          Offset offset = center;
-          if (i == 0) offset += const Offset(-25, 0);
-          if (i == 2) offset += const Offset(25, 0);
-          double radius = i == 1 ? 10 : 7;
-          paint.color = colors[i];
-          canvas.drawCircle(offset, radius, paint);
-        }
+        TrailPainterHelper.drawCircleTrail(canvas, size, center, isPro);
         break;
       case 'rect':
-        paint
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 3;
-        final rect = Rect.fromCenter(center: center, width: 30, height: 30);
-
-        if (isPro) {
-          canvas.save();
-          canvas.translate(center.dx, center.dy);
-          canvas.rotate(pi / 4);
-          final path = Path()..addRect(Rect.fromCenter(center: Offset.zero, width: 30, height: 30));
-          drawGlow(path, Colors.purple);
-          paint.color = Colors.purple;
-          canvas.drawPath(path, paint);
-          canvas.restore();
-        } else {
-          canvas.drawRect(rect, paint);
-        }
+        TrailPainterHelper.drawRectTrail(canvas, size, center, isPro);
         break;
       case 'star':
-        paint.style = PaintingStyle.fill;
-        Path starPath = Path();
-        double outerRadius = 15;
-        double innerRadius = 7;
-
-        for (int i = 0; i < 5; i++) {
-          double angle = (i * 2 * pi / 5) - (pi / 2);
-          if (i == 0) {
-            starPath.moveTo(center.dx + outerRadius * cos(angle),
-                center.dy + outerRadius * sin(angle));
-          } else {
-            starPath.lineTo(center.dx + outerRadius * cos(angle),
-                center.dy + outerRadius * sin(angle));
-          }
-          angle += pi / 5;
-          starPath.lineTo(center.dx + innerRadius * cos(angle),
-              center.dy + innerRadius * sin(angle));
-        }
-        starPath.close();
-
-        if (isPro) {
-          drawGlow(starPath, Colors.amber);
-          paint.color = Colors.amber;
-        } else {
-          paint.color = Colors.orange;
-        }
-        canvas.drawPath(starPath, paint);
+        TrailPainterHelper.drawStarTrail(canvas, size, center, isPro);
         break;
       case 'lightning':
-        paint
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 4
-          ..strokeCap = StrokeCap.round;
-
-        Path bolt = Path();
-        bolt.moveTo(center.dx + 5, center.dy - 15);
-        bolt.lineTo(center.dx - 10, center.dy + 5);
-        bolt.lineTo(center.dx + 5, center.dy);
-        bolt.lineTo(center.dx - 5, center.dy + 15);
-
-        if (isPro) {
-          drawGlow(bolt, Colors.blue);
-          paint.color = Colors.blue;
-        } else {
-          paint.color = Colors.orange;
-        }
-        canvas.drawPath(bolt, paint);
+        TrailPainterHelper.drawLightningTrail(canvas, size, center, isPro);
         break;
       default:
-        // 'none'
-        paint
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2
-          ..color = Colors.grey;
-        canvas.drawCircle(center, 15, paint);
-        canvas.drawLine(
-          center + const Offset(-10, -10),
-          center + const Offset(10, 10),
-          paint,
-        );
+        TrailPainterHelper.drawNone(canvas, size, center);
     }
   }
 

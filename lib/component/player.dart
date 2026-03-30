@@ -14,11 +14,18 @@ import 'package:game/component/trailes/star.dart';
 import 'package:game/main.dart';
 
 import '../configs/const.dart';
-import 'skins/skinEnum.dart';
+import 'skins/skin_enum.dart';
+import 'helpers/collision_helper.dart';
+import 'helpers/glow_helper.dart';
 
-class Player extends SpriteComponent
+class TheBird extends SpriteComponent
     with TapCallbacks, HasGameReference<MyWorld>, CollisionCallbacks {
-  Player() : super(size: Vector2(46, 29), anchor: Anchor.center, priority: 2);
+  TheBird()
+    : super(
+        size: Vector2(150 * .45, 90 * .45),
+        anchor: Anchor.center,
+        priority: 2,
+      );
 
   final Vector2 gravity = Vector2(0, Consts.gravity);
   final Vector2 jump = Vector2(0, Consts.jump);
@@ -34,8 +41,9 @@ class Player extends SpriteComponent
   String _selectedTrail = 'none';
   double _trailTimer = 0;
   final double _trailInterval = 0.05;
-  bool _isInvincible = false;
+  bool isInvincible = false;
   bool hasActiveShield = false;
+  bool isGhostMode = false;
 
   @override
   Future<void> onLoad() async {
@@ -110,27 +118,13 @@ class Player extends SpriteComponent
     if (!game.isStarted) return;
 
     if (other is Pipe) {
-      if (_isInvincible) return;
-
-      if (hasActiveShield) {
-        hasActiveShield = false; // Consume the active shield
-        _isInvincible = true;
-        add(
-          TimerComponent(
-            period: 1.0,
-            removeOnFinish: true,
-            onTick: () => _isInvincible = false,
-          ),
-        );
-        // other.removeFromParent();
-        game.audio.playBrake();
-        return;
+      if (CollisionHelper.handlePipeCollision(this, other)) {
+        game.gameOver();
       }
-      game.gameOver();
     } else if (other is Coin) {
       if (other.collect()) {
         game.audio.playPoint();
-        game.playerData.addCoins(1);
+        game.playerData.runBatched([() => game.playerData.addCoins(1)]);
         game.coins.value = game.playerData.coins;
       }
     }
@@ -149,7 +143,7 @@ class Player extends SpriteComponent
     rotate();
     setPlayerPosition();
     _resetAllTrails();
-    _isInvincible = false;
+    isInvincible = false;
     // hasActiveShield = false; // Logic handled in startGame
   }
 
@@ -157,7 +151,7 @@ class Player extends SpriteComponent
   void render(Canvas canvas) {
     // Check if we should render (visibility toggle for flashing)
     bool isVisible = true;
-    if (_isInvincible) {
+    if (isInvincible) {
       isVisible =
           (DateTime.now().millisecondsSinceEpoch / 100).floor() % 2 == 0;
     }
@@ -165,10 +159,11 @@ class Player extends SpriteComponent
     if (!isVisible) return; // Don't render anything if flashing invisible
 
     bool showShield =
-        hasActiveShield ||
-        (!game.isStarted &&
-            game.isShieldEnabled &&
-            game.playerData.shields > 0);
+        (hasActiveShield ||
+            (!game.isStarted &&
+                game.isShieldEnabled &&
+                game.playerData.shields > 0)) &&
+        !isInvincible;
 
     if (showShield) {
       canvas.save();
@@ -229,51 +224,17 @@ class Player extends SpriteComponent
         );
       }
       canvas.restore(); // Restore counter-rotation
-    } else if (_isInvincible) {
-      canvas.save();
-      // Counter-rotate for invincibility effect
-      canvas.translate(width / 2, height / 2);
-      canvas.rotate(-angle);
-      canvas.translate(-width / 2, -height / 2);
-
-      // Invincible Mode: High Energy (Cyan/White) instead of Red
-      double time = DateTime.now().millisecondsSinceEpoch / 1000;
-      double orbitRadius = width * 0.9;
-
-      for (int i = 0; i < 3; i++) {
-        double angleVal = (time * 8) + (i * (2 * pi / 3)); // Fast spin
-
-        // Bright Cyan/White Trails
-        for (int j = 1; j <= 4; j++) {
-          double trailAngle = angleVal - (j * 0.1);
-          double trailX = (width / 2) + orbitRadius * cos(trailAngle);
-          double trailY = (height / 2) + orbitRadius * sin(trailAngle);
-
-          canvas.drawCircle(
-            Offset(trailX, trailY),
-            5.0 - (j * 0.8),
-            Paint()
-              ..color = Colors.cyanAccent.withAlpha(
-                ((0.8 - (j * 0.15)) * 255).toInt(),
-              ),
-          );
-        }
-
-        double satelliteX = (width / 2) + orbitRadius * cos(angleVal);
-        double satelliteY = (height / 2) + orbitRadius * sin(angleVal);
-
-        canvas.drawCircle(
-          Offset(satelliteX, satelliteY),
-          7,
-          Paint()
-            ..color = Colors.white
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6),
-        );
-      }
-      canvas.restore(); // Restore counter-rotation
+    } else if (isInvincible) {
+      // No orbiting effect during flash as requested
     }
 
+    if (isGhostMode && !isInvincible) {
+      GlowHelper.drawGlow(canvas, this);
+    }
     super.render(canvas); // Draw bird on top
+    if (isGhostMode && !isInvincible) {
+      canvas.restore();
+    }
   }
 
   @override
@@ -310,6 +271,14 @@ class Player extends SpriteComponent
     }
 
     skin.skin.ability(this, dt);
+
+    // Update trails opacity
+    double targetOpacity = isGhostMode ? 0.6 : 1.0;
+    _lineTrail.opacity = targetOpacity;
+    _circleTrail.opacity = targetOpacity;
+    _rotateRectTrail.opacity = targetOpacity;
+    _starTrail.opacity = targetOpacity;
+    _lightningTrail.opacity = targetOpacity;
 
     super.update(dt);
   }

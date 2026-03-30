@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import 'package:game/component/skins/skinEnum.dart';
-import 'package:game/screens/Widgets/shop_helper.dart';
+import 'package:game/component/skins/skin_enum.dart';
 import 'package:game/screens/Widgets/trails_tab.dart';
 import 'package:game/screens/Widgets/power_ups_tab.dart';
 import 'package:game/screens/Widgets/birds_tab.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:game/main.dart';
+
+import '../configs/shop_helper.dart';
 
 class ShopScreen extends StatefulWidget {
   final MyWorld game;
@@ -18,39 +19,24 @@ class ShopScreen extends StatefulWidget {
 
 class _ShopScreenState extends State<ShopScreen> {
 
-  String selectedTrail = 'none';
-  List<String> purchasedTrails = ['none'];
-
   bool isProMode = false;
 
   @override
   void initState() {
     super.initState();
-    _loadData();
-  }
-
-  void _loadData() {
-    String savedTrail = widget.game.playerData.selectedTrail;
-    List<String> bought = List.from(widget.game.playerData.purchasedTrails);
-    setState(() {
-      selectedTrail = widget.game.tempTrail ?? savedTrail;
-      purchasedTrails = bought;
-    });
   }
 
   void _selectTrail(String id) {
     if (widget.game.tempTrail != null) {
       widget.game.tempTrail = null;
     }
-    setState(() {
-      selectedTrail = id;
-    });
 
-    widget.game.playerData.equipTrail(id);
-    // _dataManage.savePlayerData(widget.game.playerData);
-
+    widget.game.playerData.runBatched([() => widget.game.playerData.equipTrail(id)]);
     // Update player immediately if game is running/ready
     widget.game.player.updateTrail(id);
+    
+    setState(() {}); // Still call setState to rebuild the UI
+
     widget.game.analytics.logEvent(
       name: 'select_trail',
       parameters: {'trail': id},
@@ -328,6 +314,49 @@ class _ShopScreenState extends State<ShopScreen> {
               style: GoogleFonts.luckiestGuy(
                 textStyle: const TextStyle(color: Colors.grey),
               ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (widget.game.ads.rewardedAd != null) {
+                Navigator.of(context).pop();
+                widget.game.ads.showRewardedAd(widget.game, () {
+                  widget.game.tempSkin = skin;
+                  widget.game.player.updateSkin(skin);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Skin equipped for one life!"),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  setState(() {});
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Ad not ready yet, try again later"),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.play_circle_fill,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "Try",
+                  style: GoogleFonts.luckiestGuy(
+                    textStyle: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
             ),
           ),
           ElevatedButton(

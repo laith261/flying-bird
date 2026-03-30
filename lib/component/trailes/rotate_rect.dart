@@ -23,8 +23,10 @@ class RotateRectTrail extends PositionComponent {
   final List<RotateRectParticle> _particles = [];
   bool isPro = false;
   double _time = 0;
+  double opacity = 1.0;
 
   RotateRectTrail() : super(priority: 1);
+
 
   void addPoint(Vector2 point) {
     _particles.add(
@@ -61,10 +63,18 @@ class RotateRectTrail extends PositionComponent {
   void render(Canvas canvas) {
     if (_particles.isEmpty) return;
 
+    if (opacity < 1.0) {
+      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+    }
+
     if (isPro) {
       _renderPro(canvas);
     } else {
       _renderStandard(canvas);
+    }
+
+    if (opacity < 1.0) {
+      canvas.restore();
     }
   }
 

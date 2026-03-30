@@ -8,12 +8,10 @@ class StartButton extends StatelessWidget {
   const StartButton({
     super.key,
     required this.game,
-    required this.page,
     required this.text,
   });
 
   final MyWorld game;
-  final String page;
   final String text;
 
   @override
@@ -21,7 +19,7 @@ class StartButton extends StatelessWidget {
     return MaterialButton(
       color: Colors.orangeAccent,
       onPressed: () {
-        game.overlays.remove(page);
+        game.overlays.remove("start");
         game.startGame(withRewarded: game.ads.didGetRewarded);
       },
 

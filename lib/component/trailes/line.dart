@@ -6,8 +6,10 @@ import '../../configs/const.dart';
 class LineTrail extends PositionComponent {
   final List<Vector2> _points = [];
   bool isPro = false;
+  double opacity = 1.0;
 
   LineTrail() : super(priority: 1);
+
 
   void addPoint(Vector2 point) {
     _points.add(point.clone());
@@ -38,12 +40,21 @@ class LineTrail extends PositionComponent {
   void render(Canvas canvas) {
     if (_points.isEmpty || _points.length < 2) return;
 
+    if (opacity < 1.0) {
+      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+    }
+
     if (isPro) {
       _renderPro(canvas);
     } else {
       _renderStandard(canvas);
     }
+
+    if (opacity < 1.0) {
+      canvas.restore();
+    }
   }
+
 
   void _renderPro(Canvas canvas) {
     final neonColors = [

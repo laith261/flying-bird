@@ -28,7 +28,7 @@ class AdmobAds {
 
   Future<void> createInterstitialAd() async {
     InterstitialAd.load(
-      adUnitId: dotenv.env['InterstitialAd']!,
+      adUnitId: dotenv.env['InterstitialAd'] ?? 'ca-app-pub-3940256099942544/1033173712',
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
@@ -39,7 +39,7 @@ class AdmobAds {
           _numInterstitialLoadAttempts += 1;
           _interstitialAd = null;
           if (_numInterstitialLoadAttempts < _maxFailedLoadAttempts) {
-            createInterstitialAd();
+            Timer(Duration(seconds: 5), () => createInterstitialAd());
           }
         },
       ),
@@ -67,7 +67,7 @@ class AdmobAds {
 
   void loadRewardedAd() {
     RewardedAd.load(
-      adUnitId: dotenv.env['RewardedAd']!,
+      adUnitId: dotenv.env['RewardedAd'] ?? 'ca-app-pub-3940256099942544/5224354917',
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => _rewardedAd = ad,
@@ -110,10 +110,11 @@ class AdmobAds {
 
     if (size == null) {
       // Unable to get width of anchored banner.
+      _loadingBanner = false;
       return;
     }
     await BannerAd(
-      adUnitId: dotenv.env['BannerAd']!,
+      adUnitId: dotenv.env['BannerAd'] ?? 'ca-app-pub-3940256099942544/6300978111',
       request: const AdRequest(),
       size: size,
       listener: BannerAdListener(

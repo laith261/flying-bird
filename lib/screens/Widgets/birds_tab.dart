@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:game/main.dart';
-import 'package:game/component/skins/skinEnum.dart';
-import 'package:game/screens/Widgets/shop_helper.dart';
+import 'package:game/component/skins/skin_enum.dart';
+
+import '../../configs/shop_helper.dart';
 
 class BirdsTab extends StatelessWidget {
   final MyWorld game;
@@ -26,6 +27,7 @@ class BirdsTab extends StatelessWidget {
         final skin = Skins.values[index];
         final bool isOwned = ShopHelper.isOwned(game, skin);
         final bool isSelected = ShopHelper.isSelected(game, skin);
+        final bool isTemp = game.tempSkin == skin;
         final int price = ShopHelper.getPrice(skin);
         final String description = ShopHelper.getDescription(skin);
 
@@ -48,12 +50,12 @@ class BirdsTab extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               color: isSelected
-                  ? Colors.orange.withAlpha(26)
+                  ? (isTemp ? Colors.blue.withAlpha(26) : Colors.orange.withAlpha(26))
                   : Colors.white,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isSelected
-                    ? Colors.orange
+                    ? (isTemp ? Colors.blue : Colors.orange)
                     : Colors.grey.withAlpha(77),
                 width: isSelected ? 4 : 2,
               ),
@@ -113,7 +115,17 @@ class BirdsTab extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          if (!isOwned)
+                          if (isTemp)
+                            const Text(
+                              "TEMP",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.0,
+                                fontSize: 12,
+                              ),
+                            )
+                          else if (!isOwned)
                             Row(
                               mainAxisAlignment:
                                   MainAxisAlignment.center,
@@ -149,7 +161,7 @@ class BirdsTab extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (!isOwned)
+                if (!isOwned && !isTemp)
                   Center(
                     child: Container(
                       padding: const EdgeInsets.all(15),
@@ -164,7 +176,17 @@ class BirdsTab extends StatelessWidget {
                       ),
                     ),
                   ),
-                if (isSelected)
+                if (isTemp)
+                  const Positioned(
+                    top: 10,
+                    right: 10,
+                    child: Icon(
+                      Icons.access_time_filled,
+                      color: Colors.blue,
+                      size: 30,
+                    ),
+                  )
+                else if (isSelected)
                   const Positioned(
                     top: 10,
                     right: 10,

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:game/main.dart';
 import 'package:game/component/power_ups/power_up_enum.dart';
-import 'package:game/screens/Widgets/shop_helper.dart';
+
+import '../../configs/shop_helper.dart';
 
 class PowerUpsTab extends StatelessWidget {
   final MyWorld game;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:game/component/skins/skinEnum.dart';
+import 'package:game/component/skins/skin_enum.dart';
 import 'package:game/component/trailes/trail_enum.dart';
 import 'package:game/component/power_ups/power_up_enum.dart';
 import 'package:game/main.dart';
@@ -10,7 +10,7 @@ class ShopHelper {
   }
 
   static bool isSelected(MyWorld game, Skins skin) {
-    return game.playerData.selectedSkin == skin;
+    return (game.tempSkin ?? game.playerData.selectedSkin) == skin;
   }
 
   static int getPrice(Skins skin) {
@@ -25,9 +25,12 @@ class ShopHelper {
     final price = getPrice(skin);
     
     if (game.playerData.coins >= price) {
-      await game.playerData.subtractCoins(price);
-      await game.playerData.unlockSkin(skin.name);
-      await game.playerData.equipSkin(skin);
+      if (game.tempSkin != null) game.tempSkin = null;
+      await game.playerData.runBatched([
+        () => game.playerData.subtractCoins(price),
+        () => game.playerData.unlockSkin(skin.name),
+        () => game.playerData.equipSkin(skin),
+      ]);
       await game.player.updateSkin(skin);
       onComplete();
       
@@ -50,9 +53,10 @@ class ShopHelper {
     }
   }
 
-  static void equipSkin(MyWorld game, Skins skin, VoidCallback onComplete) {
-    game.playerData.equipSkin(skin);
-    game.player.updateSkin(skin);
+  static Future<void> equipSkin(MyWorld game, Skins skin, VoidCallback onComplete) async {
+    if (game.tempSkin != null) game.tempSkin = null;
+    await game.playerData.runBatched([() => game.playerData.equipSkin(skin)]);
+    await game.player.updateSkin(skin);
     onComplete();
   }
 
@@ -71,9 +75,11 @@ class ShopHelper {
 
   static Future<void> buyTrail(MyWorld game, String trailId, int price, VoidCallback onComplete) async {
     if (game.playerData.coins >= price) {
-      await game.playerData.subtractCoins(price);
-      await game.playerData.unlockTrail(trailId);
-      game.playerData.equipTrail(trailId);
+      await game.playerData.runBatched([
+        () => game.playerData.subtractCoins(price),
+        () => game.playerData.unlockTrail(trailId),
+        () => game.playerData.equipTrail(trailId),
+      ]);
       game.player.updateTrail(trailId);
       onComplete();
     }
@@ -91,12 +97,16 @@ class ShopHelper {
 
   static Future<void> buyPowerUp(BuildContext context, MyWorld game, PowerUps powerUp, VoidCallback onComplete) async {
     if (game.playerData.coins >= powerUp.price) {
-      await game.playerData.subtractCoins(powerUp.price);
-      if (powerUp == PowerUps.shield) {
-        await game.playerData.addShield(1);
-      } else if (powerUp == PowerUps.luckyDay) {
-        await game.playerData.addLuckyDay(1);
-      }
+      await game.playerData.runBatched([
+        () => game.playerData.subtractCoins(powerUp.price),
+        () async {
+          if (powerUp == PowerUps.shield) {
+            await game.playerData.addShield(1);
+          } else if (powerUp == PowerUps.luckyDay) {
+            await game.playerData.addLuckyDay(1);
+          }
+        }
+      ]);
       onComplete();
 
       if (!context.mounted) return;

@@ -5,5 +5,5 @@ class Bird extends Skin {
   const Bird({required super.image, required super.name});
 
   @override
-  void ability(Player player, double dt) {}
+  void ability(TheBird player, double dt) {}
 }
