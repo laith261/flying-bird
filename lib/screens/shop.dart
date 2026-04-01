@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:game/component/skins/skin_enum.dart';
 import 'package:game/screens/Widgets/trails_tab.dart';
 import 'package:game/screens/Widgets/power_ups_tab.dart';
 import 'package:game/screens/Widgets/birds_tab.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:game/main.dart';
-
-import '../configs/shop_helper.dart';
 
 class ShopScreen extends StatefulWidget {
   final MyWorld game;
