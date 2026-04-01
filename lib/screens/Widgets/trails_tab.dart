@@ -6,62 +6,187 @@ import 'package:game/configs/trail_painter_helper.dart';
 
 import '../../configs/shop_helper.dart';
 
-class TrailsTab extends StatelessWidget {
+class TrailsTab extends StatefulWidget {
   final MyWorld game;
   final bool isProMode;
-  final VoidCallback onStateChange;
-  final Function(String, String, int) showPurchaseConfirmation;
-  final Function(String) selectTrail;
 
   const TrailsTab({
     super.key,
     required this.game,
     required this.isProMode,
-    required this.onStateChange,
-    required this.showPurchaseConfirmation,
-    required this.selectTrail,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      scrollDirection: Axis.horizontal,
-      itemCount: Trails.values.length,
-      itemBuilder: (context, index) {
-        final trail = Trails.values[index];
-        final String baseId = trail.id;
-        final bool isPro = isProMode && baseId != 'none';
-        final String trailId = isPro ? '${baseId}_pro' : baseId;
-        final String name = isPro ? '${trail.name} Pro' : trail.name;
+  State<TrailsTab> createState() => _TrailsTabState();
+}
 
-        final int price = ShopHelper.getTrailPrice(trail, isPro);
-        final int requiredScore = trail.requiredScore;
+class _TrailsTabState extends State<TrailsTab> {
+  void _selectTrail(String id) {
+    if (widget.game.tempTrail != null) {
+      widget.game.tempTrail = null;
+    }
 
-        final bool isSelected = ShopHelper.isTrailSelected(game, trailId);
-        final bool isTemp = game.tempTrail == trailId;
-        final bool isOwned = ShopHelper.isTrailOwned(game, trailId);
-        final bool isLevelLocked = game.highest.value < requiredScore;
+    widget.game.playerData.runBatched([() => widget.game.playerData.equipTrail(id)]);
+    widget.game.player.updateTrail(id);
+    
+    setState(() {}); 
 
-        return GestureDetector(
-          onTap: () {
-            if (isLevelLocked) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text("Need $requiredScore score to unlock!"),
-                  duration: const Duration(seconds: 1),
+    widget.game.analytics.logEvent(
+      name: 'select_trail',
+      parameters: {'trail': id},
+    );
+  }
+
+  void _buyTrail(String trailId, int price) {
+    ShopHelper.buyTrail(widget.game, trailId, price, () {
+      setState(() {
+        _selectTrail(trailId);
+      });
+      widget.game.analytics.logEvent(
+        name: 'buy_trail',
+        parameters: {'trail': trailId},
+      );
+    });
+  }
+
+  void _showPurchaseConfirmation(String trailId, String trailName, int price) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Confirm Purchase",
+          style: GoogleFonts.luckiestGuy(
+            textStyle: const TextStyle(color: Colors.orange),
+          ),
+        ),
+        content: Text(
+          "Do you want to buy $trailName for $price coins?",
+          style: GoogleFonts.luckiestGuy(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              "Cancel",
+              style: GoogleFonts.luckiestGuy(
+                textStyle: const TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (widget.game.ads.rewardedAd != null) {
+                Navigator.of(context).pop();
+                widget.game.ads.showRewardedAd(widget.game, () {
+                  widget.game.tempTrail = trailId;
+                  widget.game.player.updateTrail(trailId);
+                  
+                  // Force list rebuild to show the 'TEMP' indicator
+                  widget.game.playerData.addShield(0);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Trail equipped for one life!"),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  setState(() {});
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Ad not ready yet, try again later"),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.play_circle_fill,
+                  color: Colors.white,
+                  size: 16,
                 ),
-              );
-              return;
-            }
+                const SizedBox(width: 4),
+                Text(
+                  "Try",
+                  style: GoogleFonts.luckiestGuy(
+                    textStyle: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: widget.game.playerData.coins >= price
+                ? () {
+                    Navigator.of(context).pop();
+                    _buyTrail(trailId, price);
+                  }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.game.playerData.coins >= price
+                  ? Colors.orange
+                  : Colors.grey,
+            ),
+            child: Text(
+              "Buy",
+              style: GoogleFonts.luckiestGuy(
+                textStyle: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-            if (!isOwned) {
-              showPurchaseConfirmation(trailId, name, price);
-              return;
-            }
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: widget.game.playerData,
+      builder: (context, _) {
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          scrollDirection: Axis.horizontal,
+          itemCount: Trails.values.length,
+          itemBuilder: (context, index) {
+            final trail = Trails.values[index];
+            final String baseId = trail.id;
+            final bool isPro = widget.isProMode && baseId != 'none';
+            final String trailId = isPro ? '${baseId}_pro' : baseId;
+            final String name = isPro ? '${trail.name} Pro' : trail.name;
 
-            selectTrail(trailId);
-          },
+            final int price = ShopHelper.getTrailPrice(trail, isPro);
+            final int requiredScore = trail.requiredScore;
+
+            final bool isSelected = ShopHelper.isTrailSelected(widget.game, trailId);
+            final bool isTemp = widget.game.tempTrail == trailId;
+            final bool isOwned = ShopHelper.isTrailOwned(widget.game, trailId);
+            final bool isLevelLocked = widget.game.highest.value < requiredScore;
+
+            return GestureDetector(
+              onTap: () {
+                if (isLevelLocked) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Need $requiredScore score to unlock!"),
+                      duration: const Duration(seconds: 1),
+                    ),
+                  );
+                  return;
+                }
+
+                if (!isOwned) {
+                  _showPurchaseConfirmation(trailId, name, price);
+                  return;
+                }
+
+                _selectTrail(trailId);
+              },
           child: Container(
             width: 160,
             margin: const EdgeInsets.only(right: 15, bottom: 50, top: 20),
@@ -96,7 +221,7 @@ class TrailsTab extends StatelessWidget {
                       child: Padding(
                         padding: EdgeInsets.zero,
                         child: Opacity(
-                          opacity: isLevelLocked || !isOwned ? 0.3 : 1.0,
+                          opacity: isLevelLocked || (!isOwned && !isTemp) ? 0.3 : 1.0,
                           child: CustomPaint(
                             painter: TrailPreviewPainter(trailId),
                             size: Size.infinite,
@@ -205,6 +330,7 @@ class TrailsTab extends StatelessWidget {
         );
       },
     );
+  });
   }
 }
 

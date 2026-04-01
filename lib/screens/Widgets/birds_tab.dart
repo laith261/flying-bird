@@ -5,42 +5,143 @@ import 'package:game/component/skins/skin_enum.dart';
 
 import '../../configs/shop_helper.dart';
 
-class BirdsTab extends StatelessWidget {
+class BirdsTab extends StatefulWidget {
   final MyWorld game;
-  final VoidCallback onStateChange;
-  final Function(Skins, int) showSkinPurchaseConfirmation;
 
   const BirdsTab({
     super.key,
     required this.game,
-    required this.onStateChange,
-    required this.showSkinPurchaseConfirmation,
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      scrollDirection: Axis.horizontal,
-      itemCount: Skins.values.length,
-      itemBuilder: (context, index) {
-        final skin = Skins.values[index];
-        final bool isOwned = ShopHelper.isOwned(game, skin);
-        final bool isSelected = ShopHelper.isSelected(game, skin);
-        final bool isTemp = game.tempSkin == skin;
-        final int price = ShopHelper.getPrice(skin);
-        final String description = ShopHelper.getDescription(skin);
+  State<BirdsTab> createState() => _BirdsTabState();
+}
 
-        return GestureDetector(
-          onTap: () {
-            if (!isOwned) {
-              showSkinPurchaseConfirmation(skin, price);
-            } else {
-              ShopHelper.equipSkin(game, skin, () {
-                onStateChange();
-              });
-            }
-          },
+class _BirdsTabState extends State<BirdsTab> {
+  void _showSkinPurchaseConfirmation(Skins skin, int price) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(
+          "Confirm Purchase",
+          style: GoogleFonts.luckiestGuy(
+            textStyle: const TextStyle(color: Colors.orange),
+          ),
+        ),
+        content: Text(
+          "Do you want to buy ${skin.name} for $price coins?",
+          style: GoogleFonts.luckiestGuy(),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              "Cancel",
+              style: GoogleFonts.luckiestGuy(
+                textStyle: const TextStyle(color: Colors.grey),
+              ),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              if (widget.game.ads.rewardedAd != null) {
+                Navigator.of(context).pop();
+                widget.game.ads.showRewardedAd(widget.game, () {
+                  widget.game.tempSkin = skin;
+                  widget.game.player.updateSkin(skin);
+                  
+                  // Force list rebuild to show the 'TEMP' indicator
+                  widget.game.playerData.addShield(0);
+                  
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Skin equipped for one life!"),
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                  setState(() {});
+                });
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Ad not ready yet, try again later"),
+                    duration: Duration(seconds: 1),
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.play_circle_fill,
+                  color: Colors.white,
+                  size: 16,
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "Try",
+                  style: GoogleFonts.luckiestGuy(
+                    textStyle: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          ElevatedButton(
+            onPressed: widget.game.playerData.coins >= price
+                ? () {
+                    Navigator.of(context).pop();
+                    ShopHelper.buySkin(context, widget.game, skin, () {
+                      setState(() {});
+                    });
+                  }
+                : null,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: widget.game.playerData.coins >= price
+                  ? Colors.orange
+                  : Colors.grey,
+            ),
+            child: Text(
+              "Buy",
+              style: GoogleFonts.luckiestGuy(
+                textStyle: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: widget.game.playerData,
+      builder: (context, _) {
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          scrollDirection: Axis.horizontal,
+          itemCount: Skins.values.length,
+          itemBuilder: (context, index) {
+            final skin = Skins.values[index];
+            final bool isOwned = ShopHelper.isOwned(widget.game, skin);
+            final bool isSelected = ShopHelper.isSelected(widget.game, skin);
+            final bool isTemp = widget.game.tempSkin == skin;
+            final int price = ShopHelper.getPrice(skin);
+            final String description = ShopHelper.getDescription(skin);
+
+            return GestureDetector(
+              onTap: () {
+                if (!isOwned) {
+                  _showSkinPurchaseConfirmation(skin, price);
+                } else {
+                  ShopHelper.equipSkin(widget.game, skin, () {
+                    setState(() {});
+                  });
+                }
+              },
           child: Container(
             width: 160,
             margin: const EdgeInsets.only(
@@ -202,5 +303,6 @@ class BirdsTab extends StatelessWidget {
         );
       },
     );
+  });
   }
 }

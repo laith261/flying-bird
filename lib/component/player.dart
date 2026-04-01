@@ -48,7 +48,7 @@ class TheBird extends SpriteComponent
   @override
   Future<void> onLoad() async {
     setPlayerPosition();
-    sprite = await Sprite.load(skin.image);
+    sprite = skin.sprite;
     add(CircleHitbox());
 
     // Add all trails to game
@@ -71,7 +71,7 @@ class TheBird extends SpriteComponent
 
   Future<void> updateSkin(Skins newSkin) async {
     skin = newSkin;
-    sprite = await Sprite.load(skin.image);
+    sprite = skin.sprite;
   }
 
   void _updateTrailConfig(String trailId) {

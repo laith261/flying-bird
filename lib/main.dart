@@ -77,6 +77,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   Future<void> onLoad() async {
     // debugMode = true;
     playerData = await PlayerInfo.load();
+    await Skins.loadAllSkins();
     coins.value = playerData.coins;
     highest.value = playerData.highScore;
 

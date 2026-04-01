@@ -26,23 +26,6 @@ class _ShopScreenState extends State<ShopScreen> {
     super.initState();
   }
 
-  void _selectTrail(String id) {
-    if (widget.game.tempTrail != null) {
-      widget.game.tempTrail = null;
-    }
-
-    widget.game.playerData.runBatched([() => widget.game.playerData.equipTrail(id)]);
-    // Update player immediately if game is running/ready
-    widget.game.player.updateTrail(id);
-    
-    setState(() {}); // Still call setState to rebuild the UI
-
-    widget.game.analytics.logEvent(
-      name: 'select_trail',
-      parameters: {'trail': id},
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -134,26 +117,31 @@ class _ShopScreenState extends State<ShopScreen> {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Transform.translate(
-                      offset: const Offset(0, 3),
-                      child: Text(
-                        widget.game.playerData.coins.toString(),
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.luckiestGuy(
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black,
-                                offset: Offset(1, 1),
-                                blurRadius: 2,
+                    ValueListenableBuilder<int>(
+                      valueListenable: widget.game.coins,
+                      builder: (context, coins, _) {
+                        return Transform.translate(
+                          offset: const Offset(0, 3),
+                          child: Text(
+                            coins.toString(),
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.luckiestGuy(
+                              textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black,
+                                    offset: Offset(1, 1),
+                                    blurRadius: 2,
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -165,20 +153,14 @@ class _ShopScreenState extends State<ShopScreen> {
                     TrailsTab(
                       game: widget.game,
                       isProMode: isProMode,
-                      onStateChange: () => setState(() {}),
-                      showPurchaseConfirmation: _showPurchaseConfirmation,
-                      selectTrail: _selectTrail,
                     ),
                     // Power Ups Tab
                     PowerUpsTab(
                       game: widget.game,
-                      onStateChange: () => setState(() {}),
                     ),
                     // Birds Tab
                     BirdsTab(
                       game: widget.game,
-                      onStateChange: () => setState(() {}),
-                      showSkinPurchaseConfirmation: _showSkinPurchaseConfirmation,
                     ),
                   ],
                 ),
@@ -186,201 +168,6 @@ class _ShopScreenState extends State<ShopScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  void _showPurchaseConfirmation(String trailId, String trailName, int price) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          "Confirm Purchase",
-          style: GoogleFonts.luckiestGuy(
-            textStyle: const TextStyle(color: Colors.orange),
-          ),
-        ),
-        content: Text(
-          "Do you want to buy $trailName for $price coins?",
-          style: GoogleFonts.luckiestGuy(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              "Cancel",
-              style: GoogleFonts.luckiestGuy(
-                textStyle: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (widget.game.ads.rewardedAd != null) {
-                Navigator.of(context).pop();
-                widget.game.ads.showRewardedAd(widget.game, () {
-                  widget.game.tempTrail = trailId;
-                  widget.game.player.updateTrail(trailId);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Trail equipped for one life!"),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                });
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Ad not ready yet, try again later"),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.play_circle_fill,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  "Try",
-                  style: GoogleFonts.luckiestGuy(
-                    textStyle: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: widget.game.playerData.coins >= price
-                ? () {
-                    Navigator.of(context).pop();
-                    _buyTrail(trailId, price);
-                  }
-                : null, // Disable button if not enough coins
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.game.playerData.coins >= price
-                  ? Colors.orange
-                  : Colors.grey,
-            ),
-            child: Text(
-              "Buy",
-              style: GoogleFonts.luckiestGuy(
-                textStyle: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _buyTrail(String trailId, int price) {
-    ShopHelper.buyTrail(widget.game, trailId, price, () {
-      setState(() {
-        _selectTrail(trailId);
-      });
-      widget.game.analytics.logEvent(
-        name: 'buy_trail',
-        parameters: {'trail': trailId},
-      );
-    });
-  }
-
-  void _showSkinPurchaseConfirmation(Skins skin, int price) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          "Confirm Purchase",
-          style: GoogleFonts.luckiestGuy(
-            textStyle: const TextStyle(color: Colors.orange),
-          ),
-        ),
-        content: Text(
-          "Do you want to buy ${skin.name} for $price coins?",
-          style: GoogleFonts.luckiestGuy(),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(
-              "Cancel",
-              style: GoogleFonts.luckiestGuy(
-                textStyle: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              if (widget.game.ads.rewardedAd != null) {
-                Navigator.of(context).pop();
-                widget.game.ads.showRewardedAd(widget.game, () {
-                  widget.game.tempSkin = skin;
-                  widget.game.player.updateSkin(skin);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Skin equipped for one life!"),
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                  setState(() {});
-                });
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Ad not ready yet, try again later"),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.play_circle_fill,
-                  color: Colors.white,
-                  size: 16,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  "Try",
-                  style: GoogleFonts.luckiestGuy(
-                    textStyle: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          ElevatedButton(
-            onPressed: widget.game.playerData.coins >= price
-                ? () {
-                    Navigator.of(context).pop();
-                    ShopHelper.buySkin(context, widget.game, skin, () {
-                      setState(() {});
-                    });
-                  }
-                : null,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: widget.game.playerData.coins >= price
-                  ? Colors.orange
-                  : Colors.grey,
-            ),
-            child: Text(
-              "Buy",
-              style: GoogleFonts.luckiestGuy(
-                textStyle: const TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

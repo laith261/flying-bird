@@ -39,12 +39,12 @@ class Functions {
         steps: scorePoint,
       ),
     );
-    // Achievements.increment(
-    //   achievement: Achievement(
-    //     androidID: Consts.achievements5000,
-    //     steps: scorePoint,
-    //   ),
-    // );
+    Achievements.increment(
+      achievement: Achievement(
+        androidID: Consts.achievements1000,
+        steps: scorePoint,
+      ),
+    );
     // Achievements.increment(
     //   achievement: Achievement(
     //     androidID: Consts.achievements10000,

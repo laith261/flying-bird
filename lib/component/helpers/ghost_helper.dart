@@ -17,7 +17,7 @@ class GhostHelper {
 
           player.add(
             TimerComponent(
-              period: 5.0,
+              period: 6.0,
               removeOnFinish: true,
               onTick: () {
                 // Stage 3: Final Flash (1 second)

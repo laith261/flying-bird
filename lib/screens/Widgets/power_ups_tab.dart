@@ -5,16 +5,19 @@ import 'package:game/component/power_ups/power_up_enum.dart';
 
 import '../../configs/shop_helper.dart';
 
-class PowerUpsTab extends StatelessWidget {
+class PowerUpsTab extends StatefulWidget {
   final MyWorld game;
-  final VoidCallback onStateChange;
 
   const PowerUpsTab({
     super.key,
     required this.game,
-    required this.onStateChange,
   });
 
+  @override
+  State<PowerUpsTab> createState() => _PowerUpsTabState();
+}
+
+class _PowerUpsTabState extends State<PowerUpsTab> {
   @override
   Widget build(BuildContext context) {
     final powerUps = PowerUps.values;
@@ -24,7 +27,7 @@ class PowerUpsTab extends StatelessWidget {
       itemCount: powerUps.length,
       itemBuilder: (context, index) {
         final powerUp = powerUps[index];
-        final int count = ShopHelper.getPowerUpCount(game, powerUp);
+        final int count = ShopHelper.getPowerUpCount(widget.game, powerUp);
 
         return Container(
           margin: const EdgeInsets.only(bottom: 15, top: 10),
@@ -91,9 +94,9 @@ class PowerUpsTab extends StatelessWidget {
                   ElevatedButton(
                     onPressed: () => ShopHelper.buyPowerUp(
                       context,
-                      game,
+                      widget.game,
                       powerUp,
-                      onStateChange,
+                      () => setState(() {}),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
