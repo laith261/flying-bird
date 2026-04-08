@@ -6,7 +6,7 @@ import 'package:game/component/skins/ghost.dart';
 
 enum Skins {
   bird(
-    Bird(image: 'bird/skins/bird.png', name: 'Bird5'),
+    Bird(image: 'bird/skins/bird.png', name: 'Bird'),
     0,
     'The classic bird.',
   ),

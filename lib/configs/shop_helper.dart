@@ -42,6 +42,10 @@ class ShopHelper {
           duration: const Duration(seconds: 1),
         ),
       );
+      game.analytics.logEvent(
+        name: 'buy_skin',
+        parameters: {'skin': skin.name},
+      );
     } else {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

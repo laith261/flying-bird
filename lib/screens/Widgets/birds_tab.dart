@@ -59,6 +59,10 @@ class _BirdsTabState extends State<BirdsTab> {
                       duration: Duration(seconds: 2),
                     ),
                   );
+                  widget.game.analytics.logEvent(
+                    name: 'try_skin',
+                    parameters: {'skin': skin.name},
+                  );
                   setState(() {});
                 });
               } else {
