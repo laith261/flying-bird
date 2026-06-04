@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import 'game_trail.dart';
 import '../../configs/const.dart';
 
 class RotateRectParticle {
@@ -19,7 +20,7 @@ class RotateRectParticle {
   });
 }
 
-class RotateRectTrail extends PositionComponent {
+class RotateRectTrail extends PositionComponent implements GameTrail {
   final List<RotateRectParticle> _particles = [];
   bool isPro = false;
   double _time = 0;

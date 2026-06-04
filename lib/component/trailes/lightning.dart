@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import 'game_trail.dart';
 import '../../configs/const.dart';
 
 class LightningParticle {
@@ -19,7 +20,7 @@ class LightningParticle {
   });
 }
 
-class LightningTrail extends PositionComponent {
+class LightningTrail extends PositionComponent implements GameTrail {
   final List<LightningParticle> _particles = [];
   bool isPro = false;
   double _time = 0;

@@ -1,9 +1,10 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import 'game_trail.dart';
 import '../../configs/const.dart';
 
-class LineTrail extends PositionComponent {
+class LineTrail extends PositionComponent implements GameTrail {
   final List<Vector2> _points = [];
   bool isPro = false;
   double opacity = 1.0;

@@ -22,6 +22,7 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
   Future<void> onLoad() async {
     await initSprite();
     addPipe(withCoin: false);
+
     return super.onLoad();
   }
 
@@ -61,6 +62,7 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
 
       addAll(components);
       isTwoWay += Random().nextBool() ? 1 : 0;
+
       return;
     }
     // For TwoWay pipe, the gap is in the middle

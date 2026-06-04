@@ -1,6 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import 'game_trail.dart';
 import '../../configs/const.dart';
 
 class CircleParticle {
@@ -11,7 +12,7 @@ class CircleParticle {
   CircleParticle({required this.position, this.age = 0, this.lifespan = 0.5});
 }
 
-class CircleTrail extends PositionComponent {
+class CircleTrail extends PositionComponent implements GameTrail {
   final List<CircleParticle> _particles = [];
   bool isPro = false;
   double _time = 0;

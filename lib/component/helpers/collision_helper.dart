@@ -18,6 +18,7 @@ class CollisionHelper {
         ),
       );
       player.game.audio.playBrake();
+
       return false;
     }
 

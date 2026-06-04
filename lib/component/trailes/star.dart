@@ -3,7 +3,10 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
+import 'game_trail.dart';
 import '../../configs/const.dart';
+
+typedef StarDrawOptions = ({Color baseColor, bool isGlow});
 
 class StarParticle {
   Vector2 position;
@@ -25,7 +28,7 @@ class StarParticle {
   });
 }
 
-class StarTrail extends PositionComponent {
+class StarTrail extends PositionComponent implements GameTrail {
   final List<StarParticle> _particles = [];
   bool isPro = false;
   double _time = 0;
@@ -126,12 +129,12 @@ class StarTrail extends PositionComponent {
 
     // Glow Pass
     for (final p in _particles) {
-      _drawStar(canvas, p, glowPaint, currentColor, isGlow: true);
+      _drawStar(canvas, p, glowPaint, (baseColor: currentColor, isGlow: true));
     }
 
     // Core Pass
     for (final p in _particles) {
-      _drawStar(canvas, p, corePaint, Colors.white, isGlow: false);
+      _drawStar(canvas, p, corePaint, (baseColor: Colors.white, isGlow: false));
     }
   }
 
@@ -141,7 +144,7 @@ class StarTrail extends PositionComponent {
     // Let's use Orange for standard to look "Fire-y"
     final paint = Paint()..style = PaintingStyle.fill;
     for (var p in _particles) {
-      _drawStar(canvas, p, paint, Colors.white);
+      _drawStar(canvas, p, paint, (baseColor: Colors.white, isGlow: false));
     }
   }
 
@@ -149,17 +152,16 @@ class StarTrail extends PositionComponent {
     Canvas canvas,
     StarParticle p,
     Paint paint,
-    Color baseColor, {
-    bool isGlow = false,
-  }) {
+    StarDrawOptions options,
+  ) {
     double progress = p.age / p.lifespan;
     double currentSize = p.size * (1 - progress);
     double alpha = (1 - progress).clamp(0.0, 1.0);
 
-    if (isGlow) {
-      paint.color = baseColor.withValues(alpha: alpha * 0.6);
+    if (options.isGlow) {
+      paint.color = options.baseColor.withValues(alpha: alpha * 0.6);
     } else {
-      paint.color = baseColor.withValues(alpha: alpha);
+      paint.color = options.baseColor.withValues(alpha: alpha);
     }
 
     final path = Path();

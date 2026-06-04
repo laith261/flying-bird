@@ -1,6 +1,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
+class StarParams {
+  final Offset center;
+  final double size;
+  final double rotation;
+
+  const StarParams({
+    required this.center,
+    required this.size,
+    required this.rotation,
+  });
+}
+
 class TrailPainterHelper {
   static void drawRectTrail(Canvas canvas, Size size, Offset center, bool isPro) {
     final paint = Paint()..style = PaintingStyle.fill;
@@ -125,13 +137,21 @@ class TrailPainterHelper {
           ..color = currentColor.withValues(alpha: alpha * 0.4)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
         
-        _drawStarShape(canvas, pos, starSize + 4, rotation, glowPaint);
+        _drawStarShape(
+          canvas,
+          StarParams(center: pos, size: starSize + 4, rotation: rotation),
+          glowPaint,
+        );
         paint.color = Colors.white.withValues(alpha: alpha);
       } else {
         paint.color = Colors.orange.withValues(alpha: alpha);
       }
 
-      _drawStarShape(canvas, pos, starSize * 1.5, rotation, paint);
+      _drawStarShape(
+        canvas,
+        StarParams(center: pos, size: starSize * 1.5, rotation: rotation),
+        paint,
+      );
     }
   }
 
@@ -222,12 +242,12 @@ class TrailPainterHelper {
     canvas.drawLine(start, end, paint);
   }
 
-  static void _drawStarShape(Canvas canvas, Offset center, double size, double rotation, Paint paint) {
+  static void _drawStarShape(Canvas canvas, StarParams params, Paint paint) {
     final path = Path();
     double angle = -pi / 2;
     final double step = pi / 5;
-    final double outerRadius = size / 2;
-    final double innerRadius = size / 4;
+    final double outerRadius = params.size / 2;
+    final double innerRadius = params.size / 4;
 
     path.moveTo(outerRadius * cos(angle), outerRadius * sin(angle));
     for (int i = 0; i < 5; i++) {
@@ -239,8 +259,8 @@ class TrailPainterHelper {
     path.close();
 
     canvas.save();
-    canvas.translate(center.dx, center.dy);
-    canvas.rotate(rotation);
+    canvas.translate(params.center.dx, params.center.dy);
+    canvas.rotate(params.rotation);
     canvas.drawPath(path, paint);
     canvas.restore();
   }

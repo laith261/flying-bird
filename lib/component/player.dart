@@ -17,6 +17,8 @@ import '../configs/const.dart';
 import 'skins/skin_enum.dart';
 import 'helpers/collision_helper.dart';
 import 'helpers/glow_helper.dart';
+import 'helpers/shield_helper.dart';
+import 'trailes/game_trail.dart';
 
 class TheBird extends SpriteComponent
     with TapCallbacks, HasGameReference<MyWorld>, CollisionCallbacks {
@@ -37,6 +39,13 @@ class TheBird extends SpriteComponent
   final RotateRectTrail _rotateRectTrail = RotateRectTrail();
   final StarTrail _starTrail = StarTrail();
   final LightningTrail _lightningTrail = LightningTrail();
+  late final Map<String, GameTrail> _trails = {
+    'line': _lineTrail,
+    'circle': _circleTrail,
+    'rect': _rotateRectTrail,
+    'star': _starTrail,
+    'lightning': _lightningTrail,
+  };
 
   String _selectedTrail = 'none';
   double _trailTimer = 0;
@@ -76,19 +85,16 @@ class TheBird extends SpriteComponent
 
   void _updateTrailConfig(String trailId) {
     bool isPro = trailId.endsWith('_pro');
-    if (trailId.startsWith('line')) _lineTrail.isPro = isPro;
-    if (trailId.startsWith('circle')) _circleTrail.isPro = isPro;
-    if (trailId.startsWith('rect')) _rotateRectTrail.isPro = isPro;
-    if (trailId.startsWith('star')) _starTrail.isPro = isPro;
-    if (trailId.startsWith('lightning')) _lightningTrail.isPro = isPro;
+    String baseKey = trailId.endsWith('_pro')
+        ? trailId.substring(0, trailId.length - 4)
+        : trailId;
+    _trails[baseKey]?.isPro = isPro;
   }
 
   void _resetAllTrails() {
-    _lineTrail.reset();
-    _circleTrail.reset();
-    _rotateRectTrail.reset();
-    _starTrail.reset();
-    _lightningTrail.reset();
+    for (var trail in _trails.values) {
+      trail.reset();
+    }
   }
 
   void setPlayerPosition() =>
@@ -166,64 +172,7 @@ class TheBird extends SpriteComponent
         !isInvincible;
 
     if (showShield) {
-      canvas.save();
-      // Counter-rotate the shield around the center of the bird
-      canvas.translate(width / 2, height / 2);
-      canvas.rotate(-angle);
-      canvas.translate(-width / 2, -height / 2);
-
-      // Enhanced "Orbiting Plasma" Shield with Trails
-      double time = DateTime.now().millisecondsSinceEpoch / 1000;
-      double orbitRadius = width * 0.75;
-
-      // Draw subtle rotating energy ring
-      final ringPaint = Paint()
-        ..color = Colors.cyan.withAlpha(38)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
-
-      // Rotate the ring slowly opposite to satellites
-      canvas.save();
-      canvas.translate(width / 2, height / 2);
-      canvas.rotate(-time * 0.5);
-      // Draw a dashed ring (simulated by drawing arcs or just a circle for now)
-      canvas.drawCircle(Offset.zero, orbitRadius, ringPaint);
-      canvas.restore();
-
-      // Draw 3 orbiting satellites with trails
-      for (int i = 0; i < 3; i++) {
-        double angleVal = (time * 2.5) + (i * (2 * pi / 3));
-
-        // Draw Trail (multiple smaller circles fading out)
-        for (int j = 1; j <= 5; j++) {
-          double trailAngle = angleVal - (j * 0.15); // Lag behind
-          double trailX = (width / 2) + orbitRadius * cos(trailAngle);
-          double trailY = (height / 2) + orbitRadius * sin(trailAngle);
-
-          canvas.drawCircle(
-            Offset(trailX, trailY),
-            4.0 - (j * 0.6), // Shrinking size
-            Paint()
-              ..color = Colors.cyanAccent.withAlpha(
-                ((0.5 - (j * 0.08)) * 255).toInt(),
-              ),
-          );
-        }
-
-        // Main Satellite
-        double satelliteX = (width / 2) + orbitRadius * cos(angleVal);
-        double satelliteY = (height / 2) + orbitRadius * sin(angleVal);
-
-        canvas.drawCircle(
-          Offset(satelliteX, satelliteY),
-          5,
-          Paint()
-            ..color = Colors.white
-            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-        );
-      }
-      canvas.restore(); // Restore counter-rotation
+      ShieldHelper.drawShield(canvas, this, angle);
     } else if (isInvincible) {
       // No orbiting effect during flash as requested
     }
@@ -252,33 +201,18 @@ class TheBird extends SpriteComponent
               ? _selectedTrail.substring(0, _selectedTrail.length - 4)
               : _selectedTrail;
 
-          switch (baseTrail) {
-            case 'circle':
-              _circleTrail.addPoint(position);
-              break;
-            case 'rect':
-              _rotateRectTrail.addPoint(position);
-              break;
-            case 'star':
-              _starTrail.addPoint(position);
-              break;
-            case 'lightning':
-              _lightningTrail.addPoint(position);
-              break;
-          }
+          _trails[baseTrail]?.addPoint(position);
         }
       }
     }
 
     skin.skin.ability(this, dt);
 
-    // Update trails opacity
+    // Update trails opacity using collection loop
     double targetOpacity = isGhostMode ? 0.6 : 1.0;
-    _lineTrail.opacity = targetOpacity;
-    _circleTrail.opacity = targetOpacity;
-    _rotateRectTrail.opacity = targetOpacity;
-    _starTrail.opacity = targetOpacity;
-    _lightningTrail.opacity = targetOpacity;
+    for (var trail in _trails.values) {
+      trail.opacity = targetOpacity;
+    }
 
     super.update(dt);
   }
