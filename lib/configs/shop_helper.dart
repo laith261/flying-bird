@@ -109,7 +109,7 @@ class ShopHelper {
           } else if (powerUp == PowerUps.luckyDay) {
             await game.playerData.addLuckyDay(1);
           }
-        }
+        },
       ]);
       onComplete();
 

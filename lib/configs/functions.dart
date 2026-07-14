@@ -23,7 +23,7 @@ class Functions {
   }
 
   static Future<void> addScore(int scorePoint) async {
-    if (await GameAuth.isSignedIn == false) return;
+    if (!await GameAuth.isSignedIn) return;
     Leaderboards.submitScore(
       score: Score(androidLeaderboardID: Consts.leaderBoard, value: scorePoint),
     );
@@ -54,7 +54,7 @@ class Functions {
   }
 
   static Future<bool> singIn() async {
-    if (await GameAuth.isSignedIn == true) return true;
+    if (await GameAuth.isSignedIn) return true;
     await GameAuth.signIn();
     return await GameAuth.isSignedIn;
   }

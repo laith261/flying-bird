@@ -8,7 +8,8 @@ import 'package:game/main.dart';
 
 class ShopScreen extends StatefulWidget {
   final MyWorld game;
-  const ShopScreen({super.key, required this.game});
+  final int initialTabIndex;
+  const ShopScreen({super.key, required this.game, this.initialTabIndex = 0});
 
   @override
   State<ShopScreen> createState() => _ShopScreenState();
@@ -26,6 +27,7 @@ class _ShopScreenState extends State<ShopScreen> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      initialIndex: widget.initialTabIndex,
       length: 3,
       child: Scaffold(
         backgroundColor: Colors.white,

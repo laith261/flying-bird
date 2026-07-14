@@ -49,7 +49,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   MyWorld() : super();
 
   // objects
-  late TextComponent score = buildScore();
+  late TextComponent scores = buildScore();
   final AudioHelper audio = AudioHelper();
   final AdmobAds ads = AdmobAds();
   final TheBird player = TheBird();
@@ -116,7 +116,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
       }
     });
 
-    addAll({clouds, player, pipes, score, wing});
+    addAll({clouds, player, pipes, wing});
     updateScore();
 
     // Initial overlays
@@ -155,7 +155,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     scorePoint = withRewarded ? scorePoint : 0;
     updateScore();
     isStarted = true;
-
+    add(scores);
     // Check Lucky Day usage
     if (isLuckyDayActive.value) {
       if (playerData.luckyDay > 0) {
@@ -187,6 +187,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   Skins? tempSkin;
 
   void gameOver() {
+    remove(scores);
     if (tempTrail != null) {
       player.updateTrail(playerData.selectedTrail); // Use saved data
       tempTrail = null;
@@ -222,5 +223,5 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     deadTimes++;
   }
 
-  void updateScore() => score.text = 'Score: $scorePoint';
+  void updateScore() => scores.text = 'Score: $scorePoint';
 }

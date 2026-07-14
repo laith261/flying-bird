@@ -259,20 +259,20 @@ class _TrailsTabState extends State<TrailsTab> {
                                 style: TextStyle(
                                     color: Colors.blue,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12))
+                                    fontSize: 12,),)
                           else if (!isOwned)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Icon(Icons.monetization_on,
-                                    size: 16, color: Colors.amber),
+                                    size: 16, color: Colors.amber,),
                                 const SizedBox(width: 3),
                                 Text(
                                   "$price",
                                   style: const TextStyle(
                                       fontSize: 14,
                                       color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,),
                                 ),
                               ],
                             )
@@ -281,7 +281,7 @@ class _TrailsTabState extends State<TrailsTab> {
                                 style: TextStyle(
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 12)),
+                                    fontSize: 12,),),
                         ],
                       ),
                     ),
@@ -307,7 +307,7 @@ class _TrailsTabState extends State<TrailsTab> {
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.shopping_cart,
-                          color: Colors.white, size: 40),
+                          color: Colors.white, size: 40,),
                     ),
                   ),
                 if (isTemp)
@@ -315,7 +315,7 @@ class _TrailsTabState extends State<TrailsTab> {
                     top: 10,
                     right: 10,
                     child: Icon(Icons.access_time_filled,
-                        color: Colors.blue, size: 30),
+                        color: Colors.blue, size: 30,),
                   )
                 else if (isSelected)
                   const Positioned(
@@ -330,7 +330,7 @@ class _TrailsTabState extends State<TrailsTab> {
         );
       },
     );
-  });
+  },);
   }
 }
 

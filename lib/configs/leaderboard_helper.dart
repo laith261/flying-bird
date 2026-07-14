@@ -18,7 +18,7 @@ class ChallengeData {
 class LeaderboardHelper {
   static Future<void> syncHighScore(PlayerInfo playerData) async {
     try {
-      if (await gs.GameAuth.isSignedIn == false) {
+      if (!await gs.GameAuth.isSignedIn) {
         bool signedIn = await Functions.singIn();
         if (!signedIn) return;
       }
@@ -56,7 +56,7 @@ class LeaderboardHelper {
 
   static Future<ChallengeData?> fetchChallengeData(int currentHighScore) async {
     try {
-      if (await gs.GameAuth.isSignedIn == false) {
+      if (!await gs.GameAuth.isSignedIn) {
         bool signedIn = await Functions.singIn();
         if (!signedIn) return null;
       }
