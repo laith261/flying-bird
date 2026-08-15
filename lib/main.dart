@@ -30,18 +30,19 @@ import 'package:game/component/skins/skin_enum.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await dotenv.load();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await MobileAds.instance.initialize();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
-  await dotenv.load();
   await PlayerInfo.init();
   await NotificationHelper().init();
   final game = MyWorld();
