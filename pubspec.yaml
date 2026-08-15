@@ -2,7 +2,7 @@ name: game
 description: "A new Flutter project."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 2.4.0+43
+version: 2.4.0+45
 
 environment:
   sdk: ^3.8.1
@@ -28,6 +28,9 @@ dependencies:
   permission_handler: ^12.0.1
   firebase_messaging: ^16.0.4
   google_fonts: ^6.3.2
+  flutter_local_notifications: ^22.0.1
+  timezone: ^0.11.1
+  in_app_review: ^2.0.12
 
 dev_dependencies:
   flutter_test:

@@ -104,10 +104,9 @@ class TheBird extends SpriteComponent
     if (!game.isStarted) return;
 
     velocity += gravity * dt;
-    position += velocity;
-    gameOver();
-    if ((angle * 180) / pi > 45) return;
+    position += velocity * dt;
     rotate();
+    gameOver();
   }
 
   Future<void> goUp() async {
@@ -136,7 +135,10 @@ class TheBird extends SpriteComponent
     }
   }
 
-  rotate() => angle = (velocity.y * 10) * pi / 180;
+  void rotate() {
+    double targetDegrees = (velocity.y / 6.0).clamp(-45.0, 45.0);
+    angle = targetDegrees * pi / 180;
+  }
 
   void gameOver() {
     if (game.isStarted && (y > game.size.y || y < 0)) {

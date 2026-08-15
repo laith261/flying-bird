@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/main.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -16,15 +15,8 @@ class AdmobAds {
   final int _maxFailedLoadAttempts = 3;
   bool didGetRewarded = false;
   RewardedAd? _rewardedAd;
-  BannerAd? _bannerAd;
-  bool _failedBanner = false;
-  bool _loadingBanner = false;
 
   RewardedAd? get rewardedAd => _rewardedAd;
-
-  BannerAd? get bannerAd => _bannerAd;
-
-  bool get failedBanner => _failedBanner;
 
   Future<void> createInterstitialAd() async {
     InterstitialAd.load(
@@ -98,37 +90,5 @@ class AdmobAds {
       );
       _rewardedAd = null;
     }
-  }
-
-  Future<void> loadBannerAd(BuildContext context) async {
-    if (_loadingBanner) return;
-    _loadingBanner = true;
-    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
-    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      MediaQuery.sizeOf(context).width.truncate(),
-    );
-
-    if (size == null) {
-      // Unable to get width of anchored banner.
-      _loadingBanner = false;
-      return;
-    }
-    await BannerAd(
-      adUnitId: dotenv.env['BannerAd'] ?? 'ca-app-pub-3940256099942544/6300978111',
-      request: const AdRequest(),
-      size: size,
-      listener: BannerAdListener(
-        onAdLoaded: (ad) {
-          _loadingBanner = false;
-          _bannerAd = ad as BannerAd;
-        },
-        onAdFailedToLoad: (ad, err) {
-          _loadingBanner = false;
-          _failedBanner = true;
-          Timer(Duration(seconds: 30), () => _failedBanner = false);
-          ad.dispose();
-        },
-      ),
-    ).load();
   }
 }

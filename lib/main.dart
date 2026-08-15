@@ -13,6 +13,7 @@ import 'package:games_services/games_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'component/wing.dart';
+import 'component/billboard.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -24,6 +25,7 @@ import 'firebase_options.dart';
 import 'models/player_data.dart';
 import 'screens/main_widget.dart';
 import 'configs/leaderboard_helper.dart';
+import 'configs/notification_helper.dart';
 import 'package:game/component/skins/skin_enum.dart';
 
 @pragma('vm:entry-point')
@@ -41,6 +43,7 @@ void main() async {
   Flame.device.setPortraitUpOnly();
   await dotenv.load();
   await PlayerInfo.init();
+  await NotificationHelper().init();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
@@ -56,6 +59,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   final Clouds clouds = Clouds();
   final Pipes pipes = Pipes();
   final Wing wing = Wing();
+  final Billboard billboard = Billboard();
 
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -116,6 +120,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
       }
     });
 
+    // addAll({billboard, clouds, player, pipes, wing});
     addAll({clouds, player, pipes, wing});
     updateScore();
 
@@ -151,6 +156,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   void startGame({bool withRewarded = false}) {
     player.reset();
     pipes.reset();
+    // billboard.reset();
     newHighest = false;
     scorePoint = withRewarded ? scorePoint : 0;
     updateScore();
@@ -188,6 +194,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
 
   void gameOver() {
     remove(scores);
+    // billboard.reset();
     if (tempTrail != null) {
       player.updateTrail(playerData.selectedTrail); // Use saved data
       tempTrail = null;
@@ -216,11 +223,16 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
 
   void showingAd() {
     if (deadTimes == 2) {
-      ads.showInterstitialAd();
+      if (newHighest) {
+        // Skip showing the ad on new high score and keep deadTimes = 2
+        // so the interstitial ad is postponed until the next time the player dies.
+        return;
+      }
+      Future.delayed(const Duration(milliseconds: 600), () => ads.showInterstitialAd());
       deadTimes = 0;
-      return;
+    } else {
+      deadTimes++;
     }
-    deadTimes++;
   }
 
   void updateScore() => scores.text = 'Score: $scorePoint';

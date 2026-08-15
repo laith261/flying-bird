@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
 import 'package:game/main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:in_app_review/in_app_review.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../configs/functions.dart';
 import '../component/helpers/reward_helper.dart';
@@ -32,6 +34,7 @@ class _StartWidgetState extends State<StartWidget> {
     // Check for daily reward progress
     WidgetsBinding.instance.addPostFrameCallback((_) {
       RewardHelper.checkDailyRewardProgress(context, game.playerData);
+      congress();
     });
   }
 
@@ -49,7 +52,6 @@ class _StartWidgetState extends State<StartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // congress();
     return Stack(
       children: [
         Positioned.fill(
@@ -99,10 +101,6 @@ class _StartWidgetState extends State<StartWidget> {
                       }),
                     ),
                   ],
-                  const SizedBox(height: 20),
-                  const NativeAdWidget(
-                    adUnitId: 'ca-app-pub-1226999690478326/2242455883',
-                  ),
                   const SizedBox(height: 20),
                   PowerUpToggles(game: game),
                   const SizedBox(height: 20),
@@ -185,6 +183,10 @@ class _StartWidgetState extends State<StartWidget> {
                         ),
                       );
                     },
+                  ),
+                  const SizedBox(height: 20),
+                  const NativeAdWidget(
+                    adUnitId: 'ca-app-pub-3940256099942544/2247696110',
                   ),
                 ],
               ),
@@ -297,6 +299,24 @@ class _StartWidgetState extends State<StartWidget> {
           context,
           options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
         );
+      },
+    );
+    Future.delayed(
+      const Duration(milliseconds: 800),
+      () async {
+        if (!mounted) return;
+        final prefs = await SharedPreferences.getInstance();
+        final int lastReviewTimestamp = prefs.getInt('last_in_app_review_time') ?? 0;
+        final int now = DateTime.now().millisecondsSinceEpoch;
+        const int tenDaysInMillis = 10 * 24 * 60 * 60 * 1000;
+
+        if (now - lastReviewTimestamp >= tenDaysInMillis) {
+          final InAppReview inAppReview = InAppReview.instance;
+          if (await inAppReview.isAvailable()) {
+            await inAppReview.requestReview();
+            await prefs.setInt('last_in_app_review_time', now);
+          }
+        }
       },
     );
     game.analytics.logEvent(
