@@ -198,7 +198,9 @@ class PlayerInfo extends ChangeNotifier {
     try {
       await GameAuth.signIn();
     } catch (e) {
-      debugPrint('Cloud Sign-In failed: $e');
+      if (kDebugMode) {
+        debugPrint('Cloud Sign-In failed: $e');
+      }
     }
   }
 
@@ -207,7 +209,9 @@ class PlayerInfo extends ChangeNotifier {
       try {
         _playerId = await GamesServices.getPlayerID();
       } catch (e) {
-        debugPrint('Failed to get player ID for save: $e');
+        if (kDebugMode) {
+          debugPrint('Failed to get player ID for save: $e');
+        }
       }
     }
 
@@ -219,7 +223,9 @@ class PlayerInfo extends ChangeNotifier {
     try {
       await GamesServices.saveGame(name: _storageKey, data: data);
     } catch (e) {
-      debugPrint('Cloud Save failed: $e');
+      if (kDebugMode) {
+        debugPrint('Cloud Save failed: $e');
+      }
     }
   }
 
@@ -228,7 +234,9 @@ class PlayerInfo extends ChangeNotifier {
     try {
       currentPlayerId = await GamesServices.getPlayerID();
     } catch (e) {
-      debugPrint('Error getting player ID: $e');
+      if (kDebugMode) {
+        debugPrint('Error getting player ID: $e');
+      }
     }
 
     String? jsonStr = _prefs.getString(_storageKey);
@@ -248,7 +256,9 @@ class PlayerInfo extends ChangeNotifier {
           localData._playerId = currentPlayerId;
         }
       } else {
-        debugPrint('Local data belongs to a different account. Ignoring.');
+        if (kDebugMode) {
+          debugPrint('Local data belongs to a different account. Ignoring.');
+        }
       }
     }
 
@@ -261,7 +271,9 @@ class PlayerInfo extends ChangeNotifier {
         cloudData = PlayerInfo.fromJson(jsonDecode(cloudJson));
       }
     } catch (e) {
-      debugPrint('Cloud Load failed: $e');
+      if (kDebugMode) {
+        debugPrint('Cloud Load failed: $e');
+      }
     }
 
     if (cloudData == null) {
@@ -272,20 +284,26 @@ class PlayerInfo extends ChangeNotifier {
     if (localData.lastModified >= cloudData.lastModified) {
       // Local is newer or equal
       if (localData.lastModified > cloudData.lastModified) {
-        debugPrint('Local data is newer. Overwriting Cloud.');
+        if (kDebugMode) {
+          debugPrint('Local data is newer. Overwriting Cloud.');
+        }
         try {
           await GamesServices.saveGame(
             name: _storageKey,
             data: jsonEncode(localData.toJson()),
           );
         } catch (e) {
-          debugPrint('Failed to sync Local to Cloud: $e');
+          if (kDebugMode) {
+            debugPrint('Failed to sync Local to Cloud: $e');
+          }
         }
       }
       return localData;
     } else {
       // Cloud is newer
-      debugPrint('Cloud data is newer. Overwriting Local.');
+      if (kDebugMode) {
+        debugPrint('Cloud data is newer. Overwriting Local.');
+      }
       await _prefs.setString(_storageKey, jsonEncode(cloudData.toJson()));
       return cloudData;
     }
