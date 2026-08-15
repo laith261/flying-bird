@@ -32,9 +32,11 @@ enum Skins {
   static final Map<Skins, Sprite> _cachedSprites = {};
 
   static Future<void> loadAllSkins() async {
-    for (var skin in Skins.values) {
-      _cachedSprites[skin] = await Sprite.load(skin.image);
-    }
+    await Future.wait(
+      Skins.values.map((skin) async {
+        _cachedSprites[skin] = await Sprite.load(skin.image);
+      }),
+    );
   }
 
   Sprite get sprite => _cachedSprites[this]!;
