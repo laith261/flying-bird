@@ -10,11 +10,11 @@ class Wing extends SpriteAnimationComponent
 
   @override
   Future<void> onLoad() async {
-    List<Sprite> redBirdSprites = [
-      await Sprite.load("bird/wing/1.png"),
-      await Sprite.load("bird/wing/2.png"),
-      await Sprite.load("bird/wing/3.png"),
-    ];
+    List<Sprite> redBirdSprites = await Future.wait([
+      Sprite.load("bird/wing/1.png"),
+      Sprite.load("bird/wing/2.png"),
+      Sprite.load("bird/wing/3.png"),
+    ]);
     animation = SpriteAnimation.spriteList(redBirdSprites, stepTime: 0.2);
   }
 
