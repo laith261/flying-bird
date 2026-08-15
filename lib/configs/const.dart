@@ -13,4 +13,6 @@ class Consts {
   static String achievements1000 = dotenv.env['achievements1000']!;
   // static String achievements10000 = dotenv.env['achievements10000']!;
   static String savedDataName = 'PlayerData';
+  static String firebaseApiKey = dotenv.env['apiKey']!;
+  static String NativeAd = dotenv.env['NativeAd']!;
 }

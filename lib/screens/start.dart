@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../configs/const.dart';
 import '../configs/functions.dart';
 import '../component/helpers/reward_helper.dart';
 import 'Widgets/hieh_score.dart';
@@ -186,8 +188,8 @@ class _StartWidgetState extends State<StartWidget> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  const NativeAdWidget(
-                    adUnitId: 'ca-app-pub-3940256099942544/2247696110',
+                   NativeAdWidget(
+                    adUnitId: Consts.NativeAd
                   ),
                 ],
               ),
