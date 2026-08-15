@@ -16,7 +16,6 @@ class ShopScreen extends StatefulWidget {
 }
 
 class _ShopScreenState extends State<ShopScreen> {
-
   bool isProMode = false;
 
   @override
@@ -149,18 +148,11 @@ class _ShopScreenState extends State<ShopScreen> {
                 child: TabBarView(
                   children: [
                     // Trails Tab
-                    TrailsTab(
-                      game: widget.game,
-                      isProMode: isProMode,
-                    ),
+                    TrailsTab(game: widget.game, isProMode: isProMode),
                     // Power Ups Tab
-                    PowerUpsTab(
-                      game: widget.game,
-                    ),
+                    PowerUpsTab(game: widget.game),
                     // Birds Tab
-                    BirdsTab(
-                      game: widget.game,
-                    ),
+                    BirdsTab(game: widget.game),
                   ],
                 ),
               ),

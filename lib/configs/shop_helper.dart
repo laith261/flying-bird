@@ -21,9 +21,14 @@ class ShopHelper {
     return skin.description;
   }
 
-  static Future<void> buySkin(BuildContext context, MyWorld game, Skins skin, VoidCallback onComplete) async {
+  static Future<void> buySkin(
+    BuildContext context,
+    MyWorld game,
+    Skins skin,
+    VoidCallback onComplete,
+  ) async {
     final price = getPrice(skin);
-    
+
     if (game.playerData.coins >= price) {
       if (game.tempSkin != null) game.tempSkin = null;
       await game.playerData.runBatched([
@@ -33,9 +38,9 @@ class ShopHelper {
       ]);
       await game.player.updateSkin(skin);
       onComplete();
-      
+
       if (!context.mounted) return;
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text("Bought ${skin.name}!"),
@@ -57,7 +62,11 @@ class ShopHelper {
     }
   }
 
-  static Future<void> equipSkin(MyWorld game, Skins skin, VoidCallback onComplete) async {
+  static Future<void> equipSkin(
+    MyWorld game,
+    Skins skin,
+    VoidCallback onComplete,
+  ) async {
     if (game.tempSkin != null) game.tempSkin = null;
     await game.playerData.runBatched([() => game.playerData.equipSkin(skin)]);
     await game.player.updateSkin(skin);
@@ -77,7 +86,12 @@ class ShopHelper {
     return isPro ? trail.price * 2 : trail.price;
   }
 
-  static Future<void> buyTrail(MyWorld game, String trailId, int price, VoidCallback onComplete) async {
+  static Future<void> buyTrail(
+    MyWorld game,
+    String trailId,
+    int price,
+    VoidCallback onComplete,
+  ) async {
     if (game.playerData.coins >= price) {
       await game.playerData.runBatched([
         () => game.playerData.subtractCoins(price),
@@ -99,7 +113,12 @@ class ShopHelper {
     return 0;
   }
 
-  static Future<void> buyPowerUp(BuildContext context, MyWorld game, PowerUps powerUp, VoidCallback onComplete) async {
+  static Future<void> buyPowerUp(
+    BuildContext context,
+    MyWorld game,
+    PowerUps powerUp,
+    VoidCallback onComplete,
+  ) async {
     if (game.playerData.coins >= powerUp.price) {
       await game.playerData.runBatched([
         () => game.playerData.subtractCoins(powerUp.price),

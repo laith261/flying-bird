@@ -61,7 +61,10 @@ class _NativeAdWidgetState extends State<NativeAdWidget> {
         margin: const EdgeInsets.symmetric(horizontal: 20),
         constraints: widget.height != null
             ? BoxConstraints.tightFor(height: widget.height)
-            : BoxConstraints(minHeight: widget.minHeight, maxHeight: widget.maxHeight),
+            : BoxConstraints(
+                minHeight: widget.minHeight,
+                maxHeight: widget.maxHeight,
+              ),
         decoration: BoxDecoration(
           color: Colors.blueGrey,
           borderRadius: BorderRadius.circular(8),

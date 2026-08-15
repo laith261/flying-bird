@@ -13,7 +13,7 @@ class Pipe extends SpriteComponent with HasGameReference<MyWorld> {
   // class variables
   late double upBarer = ((game.size.y / 4) / 2);
   late double downBarer = game.size.y - upBarer;
-  late bool movingUp = Random().nextBool();
+  late bool movingUp = Random.secure().nextBool();
   bool gotPoint = false;
   double yPosition = 0;
   double halfSize = 0;

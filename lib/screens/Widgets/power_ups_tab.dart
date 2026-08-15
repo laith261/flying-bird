@@ -8,10 +8,7 @@ import '../../configs/shop_helper.dart';
 class PowerUpsTab extends StatefulWidget {
   final MyWorld game;
 
-  const PowerUpsTab({
-    super.key,
-    required this.game,
-  });
+  const PowerUpsTab({super.key, required this.game});
 
   @override
   State<PowerUpsTab> createState() => _PowerUpsTabState();
@@ -35,10 +32,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.blue.withAlpha(128),
-              width: 2,
-            ),
+            border: Border.all(color: Colors.blue.withAlpha(128), width: 2),
             boxShadow: const [
               BoxShadow(
                 color: Colors.black12,
@@ -73,10 +67,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                     ),
                     Text(
                       powerUp.description,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey[600],
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],
                 ),

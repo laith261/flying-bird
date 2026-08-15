@@ -24,16 +24,16 @@ class NotificationHelper {
 
       const DarwinInitializationSettings initializationSettingsDarwin =
           DarwinInitializationSettings(
-        requestAlertPermission: true,
-        requestBadgePermission: true,
-        requestSoundPermission: true,
-      );
+            requestAlertPermission: true,
+            requestBadgePermission: true,
+            requestSoundPermission: true,
+          );
 
       const InitializationSettings initializationSettings =
           InitializationSettings(
-        android: initializationSettingsAndroid,
-        iOS: initializationSettingsDarwin,
-      );
+            android: initializationSettingsAndroid,
+            iOS: initializationSettingsDarwin,
+          );
 
       await _notificationsPlugin.initialize(settings: initializationSettings);
       _isInitialized = true;
@@ -53,19 +53,20 @@ class NotificationHelper {
       // Cancel any previously scheduled reminder so the 48h timer resets from now
       await _notificationsPlugin.cancel(id: retentionNotificationId);
 
-      final tz.TZDateTime scheduledDate =
-          tz.TZDateTime.now(tz.local).add(const Duration(hours: 48));
+      final tz.TZDateTime scheduledDate = tz.TZDateTime.now(
+        tz.local,
+      ).add(const Duration(hours: 48));
 
       const AndroidNotificationDetails androidDetails =
           AndroidNotificationDetails(
-        'retention_channel_id',
-        'Game Reminders',
-        channelDescription:
-            'Reminders to return to the game and beat your high score',
-        importance: Importance.high,
-        priority: Priority.high,
-        icon: 'launcher_icon',
-      );
+            'retention_channel_id',
+            'Game Reminders',
+            channelDescription:
+                'Reminders to return to the game and beat your high score',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: 'launcher_icon',
+          );
 
       const DarwinNotificationDetails darwinDetails =
           DarwinNotificationDetails();

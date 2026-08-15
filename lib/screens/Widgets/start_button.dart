@@ -5,11 +5,7 @@ import 'package:stroke_text/stroke_text.dart';
 import '../../main.dart';
 
 class StartButton extends StatefulWidget {
-  const StartButton({
-    super.key,
-    required this.game,
-    required this.text,
-  });
+  const StartButton({super.key, required this.game, required this.text});
 
   final MyWorld game;
   final String text;
@@ -47,20 +43,24 @@ class _StartButtonState extends State<StartButton> {
       onTapCancel: _onTapCancel,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 50),
-        transform: Matrix4.translationValues(0, _isPressed ? 8.0 : 0.0, 0), // Moves down instantly without layout shifting
+        transform: Matrix4.translationValues(
+          0,
+          _isPressed ? 8.0 : 0.0,
+          0,
+        ), // Moves down instantly without layout shifting
         width: 200,
         height: 70, // Fixed height
         decoration: BoxDecoration(
           color: const Color(0xFFFFD500), // Vibrant Hypercasual Yellow
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: Colors.black,
-            width: 4,
-          ),
+          border: Border.all(color: Colors.black, width: 4),
           boxShadow: [
             BoxShadow(
               color: Colors.black,
-              offset: Offset(0, _isPressed ? 0 : 8), // Shadow disappears as button presses in
+              offset: Offset(
+                0,
+                _isPressed ? 0 : 8,
+              ), // Shadow disappears as button presses in
               blurRadius: 0,
             ),
           ],

@@ -8,10 +8,7 @@ import '../../configs/shop_helper.dart';
 class BirdsTab extends StatefulWidget {
   final MyWorld game;
 
-  const BirdsTab({
-    super.key,
-    required this.game,
-  });
+  const BirdsTab({super.key, required this.game});
 
   @override
   State<BirdsTab> createState() => _BirdsTabState();
@@ -49,10 +46,10 @@ class _BirdsTabState extends State<BirdsTab> {
                 widget.game.ads.showRewardedAd(widget.game, () {
                   widget.game.tempSkin = skin;
                   widget.game.player.updateSkin(skin);
-                  
+
                   // Force list rebuild to show the 'TEMP' indicator
                   widget.game.playerData.addShield(0);
-                  
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Skin equipped for one life!"),
@@ -178,14 +175,12 @@ class _SkinCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 160,
-        margin: const EdgeInsets.only(
-          right: 15,
-          bottom: 50,
-          top: 20,
-        ),
+        margin: const EdgeInsets.only(right: 15, bottom: 50, top: 20),
         decoration: BoxDecoration(
           color: isSelected
-              ? (isTemp ? Colors.blue.withAlpha(26) : Colors.orange.withAlpha(26))
+              ? (isTemp
+                    ? Colors.blue.withAlpha(26)
+                    : Colors.orange.withAlpha(26))
               : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
@@ -214,8 +209,11 @@ class _SkinCard extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/${skin.image}',
                       fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.flutter_dash, size: 50, color: Colors.grey),
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.flutter_dash,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -321,11 +319,7 @@ class _SkinCard extends StatelessWidget {
               const Positioned(
                 top: 10,
                 right: 10,
-                child: Icon(
-                  Icons.check_circle,
-                  color: Colors.green,
-                  size: 30,
-                ),
+                child: Icon(Icons.check_circle, color: Colors.green, size: 30),
               ),
           ],
         ),

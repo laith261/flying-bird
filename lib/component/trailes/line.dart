@@ -11,7 +11,6 @@ class LineTrail extends PositionComponent implements GameTrail {
 
   LineTrail() : super(priority: 1);
 
-
   void addPoint(Vector2 point) {
     _points.add(point.clone());
   }
@@ -42,7 +41,10 @@ class LineTrail extends PositionComponent implements GameTrail {
     if (_points.isEmpty || _points.length < 2) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+      canvas.saveLayer(
+        null,
+        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
+      );
     }
 
     if (isPro) {
@@ -55,7 +57,6 @@ class LineTrail extends PositionComponent implements GameTrail {
       canvas.restore();
     }
   }
-
 
   void _renderPro(Canvas canvas) {
     final neonColors = [

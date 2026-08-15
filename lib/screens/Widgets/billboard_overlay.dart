@@ -29,7 +29,8 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
 
   /// Loads the AdMob banner ad using dotenv config or official Google test IDs.
   void _loadBannerAd() {
-    final String adUnitId = dotenv.env['BannerAd'] ??
+    final String adUnitId =
+        dotenv.env['BannerAd'] ??
         (defaultTargetPlatform == TargetPlatform.android
             ? 'ca-app-pub-3940256099942544/6300978111'
             : 'ca-app-pub-3940256099942544/2934735716');

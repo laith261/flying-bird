@@ -32,7 +32,7 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
 
     // Prepare pipe data
     bool isStandard = isTwoWay != 3;
-    bool isUp = Random().nextBool();
+    bool isUp = Random.secure().nextBool();
     int spaceVal = getSize();
 
     // Calculate current gap Y based on pipe type
@@ -56,19 +56,19 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
       ];
 
       if (withCoin &&
-          (Random().nextDouble() < 0.3 || game.isLuckyDayActive.value)) {
+          (Random.secure().nextDouble() < 0.3 || game.isLuckyDayActive.value)) {
         components.add(Coin(position: Vector2(coinX, coinY)));
       }
 
       addAll(components);
-      isTwoWay += Random().nextBool() ? 1 : 0;
+      isTwoWay += Random.secure().nextBool() ? 1 : 0;
 
       return;
     }
     // For TwoWay pipe, the gap is in the middle
     add(Pipe(false, false, 0, twoWayPipe, true));
     if (withCoin &&
-        (Random().nextDouble() < 0.3 || game.isLuckyDayActive.value)) {
+        (Random.secure().nextDouble() < 0.3 || game.isLuckyDayActive.value)) {
       add(Coin(position: Vector2(coinX, coinY)));
     }
     isTwoWay = 0;
@@ -111,7 +111,7 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
     if (game.player.skin.skin.isGhost &&
         !game.player.isGhostMode &&
         !game.player.isInvincible) {
-      if (Random().nextInt(7) == 0) {
+      if (Random.secure().nextInt(7) == 0) {
         GhostHelper.activateGhostMode(game.player);
       }
     }
@@ -123,5 +123,5 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
     addPipe(withCoin: false);
   }
 
-  int getSize() => Random().nextInt(space);
+  int getSize() => Random.secure().nextInt(space);
 }

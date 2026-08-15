@@ -20,7 +20,6 @@ class CircleTrail extends PositionComponent implements GameTrail {
 
   CircleTrail() : super(priority: 1);
 
-
   void addPoint(Vector2 point) {
     _particles.add(CircleParticle(position: point.clone() + Vector2(-2, 0)));
   }
@@ -54,7 +53,10 @@ class CircleTrail extends PositionComponent implements GameTrail {
     if (_particles.isEmpty) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+      canvas.saveLayer(
+        null,
+        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
+      );
     }
 
     if (isPro) {
@@ -67,7 +69,6 @@ class CircleTrail extends PositionComponent implements GameTrail {
       canvas.restore();
     }
   }
-
 
   void _renderPro(Canvas canvas) {
     final neonColors = [

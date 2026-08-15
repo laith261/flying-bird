@@ -115,7 +115,9 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                 ),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: effectiveActive ? Colors.white : Colors.white.withAlpha(180),
+                  color: effectiveActive
+                      ? Colors.white
+                      : Colors.white.withAlpha(180),
                   width: effectiveActive ? 2.5 : 1.5,
                 ),
                 boxShadow: [
@@ -154,10 +156,7 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                     ),
                   ],
                 ),
-                constraints: const BoxConstraints(
-                  minWidth: 20,
-                  minHeight: 20,
-                ),
+                constraints: const BoxConstraints(minWidth: 20, minHeight: 20),
                 child: Center(
                   child: Text(
                     "$count",
@@ -275,7 +274,10 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                         elevation: 4,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
-                          side: const BorderSide(color: Colors.white, width: 1.5),
+                          side: const BorderSide(
+                            color: Colors.white,
+                            width: 1.5,
+                          ),
                         ),
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
@@ -285,7 +287,8 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                           MaterialPageRoute(
                             builder: (context) => ShopScreen(
                               game: game,
-                              initialTabIndex: 1, // Opens directly on the Power Ups tab
+                              initialTabIndex:
+                                  1, // Opens directly on the Power Ups tab
                             ),
                           ),
                         );
@@ -307,4 +310,3 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
     );
   }
 }
-
