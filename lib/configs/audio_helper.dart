@@ -17,11 +17,19 @@ class AudioHelper {
 
   Future<void> init() async {
     await soloud.init();
-    _fly = await soloud.loadAsset('assets/audio/fly.mp3');
-    _hit = await soloud.loadAsset('assets/audio/hit.mp3');
-    _point = await soloud.loadAsset('assets/audio/point.mp3');
-    _win = await soloud.loadAsset('assets/audio/win.mp3');
-    _brake = await soloud.loadAsset('assets/audio/brake.mp3');
+    final assets = await Future.wait([
+      soloud.loadAsset('assets/audio/fly.mp3'),
+      soloud.loadAsset('assets/audio/hit.mp3'),
+      soloud.loadAsset('assets/audio/point.mp3'),
+      soloud.loadAsset('assets/audio/win.mp3'),
+      soloud.loadAsset('assets/audio/brake.mp3'),
+    ]);
+
+    _fly = assets[0];
+    _hit = assets[1];
+    _point = assets[2];
+    _win = assets[3];
+    _brake = assets[4];
   }
 
   void playFly() => _playAudio(_fly);
