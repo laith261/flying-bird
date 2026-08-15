@@ -88,9 +88,14 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
   }
 
   Future<void> initSprite() async {
-    twoWayPipe = await Sprite.load("two_way_pipe.png");
-    pipePop = await Sprite.load("pipe_top.png");
-    pipe = await Sprite.load("pipe.png");
+    final sprites = await Future.wait([
+      Sprite.load("two_way_pipe.png"),
+      Sprite.load("pipe_top.png"),
+      Sprite.load("pipe.png"),
+    ]);
+    twoWayPipe = sprites[0];
+    pipePop = sprites[1];
+    pipe = sprites[2];
   }
 
   void addPoint() {
