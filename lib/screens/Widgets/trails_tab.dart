@@ -10,11 +10,7 @@ class TrailsTab extends StatefulWidget {
   final MyWorld game;
   final bool isProMode;
 
-  const TrailsTab({
-    super.key,
-    required this.game,
-    required this.isProMode,
-  });
+  const TrailsTab({super.key, required this.game, required this.isProMode});
 
   @override
   State<TrailsTab> createState() => _TrailsTabState();
@@ -26,10 +22,12 @@ class _TrailsTabState extends State<TrailsTab> {
       widget.game.tempTrail = null;
     }
 
-    widget.game.playerData.runBatched([() => widget.game.playerData.equipTrail(id)]);
+    widget.game.playerData.runBatched([
+      () => widget.game.playerData.equipTrail(id),
+    ]);
     widget.game.player.updateTrail(id);
-    
-    setState(() {}); 
+
+    setState(() {});
 
     widget.game.analytics.logEvent(
       name: 'select_trail',
@@ -80,10 +78,10 @@ class _TrailsTabState extends State<TrailsTab> {
                 widget.game.ads.showRewardedAd(widget.game, () {
                   widget.game.tempTrail = trailId;
                   widget.game.player.updateTrail(trailId);
-                  
+
                   // Force list rebuild to show the 'TEMP' indicator
                   widget.game.playerData.addShield(0);
-                  
+
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text("Trail equipped for one life!"),
@@ -163,10 +161,14 @@ class _TrailsTabState extends State<TrailsTab> {
             final int price = ShopHelper.getTrailPrice(trail, isPro);
             final int requiredScore = trail.requiredScore;
 
-            final bool isSelected = ShopHelper.isTrailSelected(widget.game, trailId);
+            final bool isSelected = ShopHelper.isTrailSelected(
+              widget.game,
+              trailId,
+            );
             final bool isTemp = widget.game.tempTrail == trailId;
             final bool isOwned = ShopHelper.isTrailOwned(widget.game, trailId);
-            final bool isLevelLocked = widget.game.highest.value < requiredScore;
+            final bool isLevelLocked =
+                widget.game.highest.value < requiredScore;
 
             return GestureDetector(
               onTap: () {
@@ -187,150 +189,178 @@ class _TrailsTabState extends State<TrailsTab> {
 
                 _selectTrail(trailId);
               },
-          child: Container(
-            width: 160,
-            margin: const EdgeInsets.only(right: 15, bottom: 50, top: 20),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? (isTemp
-                      ? Colors.blue.withAlpha(26)
-                      : Colors.orange.withAlpha(26))
-                  : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isSelected
-                    ? (isTemp ? Colors.blue : Colors.orange)
-                    : Colors.grey.withAlpha(77),
-                width: isSelected ? 4 : 2,
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  offset: Offset(0, 5),
-                ),
-              ],
-            ),
-            child: Stack(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      flex: 2,
-                      child: Padding(
-                        padding: EdgeInsets.zero,
-                        child: Opacity(
-                          opacity: isLevelLocked || (!isOwned && !isTemp) ? 0.3 : 1.0,
-                          child: CustomPaint(
-                            painter: TrailPreviewPainter(trailId),
-                            size: Size.infinite,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            name,
-                            style: GoogleFonts.luckiestGuy(
-                              textStyle: TextStyle(
-                                fontSize: 18,
-                                color: isSelected ? Colors.orange : Colors.grey,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          if (isLevelLocked)
-                            Text(
-                              "Score: $requiredScore",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.orange,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          else if (isTemp)
-                            const Text("TEMP",
-                                style: TextStyle(
-                                    color: Colors.blue,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,),)
-                          else if (!isOwned)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.monetization_on,
-                                    size: 16, color: Colors.amber,),
-                                const SizedBox(width: 3),
-                                Text(
-                                  "$price",
-                                  style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,),
-                                ),
-                              ],
-                            )
-                          else if (isSelected)
-                            const Text("EQUIPPED",
-                                style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,),),
-                        ],
-                      ),
+              child: Container(
+                width: 160,
+                margin: const EdgeInsets.only(right: 15, bottom: 50, top: 20),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? (isTemp
+                            ? Colors.blue.withAlpha(26)
+                            : Colors.orange.withAlpha(26))
+                      : Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: isSelected
+                        ? (isTemp ? Colors.blue : Colors.orange)
+                        : Colors.grey.withAlpha(77),
+                    width: isSelected ? 4 : 2,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
                     ),
                   ],
                 ),
-                if (isLevelLocked)
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withAlpha(128),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(Icons.lock, color: Colors.white, size: 40),
+                child: Stack(
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          flex: 2,
+                          child: Padding(
+                            padding: EdgeInsets.zero,
+                            child: Opacity(
+                              opacity: isLevelLocked || (!isOwned && !isTemp)
+                                  ? 0.3
+                                  : 1.0,
+                              child: CustomPaint(
+                                painter: TrailPreviewPainter(trailId),
+                                size: Size.infinite,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                name,
+                                style: GoogleFonts.luckiestGuy(
+                                  textStyle: TextStyle(
+                                    fontSize: 18,
+                                    color: isSelected
+                                        ? Colors.orange
+                                        : Colors.grey,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              if (isLevelLocked)
+                                Text(
+                                  "Score: $requiredScore",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              else if (isTemp)
+                                const Text(
+                                  "TEMP",
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                )
+                              else if (!isOwned)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.monetization_on,
+                                      size: 16,
+                                      color: Colors.amber,
+                                    ),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      "$price",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              else if (isSelected)
+                                const Text(
+                                  "EQUIPPED",
+                                  style: TextStyle(
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  )
-                else if (!isOwned && !isTemp)
-                  Center(
-                    child: Container(
-                      padding: const EdgeInsets.all(15),
-                      decoration: BoxDecoration(
-                        color: Colors.green.withAlpha(204),
-                        shape: BoxShape.circle,
+                    if (isLevelLocked)
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withAlpha(128),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.lock,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
+                      )
+                    else if (!isOwned && !isTemp)
+                      Center(
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.green.withAlpha(204),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.shopping_cart,
+                            color: Colors.white,
+                            size: 40,
+                          ),
+                        ),
                       ),
-                      child: const Icon(Icons.shopping_cart,
-                          color: Colors.white, size: 40,),
-                    ),
-                  ),
-                if (isTemp)
-                  const Positioned(
-                    top: 10,
-                    right: 10,
-                    child: Icon(Icons.access_time_filled,
-                        color: Colors.blue, size: 30,),
-                  )
-                else if (isSelected)
-                  const Positioned(
-                    top: 10,
-                    right: 10,
-                    child:
-                        Icon(Icons.check_circle, color: Colors.green, size: 30),
-                  ),
-              ],
-            ),
-          ),
+                    if (isTemp)
+                      const Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Icon(
+                          Icons.access_time_filled,
+                          color: Colors.blue,
+                          size: 30,
+                        ),
+                      )
+                    else if (isSelected)
+                      const Positioned(
+                        top: 10,
+                        right: 10,
+                        child: Icon(
+                          Icons.check_circle,
+                          color: Colors.green,
+                          size: 30,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
-  },);
   }
 }
 

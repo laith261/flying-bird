@@ -28,7 +28,6 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
 
   RotateRectTrail() : super(priority: 1);
 
-
   void addPoint(Vector2 point) {
     _particles.add(
       RotateRectParticle(position: point.clone() + Vector2(-2, 0)),
@@ -65,7 +64,10 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
     if (_particles.isEmpty) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+      canvas.saveLayer(
+        null,
+        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
+      );
     }
 
     if (isPro) {

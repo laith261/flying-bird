@@ -92,7 +92,8 @@ class _StartWidgetState extends State<StartWidget> {
                     game: game,
                     text: game.ads.didGetRewarded ? "continue" : "Start Game",
                   ),
-                  if (game.ads.rewardedAd != null && !game.ads.didGetRewarded) ...[
+                  if (game.ads.rewardedAd != null &&
+                      !game.ads.didGetRewarded) ...[
                     const SizedBox(height: 15),
                     RewardedAd(
                       game: game,
@@ -251,9 +252,7 @@ class _StartWidgetState extends State<StartWidget> {
           const SizedBox(width: 15),
           _buildIconButton(
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ShopScreen(game: game),
-              ),
+              MaterialPageRoute(builder: (context) => ShopScreen(game: game)),
             ),
             icon: Icons.store,
             color: Colors.green,
@@ -287,38 +286,34 @@ class _StartWidgetState extends State<StartWidget> {
       ),
     );
   }
+
   void congress() {
     if (!game.newHighest) return;
     game.newHighest = false;
     game.audio.playWin();
-    Future.delayed(
-      Duration.zero,
-          () {
-        if (!mounted) return;
-        Confetti.launch(
-          context,
-          options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
-        );
-      },
-    );
-    Future.delayed(
-      const Duration(milliseconds: 800),
-      () async {
-        if (!mounted) return;
-        final prefs = await SharedPreferences.getInstance();
-        final int lastReviewTimestamp = prefs.getInt('last_in_app_review_time') ?? 0;
-        final int now = DateTime.now().millisecondsSinceEpoch;
-        const int tenDaysInMillis = 10 * 24 * 60 * 60 * 1000;
+    Future.delayed(Duration.zero, () {
+      if (!mounted) return;
+      Confetti.launch(
+        context,
+        options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
+      );
+    });
+    Future.delayed(const Duration(milliseconds: 800), () async {
+      if (!mounted) return;
+      final prefs = await SharedPreferences.getInstance();
+      final int lastReviewTimestamp =
+          prefs.getInt('last_in_app_review_time') ?? 0;
+      final int now = DateTime.now().millisecondsSinceEpoch;
+      const int tenDaysInMillis = 10 * 24 * 60 * 60 * 1000;
 
-        if (now - lastReviewTimestamp >= tenDaysInMillis) {
-          final InAppReview inAppReview = InAppReview.instance;
-          if (await inAppReview.isAvailable()) {
-            await inAppReview.requestReview();
-            await prefs.setInt('last_in_app_review_time', now);
-          }
+      if (now - lastReviewTimestamp >= tenDaysInMillis) {
+        final InAppReview inAppReview = InAppReview.instance;
+        if (await inAppReview.isAvailable()) {
+          await inAppReview.requestReview();
+          await prefs.setInt('last_in_app_review_time', now);
         }
-      },
-    );
+      }
+    });
     game.analytics.logEvent(
       name: 'new_highest',
       parameters: {'score': game.highest},

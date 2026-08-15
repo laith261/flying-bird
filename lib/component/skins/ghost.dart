@@ -13,4 +13,3 @@ class Ghost extends Skin {
   @override
   bool get hasWings => false;
 }
-

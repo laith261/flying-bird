@@ -74,7 +74,8 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   PlayerInfo playerData = PlayerInfo();
   ValueNotifier<int> coins = ValueNotifier<int>(0);
   ValueNotifier<int> highest = ValueNotifier<int>(0);
-  final ValueNotifier<ChallengeData?> leaderboardChallenge = ValueNotifier<ChallengeData?>(null);
+  final ValueNotifier<ChallengeData?> leaderboardChallenge =
+      ValueNotifier<ChallengeData?>(null);
   bool hasShownChallengeAnimation = false;
 
   @override
@@ -99,7 +100,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     player.updateTrail(playerData.selectedTrail);
     player.skin = playerData.selectedSkin;
 
-
     // Listen for account changes
     GameAuth.player.listen((isAuthenticated) async {
       if (isAuthenticated != null) {
@@ -111,9 +111,11 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
           player.updateTrail(playerData.selectedTrail);
           await player.updateSkin(playerData.selectedSkin);
           updateScore();
-          
+
           // Re-fetch challenges for new account
-          LeaderboardHelper.fetchChallengeData(playerData.highScore).then((data) {
+          LeaderboardHelper.fetchChallengeData(playerData.highScore).then((
+            data,
+          ) {
             leaderboardChallenge.value = data;
           });
         }
@@ -228,7 +230,10 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
         // so the interstitial ad is postponed until the next time the player dies.
         return;
       }
-      Future.delayed(const Duration(milliseconds: 600), () => ads.showInterstitialAd());
+      Future.delayed(
+        const Duration(milliseconds: 600),
+        () => ads.showInterstitialAd(),
+      );
       deadTimes = 0;
     } else {
       deadTimes++;

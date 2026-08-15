@@ -46,7 +46,9 @@ class LeaderboardHelper {
           );
         } else if (cloudScore > localScore) {
           // Sync Leaderboard to Local
-          await playerData.runBatched([() => playerData.updateHighScore(cloudScore)]);
+          await playerData.runBatched([
+            () => playerData.updateHighScore(cloudScore),
+          ]);
         }
       }
     } catch (e) {

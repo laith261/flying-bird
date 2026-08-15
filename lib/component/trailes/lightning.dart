@@ -24,7 +24,7 @@ class LightningTrail extends PositionComponent implements GameTrail {
   final List<LightningParticle> _particles = [];
   bool isPro = false;
   double _time = 0;
-  final Random _rnd = Random();
+  final Random _rnd = Random.secure();
   double opacity = 1.0;
 
   LightningTrail() : super(priority: 1);
@@ -74,7 +74,10 @@ class LightningTrail extends PositionComponent implements GameTrail {
     if (_particles.isEmpty) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+      canvas.saveLayer(
+        null,
+        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
+      );
     }
 
     if (isPro) {

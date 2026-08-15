@@ -14,7 +14,12 @@ class StarParams {
 }
 
 class TrailPainterHelper {
-  static void drawRectTrail(Canvas canvas, Size size, Offset center, bool isPro) {
+  static void drawRectTrail(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    bool isPro,
+  ) {
     final paint = Paint()..style = PaintingStyle.fill;
     final int count = 5;
     final double spacing = 15.0;
@@ -38,18 +43,22 @@ class TrailPainterHelper {
           Colors.limeAccent,
         ];
         Color currentColor = neonColors[i % neonColors.length];
-        
+
         // Glow
         final glowPaint = Paint()
           ..style = PaintingStyle.fill
           ..color = currentColor.withValues(alpha: alpha * 0.4)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-        
+
         canvas.save();
         canvas.translate(pos.dx, pos.dy);
         canvas.rotate(angle);
         canvas.drawRect(
-          Rect.fromCenter(center: Offset.zero, width: (rectSize * 1.5) + 4, height: (rectSize * 1.5) + 4),
+          Rect.fromCenter(
+            center: Offset.zero,
+            width: (rectSize * 1.5) + 4,
+            height: (rectSize * 1.5) + 4,
+          ),
           glowPaint,
         );
         canvas.restore();
@@ -63,14 +72,23 @@ class TrailPainterHelper {
       canvas.translate(pos.dx, pos.dy);
       canvas.rotate(angle);
       canvas.drawRect(
-        Rect.fromCenter(center: Offset.zero, width: rectSize * 1.5, height: rectSize * 1.5),
+        Rect.fromCenter(
+          center: Offset.zero,
+          width: rectSize * 1.5,
+          height: rectSize * 1.5,
+        ),
         paint,
       );
       canvas.restore();
     }
   }
 
-  static void drawCircleTrail(Canvas canvas, Size size, Offset center, bool isPro) {
+  static void drawCircleTrail(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    bool isPro,
+  ) {
     final paint = Paint()..style = PaintingStyle.fill;
     final int count = 6;
     final double spacing = 12.0;
@@ -97,7 +115,7 @@ class TrailPainterHelper {
           ..style = PaintingStyle.fill
           ..color = currentColor.withValues(alpha: alpha * 0.4)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-        
+
         canvas.drawCircle(pos, radius + 3, glowPaint);
         paint.color = Colors.white.withValues(alpha: alpha);
       } else {
@@ -108,7 +126,12 @@ class TrailPainterHelper {
     }
   }
 
-  static void drawStarTrail(Canvas canvas, Size size, Offset center, bool isPro) {
+  static void drawStarTrail(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    bool isPro,
+  ) {
     final paint = Paint()..style = PaintingStyle.fill;
     final int count = 5;
     final double spacing = 18.0;
@@ -136,7 +159,7 @@ class TrailPainterHelper {
           ..style = PaintingStyle.fill
           ..color = currentColor.withValues(alpha: alpha * 0.4)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-        
+
         _drawStarShape(
           canvas,
           StarParams(center: pos, size: starSize + 4, rotation: rotation),
@@ -155,12 +178,17 @@ class TrailPainterHelper {
     }
   }
 
-  static void drawLightningTrail(Canvas canvas, Size size, Offset center, bool isPro) {
+  static void drawLightningTrail(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    bool isPro,
+  ) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.5
       ..strokeCap = StrokeCap.round;
-    
+
     final int count = 3;
     final double spacing = 20.0;
     // final Offset drawCenter = center + const Offset(20, 0);
@@ -192,7 +220,7 @@ class TrailPainterHelper {
           ..strokeCap = StrokeCap.round
           ..color = currentColor.withValues(alpha: alpha * 0.4)
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-        
+
         canvas.save();
         canvas.translate(pos.dx, pos.dy);
         canvas.drawPath(bolt, glowPaint);
@@ -211,7 +239,12 @@ class TrailPainterHelper {
     }
   }
 
-  static void drawLineTrail(Canvas canvas, Size size, Offset center, bool isPro) {
+  static void drawLineTrail(
+    Canvas canvas,
+    Size size,
+    Offset center,
+    bool isPro,
+  ) {
     final paint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 6
@@ -228,7 +261,7 @@ class TrailPainterHelper {
         ..strokeCap = StrokeCap.round
         ..color = Colors.orange.withValues(alpha: 0.4)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
-      
+
       canvas.drawLine(start, end, glowPaint);
 
       final shader = const LinearGradient(

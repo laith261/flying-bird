@@ -135,11 +135,7 @@ class DailyRewardDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildProgressIndicator(
-    int index,
-    bool isCompleted,
-    bool isCurrent,
-  ) {
+  Widget _buildProgressIndicator(int index, bool isCompleted, bool isCurrent) {
     return SizedBox(
       key: ValueKey('reward_day_$index'),
       width: 35,

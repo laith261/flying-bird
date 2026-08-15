@@ -20,7 +20,9 @@ class AdmobAds {
 
   Future<void> createInterstitialAd() async {
     InterstitialAd.load(
-      adUnitId: dotenv.env['InterstitialAd'] ?? 'ca-app-pub-3940256099942544/1033173712',
+      adUnitId:
+          dotenv.env['InterstitialAd'] ??
+          'ca-app-pub-3940256099942544/1033173712',
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
           _interstitialAd = ad;
@@ -59,7 +61,8 @@ class AdmobAds {
 
   void loadRewardedAd() {
     RewardedAd.load(
-      adUnitId: dotenv.env['RewardedAd'] ?? 'ca-app-pub-3940256099942544/5224354917',
+      adUnitId:
+          dotenv.env['RewardedAd'] ?? 'ca-app-pub-3940256099942544/5224354917',
       request: AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) => _rewardedAd = ad,

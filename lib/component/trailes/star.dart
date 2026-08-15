@@ -33,7 +33,7 @@ class StarTrail extends PositionComponent implements GameTrail {
   bool isPro = false;
   double _time = 0;
   double opacity = 1.0;
-  final Random _rnd = Random();
+  final Random _rnd = Random.secure();
 
   StarTrail() : super(priority: 1);
 
@@ -91,7 +91,10 @@ class StarTrail extends PositionComponent implements GameTrail {
     if (_particles.isEmpty) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(null, Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()));
+      canvas.saveLayer(
+        null,
+        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
+      );
     }
 
     if (isPro) {
