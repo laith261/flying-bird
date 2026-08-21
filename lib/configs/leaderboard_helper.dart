@@ -80,11 +80,11 @@ class LeaderboardHelper {
       int? playerRank;
 
       // Find current player's rank from scores
-      for (var score in scores) {
-        if (score.rawScore <= currentHighScore) {
-          playerRank = score.rank;
-          break;
-        }
+      final int rankIndex = scores.indexWhere(
+        (score) => score.rawScore <= currentHighScore,
+      );
+      if (rankIndex != -1) {
+        playerRank = scores[rankIndex].rank;
       }
 
       if (playerRank != null && playerRank > 1) {
