@@ -64,9 +64,7 @@ class PlayerInfo extends ChangeNotifier {
 
   Future<void> runBatched(List<Future<void> Function()> actions) async {
     try {
-      for (final action in actions) {
-        await action();
-      }
+      await Future.wait(actions.map((action) => action()));
     } finally {
       await save();
     }
