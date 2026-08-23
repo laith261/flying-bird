@@ -130,7 +130,6 @@ class TheBird extends SpriteComponent
       if (other.collect()) {
         game.audio.playPoint();
         game.playerData.runBatched([() => game.playerData.addCoins(1)]);
-        game.coins.value = game.playerData.coins;
       }
     }
   }
