@@ -43,10 +43,8 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
       currentGapY = game.size.y / 2;
     }
 
-    // Interpolate coinY
     double coinY = (lastGapY + currentGapY) / 2;
 
-    // Update lastGapY for next pipe
     lastGapY = currentGapY;
 
     if (isStandard) {

@@ -16,7 +16,8 @@ class Magnet extends Skin {
       final coinPos = game.pipes.toLocal(playerPos);
 
       final distanceSquared = coin.position.distanceToSquared(coinPos);
-      if (distanceSquared < 22500) { // 150 * 150
+      if (distanceSquared < 22500) {
+        // 150 * 150
         final direction = (coinPos - coin.position).normalized();
         coin.position += direction * 250 * dt;
       }
