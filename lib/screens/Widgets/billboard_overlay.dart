@@ -49,7 +49,7 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
           widget.game.billboard.isAdLoaded = true;
         },
         onAdFailedToLoad: (ad, error) {
-          print("laith");
+          debugPrint("Ad failed to load: $error");
           ad.dispose();
           if (mounted) {
             setState(() {
