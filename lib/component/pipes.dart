@@ -116,7 +116,7 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
   }
 
   void reset() {
-    removeWhere((element) => element is Pipe || element is Coin);
+    removeWhere((element) => element is Pipe);
     lastGapY = game.size.y / 2;
     addPipe(withCoin: false);
   }
