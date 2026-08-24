@@ -188,9 +188,7 @@ class _StartWidgetState extends State<StartWidget> {
                     },
                   ),
                   const SizedBox(height: 20),
-                   NativeAdWidget(
-                    adUnitId: Consts.NativeAd
-                  ),
+                  NativeAdWidget(adUnitId: Consts.NativeAd),
                 ],
               ),
             ),
