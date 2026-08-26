@@ -11,7 +11,6 @@ import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
 import 'package:games_services/games_services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'component/wing.dart';
 import 'component/billboard.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -39,7 +38,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  await MobileAds.instance.initialize();
+  await AdmobAds.initializeMobileAds();
   Flame.device.fullScreen();
   Flame.device.setPortraitUpOnly();
   await PlayerInfo.init();
