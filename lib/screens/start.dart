@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';

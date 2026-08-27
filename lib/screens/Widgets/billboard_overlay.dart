@@ -5,9 +5,9 @@ import 'package:game/main.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 /// A Flutter widget positioned inside `backgroundBuilder` above `bg.png`.
-/// It renders the billboard image frame and inside it, a live AdMob test banner (`BannerAd`).
+/// It renders the billboard image frame and inside it, a live AdMob test native ad.
 /// Because this is in `backgroundBuilder`, Flame game components (bird, pipes, clouds)
-/// will cleanly render in front of both the billboard and the AdMob banner!
+/// will cleanly render in front of both the billboard and the AdMob native ad!
 class BillboardOverlayWidget extends StatefulWidget {
   const BillboardOverlayWidget({super.key, required this.game});
 
@@ -18,54 +18,58 @@ class BillboardOverlayWidget extends StatefulWidget {
 }
 
 class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
-  BannerAd? _bannerAd;
-  bool _isBannerLoaded = false;
+  NativeAd? _nativeAd;
+  bool _isAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadBannerAd();
+    _loadNativeAd();
   }
 
-  /// Loads the AdMob banner ad using dotenv config or official Google test IDs.
-  void _loadBannerAd() {
+  /// Loads the AdMob native ad using dotenv config or official Google test IDs.
+  void _loadNativeAd() {
     final String adUnitId =
-        dotenv.env['BannerAd'] ??
+        dotenv.env['NativeAd'] ??
         (defaultTargetPlatform == TargetPlatform.android
-            ? 'ca-app-pub-3940256099942544/6300978111'
-            : 'ca-app-pub-3940256099942544/2934735716');
+            ? 'ca-app-pub-3940256099942544/2247696110' // Android native ad test id
+            : 'ca-app-pub-3940256099942544/3986624511'); // iOS native ad test id
 
-    _bannerAd = BannerAd(
+    _nativeAd = NativeAd(
       adUnitId: adUnitId,
-      size: AdSize.banner,
       request: const AdRequest(),
-      listener: BannerAdListener(
+      listener: NativeAdListener(
         onAdLoaded: (ad) {
           if (mounted) {
             setState(() {
-              _isBannerLoaded = true;
+              _isAdLoaded = true;
             });
           }
           widget.game.billboard.isAdLoaded = true;
         },
         onAdFailedToLoad: (ad, error) {
-          debugPrint("Ad failed to load: $error");
+          debugPrint("Native Ad failed to load: $error");
           ad.dispose();
           if (mounted) {
             setState(() {
-              _bannerAd = null;
-              _isBannerLoaded = false;
+              _nativeAd = null;
+              _isAdLoaded = false;
             });
           }
           widget.game.billboard.isAdLoaded = false;
         },
+      ),
+      nativeTemplateStyle: NativeTemplateStyle(
+        templateType: TemplateType.medium,
+        mainBackgroundColor: Colors.black,
+        cornerRadius: 8.0,
       ),
     )..load();
   }
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    _nativeAd?.dispose();
     super.dispose();
   }
 
@@ -78,10 +82,10 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
           return const SizedBox.shrink();
         }
 
-        // Only show billboard when the game is started, banner ad is loaded and not null, and within screen boundaries
+        // Only show billboard when the game is started, native ad is loaded and not null, and within screen boundaries
         if (!widget.game.isStarted ||
-            !_isBannerLoaded ||
-            _bannerAd == null ||
+            !_isAdLoaded ||
+            _nativeAd == null ||
             rect.right < -50 ||
             rect.left > widget.game.size.x + 50) {
           return const SizedBox.shrink();
@@ -104,7 +108,7 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
                 fit: BoxFit.fill,
               ),
             ),
-            // 2. Live AdMob Banner Container inside Billboard display face
+            // 2. Live AdMob Native Ad Container inside Billboard display face
             Positioned(
               left: rect.left,
               top: rect.top,
@@ -117,9 +121,9 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
                 child: FittedBox(
                   fit: BoxFit.contain,
                   child: SizedBox(
-                    width: _bannerAd!.size.width.toDouble(),
-                    height: _bannerAd!.size.height.toDouble(),
-                    child: AdWidget(ad: _bannerAd!),
+                    width: 300,
+                    height: 250, // Standard size for medium template native ad
+                    child: AdWidget(ad: _nativeAd!),
                   ),
                 ),
               ),

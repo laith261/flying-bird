@@ -121,8 +121,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
       }
     });
 
-    // addAll({billboard, clouds, player, pipes, wing});
-    addAll({clouds, player, pipes, wing});
+    addAll({billboard, clouds, player, pipes, wing});
     updateScore();
 
     // Initial overlays
