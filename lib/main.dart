@@ -25,6 +25,7 @@ import 'models/player_data.dart';
 import 'screens/main_widget.dart';
 import 'configs/leaderboard_helper.dart';
 import 'configs/notification_helper.dart';
+import 'component/helpers/daily_missions_helper.dart';
 import 'package:game/component/skins/skin_enum.dart';
 
 @pragma('vm:entry-point')
@@ -81,6 +82,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   Future<void> onLoad() async {
     // debugMode = true;
     playerData = await PlayerInfo.load();
+    await DailyMissionsManager.instance.init();
     await Skins.loadAllSkins();
     coins.value = playerData.coins;
     highest.value = playerData.highScore;
@@ -127,6 +129,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     // Initial overlays
     overlays.add('start');
     overlays.add('coin_display');
+    overlays.add('highest_score');
   }
 
   @override
@@ -208,6 +211,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     audio.playHit();
     Functions.vibration(isStarted);
     checkHighest();
+    DailyMissionsManager.instance.trackGamePlayed(scorePoint);
     showingAd();
     isStarted = false;
     audio.setStarted(isStarted);

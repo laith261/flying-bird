@@ -18,6 +18,7 @@ import 'skins/skin_enum.dart';
 import 'helpers/collision_helper.dart';
 import 'helpers/glow_helper.dart';
 import 'helpers/shield_helper.dart';
+import 'helpers/daily_missions_helper.dart';
 import 'trailes/game_trail.dart';
 
 class TheBird extends SpriteComponent
@@ -130,6 +131,7 @@ class TheBird extends SpriteComponent
       if (other.collect()) {
         game.audio.playPoint();
         game.playerData.runBatched([() => game.playerData.addCoins(1)]);
+        DailyMissionsManager.instance.trackCoinCollected(1);
       }
     }
   }

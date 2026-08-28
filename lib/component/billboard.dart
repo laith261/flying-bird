@@ -28,6 +28,8 @@ class Billboard extends SpriteComponent with HasGameReference<MyWorld> {
 
   bool isAdLoaded = false;
   final ValueNotifier<Rect?> widgetRectNotifier = ValueNotifier<Rect?>(null);
+  VoidCallback? onAdRefreshRequested;
+  bool _wasVisibleOnScreen = false;
 
   @override
   Future<void> onLoad() async {
@@ -84,6 +86,15 @@ class Billboard extends SpriteComponent with HasGameReference<MyWorld> {
 
   @override
   void update(double dt) {
+    final bool isVisibleNow = game.isStarted &&
+        isAdLoaded &&
+        _state != BillboardState.waitingInterval;
+
+    if (_wasVisibleOnScreen && !isVisibleNow) {
+      onAdRefreshRequested?.call();
+    }
+    _wasVisibleOnScreen = isVisibleNow;
+
     if (!game.isStarted || !isAdLoaded) {
       _updateWidgetRect();
       return;

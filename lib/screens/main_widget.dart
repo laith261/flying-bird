@@ -9,6 +9,7 @@ import '../main.dart';
 import 'start.dart';
 import 'Widgets/coin_display.dart';
 import 'Widgets/billboard_overlay.dart';
+import 'Widgets/hieh_score.dart';
 
 class MainWidget extends StatefulWidget {
   const MainWidget({super.key, required this.game});
@@ -69,6 +70,8 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
                     'start': (context, _) => StartWidget(game: widget.game),
                     'coin_display': (context, _) =>
                         CoinDisplay(game: widget.game),
+                    'highest_score': (context, _) =>
+                        HighestScore(game: widget.game),
                   },
                   backgroundBuilder: (context) => Stack(
                     children: [

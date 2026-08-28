@@ -8,8 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../configs/const.dart';
 import '../configs/functions.dart';
 import '../component/helpers/reward_helper.dart';
-import 'Widgets/hieh_score.dart';
 import 'Widgets/reword_ad.dart';
+import 'Widgets/daily_missions_dialog.dart';
+import '../component/helpers/daily_missions_helper.dart';
 import 'shop.dart';
 import 'Widgets/start_button.dart';
 import 'Widgets/power_up_toggles.dart';
@@ -87,7 +88,6 @@ class _StartWidgetState extends State<StartWidget> {
                       ),
                     ),
                   ),
-                  HighestScore(game: game),
                   const SizedBox(height: 30),
                   StartButton(
                     game: game,
@@ -247,6 +247,49 @@ class _StartWidgetState extends State<StartWidget> {
             onPressed: () => Functions.showAchievements(),
             icon: Icons.star_rounded,
             color: Colors.purpleAccent,
+          ),
+          const SizedBox(width: 15),
+          AnimatedBuilder(
+            animation: DailyMissionsManager.instance,
+            builder: (context, child) {
+              final hasBadge =
+                  DailyMissionsManager.instance.hasUnclaimedCompletedMission;
+              return Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  _buildIconButton(
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (context) =>
+                          DailyMissionsDialog(playerData: game.playerData),
+                    ),
+                    icon: Icons.assignment_turned_in_rounded,
+                    color: Colors.pinkAccent,
+                  ),
+                  if (hasBadge)
+                    Positioned(
+                      top: -2,
+                      right: -2,
+                      child: Container(
+                        width: 14,
+                        height: 14,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 4,
+                              offset: Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
           ),
           const SizedBox(width: 15),
           _buildIconButton(

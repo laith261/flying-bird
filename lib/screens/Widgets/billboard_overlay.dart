@@ -24,6 +24,18 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
   @override
   void initState() {
     super.initState();
+    widget.game.billboard.onAdRefreshRequested = _refreshAd;
+    _loadNativeAd();
+  }
+
+  void _refreshAd() {
+    if (!mounted) return;
+    _nativeAd?.dispose();
+    setState(() {
+      _nativeAd = null;
+      _isAdLoaded = false;
+    });
+    widget.game.billboard.isAdLoaded = false;
     _loadNativeAd();
   }
 
@@ -69,6 +81,7 @@ class _BillboardOverlayWidgetState extends State<BillboardOverlayWidget> {
 
   @override
   void dispose() {
+    widget.game.billboard.onAdRefreshRequested = null;
     _nativeAd?.dispose();
     super.dispose();
   }
