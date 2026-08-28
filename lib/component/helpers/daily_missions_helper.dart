@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/player_data.dart';
@@ -17,6 +18,8 @@ class DailyMissionsManager extends ChangeNotifier {
   bool _coinsClaimed = false;
   bool _scoreClaimed = false;
   bool _gamesClaimed = false;
+
+  Timer? _saveTimer;
 
   // Getters
   String get date => _date;
@@ -61,7 +64,8 @@ class DailyMissionsManager extends ChangeNotifier {
 
   void _checkReset() {
     final now = DateTime.now();
-    final todayStr = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    final todayStr =
+        "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
     if (_date != todayStr) {
       _date = todayStr;
       _coinsProgress = 0;
@@ -92,7 +96,12 @@ class DailyMissionsManager extends ChangeNotifier {
     _checkReset();
     if (_coinsProgress < 10) {
       _coinsProgress = (_coinsProgress + amount).clamp(0, 10);
-      await _saveData();
+
+      _saveTimer?.cancel();
+      _saveTimer = Timer(const Duration(seconds: 2), () {
+        _saveData();
+      });
+
       notifyListeners();
     }
   }
@@ -106,6 +115,7 @@ class DailyMissionsManager extends ChangeNotifier {
     if (score > _scoreProgress) {
       _scoreProgress = score.clamp(0, 15);
     }
+    _saveTimer?.cancel();
     await _saveData();
     notifyListeners();
   }
