@@ -61,7 +61,8 @@ class DailyMissionsManager extends ChangeNotifier {
 
   void _checkReset() {
     final now = DateTime.now();
-    final todayStr = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    final todayStr =
+        "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
     if (_date != todayStr) {
       _date = todayStr;
       _coinsProgress = 0;

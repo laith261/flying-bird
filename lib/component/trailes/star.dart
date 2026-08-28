@@ -33,7 +33,7 @@ class StarTrail extends PositionComponent implements GameTrail {
   bool isPro = false;
   double _time = 0;
   double opacity = 1.0;
-  final Random _rnd = Random.secure();
+  final Random _rnd = Random();
 
   StarTrail() : super(priority: 1);
 
