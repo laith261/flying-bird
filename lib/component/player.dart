@@ -130,7 +130,7 @@ class TheBird extends SpriteComponent
     } else if (other is Coin) {
       if (other.collect()) {
         game.audio.playPoint();
-        game.playerData.runBatched([() => game.playerData.addCoins(1)]);
+        game.playerData.addCoins(1);
         DailyMissionsManager.instance.trackCoinCollected(1);
       }
     }
