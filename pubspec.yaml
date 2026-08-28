@@ -40,6 +40,7 @@ dev_dependencies:
   flutter_launcher_icons: ^0.14.4
   flutter_native_splash: ^2.4.6
   dart_code_metrics: any
+  mocktail: ^1.0.5
 
 flutter_launcher_icons:
   android: "launcher_icon"
