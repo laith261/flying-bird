@@ -182,7 +182,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> {
         color: Colors.grey.withAlpha(20),
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: isCompleted ? Colors.green.withAlpha(100) : Colors.grey.withAlpha(50),
+          color: isCompleted
+              ? Colors.green.withAlpha(100)
+              : Colors.grey.withAlpha(50),
           width: 1.5,
         ),
       ),
@@ -270,7 +272,10 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> {
               // Action Button / Tracker Indicator
               isTrackerOnly
                   ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.blue.withAlpha(40),
                         borderRadius: BorderRadius.circular(10),
@@ -347,10 +352,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> {
               Text(
                 "Claim",
                 style: GoogleFonts.luckiestGuy(
-                  textStyle: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                  ),
+                  textStyle: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
               const SizedBox(width: 4),

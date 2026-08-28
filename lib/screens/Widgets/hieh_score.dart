@@ -17,17 +17,11 @@ class HighestScore extends StatelessWidget {
         valueListenable: game.highest,
         builder: (context, value, child) {
           return Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.black.withAlpha(102),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withAlpha(128),
-                width: 2,
-              ),
+              border: Border.all(color: Colors.white.withAlpha(128), width: 2),
               boxShadow: const [
                 BoxShadow(
                   color: Colors.black26,

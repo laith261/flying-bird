@@ -86,7 +86,8 @@ class Billboard extends SpriteComponent with HasGameReference<MyWorld> {
 
   @override
   void update(double dt) {
-    final bool isVisibleNow = game.isStarted &&
+    final bool isVisibleNow =
+        game.isStarted &&
         isAdLoaded &&
         _state != BillboardState.waitingInterval;
 

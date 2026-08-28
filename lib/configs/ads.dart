@@ -72,8 +72,8 @@ class AdmobAds {
           _interstitialAd = null;
           _isInterstitialLoading = false;
           if (_numInterstitialLoadAttempts <= _maxFailedLoadAttempts) {
-            final int delayMs =
-                (pow(2, _numInterstitialLoadAttempts) * 1000).toInt();
+            final int delayMs = (pow(2, _numInterstitialLoadAttempts) * 1000)
+                .toInt();
             Timer(
               Duration(milliseconds: delayMs),
               () => createInterstitialAd(),
@@ -128,8 +128,8 @@ class AdmobAds {
           _rewardedAd = null;
           _isRewardedLoading = false;
           if (_numRewardedLoadAttempts <= _maxFailedLoadAttempts) {
-            final int delayMs =
-                (pow(2, _numRewardedLoadAttempts) * 1000).toInt();
+            final int delayMs = (pow(2, _numRewardedLoadAttempts) * 1000)
+                .toInt();
             Timer(Duration(milliseconds: delayMs), () => loadRewardedAd());
           } else {
             debugPrint(

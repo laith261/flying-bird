@@ -24,7 +24,7 @@ class LightningTrail extends PositionComponent implements GameTrail {
   final List<LightningParticle> _particles = [];
   bool isPro = false;
   double _time = 0;
-  final Random _rnd = Random.secure();
+  final Random _rnd = Random();
   double opacity = 1.0;
 
   LightningTrail() : super(priority: 1);
