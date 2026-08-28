@@ -143,4 +143,16 @@ class DailyMissionsManager extends ChangeNotifier {
       await playerData.runBatched([() => playerData.addCoins(10)]);
     }
   }
+
+  @visibleForTesting
+  void resetForTesting() {
+    _isInitialized = false;
+    _date = '';
+    _coinsProgress = 0;
+    _scoreProgress = 0;
+    _gamesPlayed = 0;
+    _coinsClaimed = false;
+    _scoreClaimed = false;
+    _gamesClaimed = false;
+  }
 }
