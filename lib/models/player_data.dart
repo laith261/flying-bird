@@ -202,6 +202,11 @@ class PlayerInfo extends ChangeNotifier {
     }
   }
 
+  @visibleForTesting
+  static void setPrefsForTesting(SharedPreferences prefs) {
+    _prefs = prefs;
+  }
+
   Future<void> save() async {
     if (_playerId == null) {
       try {
