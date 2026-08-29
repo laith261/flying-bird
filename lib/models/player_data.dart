@@ -3,9 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:game/component/skins/skin_enum.dart';
 import 'package:games_services/games_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:game/models/games_services_wrapper.dart';
 
 class PlayerInfo extends ChangeNotifier {
   static const String _storageKey = 'PlayerData';
+
+  // Expose wrapper for testing
+  static GamesServicesWrapper _gamesServicesWrapper = const GamesServicesWrapper();
+  @visibleForTesting
+  static set gamesServicesWrapper(GamesServicesWrapper wrapper) {
+    _gamesServicesWrapper = wrapper;
+  }
 
   int _highScore;
   int _coins;
@@ -235,7 +243,7 @@ class PlayerInfo extends ChangeNotifier {
   static Future<PlayerInfo> load() async {
     String? currentPlayerId;
     try {
-      currentPlayerId = await GamesServices.getPlayerID();
+      currentPlayerId = await _gamesServicesWrapper.getPlayerID();
     } catch (e) {
       if (kDebugMode) {
         debugPrint('Error getting player ID: $e');
@@ -269,7 +277,7 @@ class PlayerInfo extends ChangeNotifier {
 
     PlayerInfo? cloudData;
     try {
-      final String? cloudJson = await GamesServices.loadGame(name: _storageKey);
+      final String? cloudJson = await _gamesServicesWrapper.loadGame(name: _storageKey);
       if (cloudJson != null && cloudJson.isNotEmpty) {
         cloudData = PlayerInfo.fromJson(jsonDecode(cloudJson));
       }
@@ -291,7 +299,7 @@ class PlayerInfo extends ChangeNotifier {
           debugPrint('Local data is newer. Overwriting Cloud.');
         }
         try {
-          await GamesServices.saveGame(
+          await _gamesServicesWrapper.saveGame(
             name: _storageKey,
             data: jsonEncode(localData.toJson()),
           );
