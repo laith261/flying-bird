@@ -9,7 +9,8 @@ class PlayerInfo extends ChangeNotifier {
   static const String _storageKey = 'PlayerData';
 
   // Expose wrapper for testing
-  static GamesServicesWrapper _gamesServicesWrapper = const GamesServicesWrapper();
+  static GamesServicesWrapper _gamesServicesWrapper =
+      const GamesServicesWrapper();
   @visibleForTesting
   static set gamesServicesWrapper(GamesServicesWrapper wrapper) {
     _gamesServicesWrapper = wrapper;
@@ -277,7 +278,9 @@ class PlayerInfo extends ChangeNotifier {
 
     PlayerInfo? cloudData;
     try {
-      final String? cloudJson = await _gamesServicesWrapper.loadGame(name: _storageKey);
+      final String? cloudJson = await _gamesServicesWrapper.loadGame(
+        name: _storageKey,
+      );
       if (cloudJson != null && cloudJson.isNotEmpty) {
         cloudData = PlayerInfo.fromJson(jsonDecode(cloudJson));
       }

@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:game/component/player.dart';
 
 class ShieldHelper {
-  static void drawShield(Canvas canvas, TheBird player, double angle) {
+  static void drawShield(
+    Canvas canvas,
+    TheBird player,
+    double angle,
+    double time,
+  ) {
     canvas.save();
     // Counter-rotate the shield around the center of the bird
     canvas.translate(player.width / 2, player.height / 2);
@@ -11,7 +16,6 @@ class ShieldHelper {
     canvas.translate(-player.width / 2, -player.height / 2);
 
     // Enhanced "Orbiting Plasma" Shield with Trails
-    double time = DateTime.now().millisecondsSinceEpoch / 1000;
     double orbitRadius = player.width * 0.75;
 
     // Draw subtle rotating energy ring
