@@ -54,6 +54,7 @@ class TheBird extends SpriteComponent
   bool isInvincible = false;
   bool hasActiveShield = false;
   bool isGhostMode = false;
+  double _shieldTime = 0;
 
   @override
   Future<void> onLoad() async {
@@ -175,7 +176,7 @@ class TheBird extends SpriteComponent
         !isInvincible;
 
     if (showShield) {
-      ShieldHelper.drawShield(canvas, this, angle);
+      ShieldHelper.drawShield(canvas, this, angle, _shieldTime);
     } else if (isInvincible) {
       // No orbiting effect during flash as requested
     }
@@ -191,6 +192,7 @@ class TheBird extends SpriteComponent
 
   @override
   update(double dt) {
+    _shieldTime += dt;
     goDown(dt);
 
     if (game.isStarted && _selectedTrail != 'none') {
