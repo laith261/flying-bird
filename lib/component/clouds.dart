@@ -5,7 +5,6 @@ import 'package:game/configs/const.dart';
 import 'package:game/main.dart';
 
 class Clouds extends ParallaxComponent<MyWorld> {
-  @override
   Future<void> onLoad() async {
     priority = 1;
     final image = await Flame.images.load("clouds.png");
