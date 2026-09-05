@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:games_services/games_services.dart' as gs;
 import '../models/player_data.dart';
 import 'const.dart';
@@ -51,8 +52,10 @@ class LeaderboardHelper {
           ]);
         }
       }
-    } catch (e) {
-      // ignore
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('Error syncing high score: $e\n$stackTrace');
+      }
     }
   }
 
@@ -114,8 +117,10 @@ class LeaderboardHelper {
       }
 
       return null;
-    } catch (e) {
-      // ignore
+    } catch (e, stackTrace) {
+      if (kDebugMode) {
+        debugPrint('Error fetching challenge data: $e\n$stackTrace');
+      }
       return null;
     }
   }
