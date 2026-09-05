@@ -12,6 +12,10 @@ class DailyMissionsManager extends ChangeNotifier {
   bool _isInitialized = false;
 
   String _date = '';
+  int _lastCheckYear = -1;
+  int _lastCheckMonth = -1;
+  int _lastCheckDay = -1;
+
   int _coinsProgress = 0;
   int _scoreProgress = 0;
   int _gamesPlayed = 0;
@@ -64,6 +68,18 @@ class DailyMissionsManager extends ChangeNotifier {
 
   void _checkReset() {
     final now = DateTime.now();
+
+    // Fast path: avoid expensive string formatting if the day hasn't changed.
+    if (_lastCheckYear == now.year &&
+        _lastCheckMonth == now.month &&
+        _lastCheckDay == now.day) {
+      return;
+    }
+
+    _lastCheckYear = now.year;
+    _lastCheckMonth = now.month;
+    _lastCheckDay = now.day;
+
     final todayStr =
         "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
     if (_date != todayStr) {
@@ -90,6 +106,13 @@ class DailyMissionsManager extends ChangeNotifier {
     await _prefs!.setBool('dm_games_claimed', _gamesClaimed);
   }
 
+  void _scheduleSave() {
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(seconds: 2), () {
+      _saveData();
+    });
+  }
+
   // Tracking methods
   Future<void> trackCoinCollected(int amount) async {
     await init();
@@ -97,10 +120,7 @@ class DailyMissionsManager extends ChangeNotifier {
     if (_coinsProgress < 10) {
       _coinsProgress = (_coinsProgress + amount).clamp(0, 10);
 
-      _saveTimer?.cancel();
-      _saveTimer = Timer(const Duration(seconds: 2), () {
-        _saveData();
-      });
+      _scheduleSave();
 
       notifyListeners();
     }
@@ -115,8 +135,9 @@ class DailyMissionsManager extends ChangeNotifier {
     if (score > _scoreProgress) {
       _scoreProgress = score.clamp(0, 15);
     }
-    _saveTimer?.cancel();
-    await _saveData();
+
+    _scheduleSave();
+
     notifyListeners();
   }
 
@@ -158,11 +179,16 @@ class DailyMissionsManager extends ChangeNotifier {
   void resetForTesting() {
     _isInitialized = false;
     _date = '';
+    _lastCheckYear = -1;
+    _lastCheckMonth = -1;
+    _lastCheckDay = -1;
     _coinsProgress = 0;
     _scoreProgress = 0;
     _gamesPlayed = 0;
     _coinsClaimed = false;
     _scoreClaimed = false;
     _gamesClaimed = false;
+    _saveTimer?.cancel();
+    _saveTimer = null;
   }
 }
