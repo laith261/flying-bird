@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 
 import 'package:flame/components.dart';
@@ -21,7 +22,7 @@ class RotateRectParticle {
 }
 
 class RotateRectTrail extends PositionComponent implements GameTrail {
-  final List<RotateRectParticle> _particles = [];
+  final Queue<RotateRectParticle> _particles = Queue();
   bool isPro = false;
   double _time = 0;
   double opacity = 1.0;
@@ -46,16 +47,16 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
       _time += dt;
     }
 
-    for (int i = _particles.length - 1; i >= 0; i--) {
-      final p = _particles[i];
+    for (final p in _particles) {
       p.age += dt;
       p.position.x -= Consts.pipeSpeed * dt;
       // Rotate 0 to 2pi over lifespan
       p.angle = (p.age / p.lifespan) * 2 * pi;
+    }
 
-      if (p.age >= p.lifespan) {
-        _particles.removeAt(i);
-      }
+    while (_particles.isNotEmpty &&
+        _particles.first.age >= _particles.first.lifespan) {
+      _particles.removeFirst();
     }
   }
 
