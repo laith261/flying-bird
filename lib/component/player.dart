@@ -53,7 +53,19 @@ class TheBird extends SpriteComponent
   final double _trailInterval = 0.05;
   bool isInvincible = false;
   bool hasActiveShield = false;
-  bool isGhostMode = false;
+  bool _isGhostMode = false;
+  bool get isGhostMode => _isGhostMode;
+  set isGhostMode(bool value) {
+    if (_isGhostMode == value) return;
+    _isGhostMode = value;
+
+    // Update trails opacity
+    double targetOpacity = _isGhostMode ? 0.6 : 1.0;
+    for (var trail in _trails.values) {
+      trail.opacity = targetOpacity;
+    }
+  }
+
   double _shieldTime = 0;
 
   @override
@@ -212,12 +224,6 @@ class TheBird extends SpriteComponent
     }
 
     skin.skin.ability(this, dt);
-
-    // Update trails opacity using collection loop
-    double targetOpacity = isGhostMode ? 0.6 : 1.0;
-    for (var trail in _trails.values) {
-      trail.opacity = targetOpacity;
-    }
 
     super.update(dt);
   }
