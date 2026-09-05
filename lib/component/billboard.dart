@@ -31,7 +31,6 @@ class Billboard extends SpriteComponent with HasGameReference<MyWorld> {
   VoidCallback? onAdRefreshRequested;
   bool _wasVisibleOnScreen = false;
 
-  @override
   Future<void> onLoad() async {
     try {
       final loadedSprite = await Sprite.load("billboard.png");
