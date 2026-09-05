@@ -31,8 +31,8 @@ class LineTrail extends PositionComponent implements GameTrail {
     }
 
     // Limit trail length to shorten it
-    while (_points.length > 25) {
-      _points.removeAt(0);
+    if (_points.length > 25) {
+      _points.removeRange(0, _points.length - 25);
     }
   }
 
