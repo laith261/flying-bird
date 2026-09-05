@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:game/component/skins/skin_enum.dart';
@@ -71,12 +72,24 @@ class PlayerInfo extends ChangeNotifier {
 
   // --- Logic Methods ---
 
+  Timer? _saveTimer;
+  bool _savePending = false;
+
   Future<void> runBatched(List<Future<void> Function()> actions) async {
     try {
       await Future.wait(actions.map((action) => action()));
     } finally {
-      await save();
+      _scheduleSave();
     }
+  }
+
+  void _scheduleSave() {
+    if (_savePending) return;
+    _savePending = true;
+    _saveTimer = Timer(const Duration(seconds: 2), () {
+      _savePending = false;
+      save();
+    });
   }
 
   Future<void> addShield(int amount) async {
