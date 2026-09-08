@@ -7,10 +7,7 @@ import 'package:game/main.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobAds {
-  AdmobAds() {
-    createInterstitialAd();
-    loadRewardedAd();
-  }
+  AdmobAds();
 
   static Future<void> initializeMobileAds() async {
     final Completer<void> completer = Completer<void>();
@@ -40,21 +37,34 @@ class AdmobAds {
   }
 
   InterstitialAd? _interstitialAd;
-  int _numInterstitialLoadAttempts = 0;
   bool _isInterstitialLoading = false;
+  bool _isInterstitialCancelled = false;
 
   RewardedAd? _rewardedAd;
-  int _numRewardedLoadAttempts = 0;
   bool _isRewardedLoading = false;
 
-  final int _maxFailedLoadAttempts = 3;
   bool didGetRewarded = false;
 
   RewardedAd? get rewardedAd => _rewardedAd;
+  bool get isRewardedLoading => _isRewardedLoading;
 
-  Future<void> createInterstitialAd() async {
+  /// Cancels any pending or loaded interstitial ad.
+  void cancelInterstitialAd() {
+    _isInterstitialCancelled = true;
+    if (_interstitialAd != null) {
+      _interstitialAd!.dispose();
+      _interstitialAd = null;
+    }
+  }
+
+  /// Loads and displays an Interstitial ad on-demand at round boundary.
+  Future<void> loadAndShowInterstitialAd({
+    VoidCallback? onAdClosed,
+    VoidCallback? onAdFailed,
+  }) async {
     if (_interstitialAd != null || _isInterstitialLoading) return;
     _isInterstitialLoading = true;
+    _isInterstitialCancelled = false;
 
     InterstitialAd.load(
       adUnitId:
@@ -62,107 +72,112 @@ class AdmobAds {
           'ca-app-pub-3940256099942544/1033173712',
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
-          _interstitialAd = ad;
-          _numInterstitialLoadAttempts = 0;
           _isInterstitialLoading = false;
+          if (_isInterstitialCancelled) {
+            ad.dispose();
+            _interstitialAd = null;
+            onAdFailed?.call();
+            return;
+          }
+          _interstitialAd = ad;
           _interstitialAd!.setImmersiveMode(true);
+          _interstitialAd!.fullScreenContentCallback =
+              FullScreenContentCallback(
+                onAdDismissedFullScreenContent: (InterstitialAd ad) {
+                  ad.dispose();
+                  _interstitialAd = null;
+                  onAdClosed?.call();
+                },
+                onAdFailedToShowFullScreenContent: (
+                  InterstitialAd ad,
+                  AdError error,
+                ) {
+                  ad.dispose();
+                  _interstitialAd = null;
+                  onAdFailed?.call();
+                },
+              );
+          _interstitialAd!.show();
         },
         onAdFailedToLoad: (LoadAdError error) {
-          _numInterstitialLoadAttempts += 1;
-          _interstitialAd = null;
           _isInterstitialLoading = false;
-          if (_numInterstitialLoadAttempts <= _maxFailedLoadAttempts) {
-            final int delayMs = (pow(2, _numInterstitialLoadAttempts) * 1000)
-                .toInt();
-            Timer(
-              Duration(milliseconds: delayMs),
-              () => createInterstitialAd(),
-            );
-          } else {
-            debugPrint(
-              'Failed to load interstitial ad after $_maxFailedLoadAttempts attempts',
-            );
-          }
+          _interstitialAd = null;
+          debugPrint('Failed to load interstitial ad: ${error.message}');
+          onAdFailed?.call();
         },
       ),
       request: const AdRequest(),
     );
   }
 
-  Future<void> showInterstitialAd() async {
-    if (_interstitialAd == null) {
+  /// Strict user-initiated (on-demand) loading for Rewarded Ads.
+  /// Enforces a max timeout (default 3 seconds), single active reference,
+  /// and zero background pre-fetching or retries.
+  Future<void> loadAndShowRewardedAd({
+    required VoidCallback onRewardEarned,
+    required VoidCallback onLoadingStarted,
+    required VoidCallback onLoadingEnded,
+    required Function(String error) onError,
+    Duration timeout = const Duration(seconds: 3),
+  }) async {
+    if (_rewardedAd != null || _isRewardedLoading) {
       return;
     }
-    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        ad.dispose();
-        _interstitialAd = null;
-        createInterstitialAd();
-      },
-      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
-        ad.dispose();
-        _interstitialAd = null;
-        createInterstitialAd();
-      },
-    );
-    _interstitialAd!.show();
-    _interstitialAd = null;
-  }
 
-  void loadRewardedAd() {
-    if (_rewardedAd != null || _isRewardedLoading) return;
     _isRewardedLoading = true;
+    onLoadingStarted();
+
+    bool isTimedOut = false;
+    Timer? timeoutTimer = Timer(timeout, () {
+      isTimedOut = true;
+      _isRewardedLoading = false;
+      onLoadingEnded();
+      onError('Ad loading timed out.');
+    });
 
     RewardedAd.load(
       adUnitId:
           dotenv.env['RewardedAd'] ?? 'ca-app-pub-3940256099942544/5224354917',
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
+        onAdLoaded: (RewardedAd ad) {
+          if (isTimedOut) {
+            ad.dispose();
+            return;
+          }
+          timeoutTimer.cancel();
           _rewardedAd = ad;
-          _numRewardedLoadAttempts = 0;
           _isRewardedLoading = false;
+          onLoadingEnded();
+
+          _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (RewardedAd ad) {
+              ad.dispose();
+              _rewardedAd = null;
+            },
+            onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
+              ad.dispose();
+              _rewardedAd = null;
+            },
+          );
+
+          _rewardedAd!.show(
+            onUserEarnedReward: (ad, reward) {
+              didGetRewarded = true;
+              onRewardEarned();
+            },
+          );
         },
-        onAdFailedToLoad: (error) {
-          _numRewardedLoadAttempts += 1;
+        onAdFailedToLoad: (LoadAdError error) {
+          if (isTimedOut) return;
+          timeoutTimer.cancel();
           _rewardedAd = null;
           _isRewardedLoading = false;
-          if (_numRewardedLoadAttempts <= _maxFailedLoadAttempts) {
-            final int delayMs = (pow(2, _numRewardedLoadAttempts) * 1000)
-                .toInt();
-            Timer(Duration(milliseconds: delayMs), () => loadRewardedAd());
-          } else {
-            debugPrint(
-              'Failed to load rewarded ad after $_maxFailedLoadAttempts attempts',
-            );
-          }
+          onLoadingEnded();
+          onError('Failed to load ad: ${error.message}');
         },
       ),
     );
   }
-
-  void showRewardedAd(MyWorld game, Function fun) {
-    if (_rewardedAd != null) {
-      _rewardedAd!.fullScreenContentCallback = FullScreenContentCallback(
-        onAdDismissedFullScreenContent: (RewardedAd ad) {
-          ad.dispose();
-          _rewardedAd = null;
-          loadRewardedAd();
-        },
-        onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-          ad.dispose();
-          _rewardedAd = null;
-          loadRewardedAd();
-        },
-      );
-
-      _rewardedAd!.show(
-        onUserEarnedReward: (ad, reward) {
-          didGetRewarded = true;
-          fun();
-        },
-      );
-      _rewardedAd = null;
-    }
-  }
 }
+

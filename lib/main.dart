@@ -12,7 +12,6 @@ import 'package:game/configs/ads.dart';
 import 'package:games_services/games_services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'component/wing.dart';
-import 'component/billboard.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -60,7 +59,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   final Clouds clouds = Clouds();
   final Pipes pipes = Pipes();
   final Wing wing = Wing();
-  final Billboard billboard = Billboard();
 
   final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
@@ -124,7 +122,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
       }
     });
 
-    addAll({billboard, clouds, player, pipes, wing});
+    addAll({clouds, player, pipes, wing});
     updateScore();
 
     // Initial overlays
@@ -158,6 +156,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   void setHighest() {} // Deprecated, handled by PlayerData
 
   void startGame({bool withRewarded = false}) {
+    ads.cancelInterstitialAd();
     player.reset();
     pipes.reset();
     // billboard.reset();
@@ -227,19 +226,15 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   void showingAd() {
-    if (deadTimes == 2) {
+    deadTimes++;
+    if (deadTimes >= 3) {
       if (newHighest) {
-        // Skip showing the ad on new high score and keep deadTimes = 2
+        // Skip showing the ad on new high score and keep deadTimes = 3
         // so the interstitial ad is postponed until the next time the player dies.
         return;
       }
-      Future.delayed(
-        const Duration(milliseconds: 600),
-        () => ads.showInterstitialAd(),
-      );
       deadTimes = 0;
-    } else {
-      deadTimes++;
+      ads.loadAndShowInterstitialAd();
     }
   }
 

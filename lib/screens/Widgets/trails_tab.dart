@@ -73,9 +73,9 @@ class _TrailsTabState extends State<TrailsTab> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (widget.game.ads.rewardedAd != null) {
-                Navigator.of(context).pop();
-                widget.game.ads.showRewardedAd(widget.game, () {
+              Navigator.of(context).pop();
+              widget.game.ads.loadAndShowRewardedAd(
+                onRewardEarned: () {
                   widget.game.tempTrail = trailId;
                   widget.game.player.updateTrail(trailId);
 
@@ -88,16 +88,28 @@ class _TrailsTabState extends State<TrailsTab> {
                       duration: Duration(seconds: 2),
                     ),
                   );
-                  setState(() {});
-                });
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Ad not ready yet, try again later"),
-                    duration: Duration(seconds: 1),
-                  ),
-                );
-              }
+                  if (mounted) setState(() {});
+                },
+                onLoadingStarted: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Loading ad..."),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                onLoadingEnded: () {},
+                onError: (String error) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(error),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
+                },
+              );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
             child: Row(

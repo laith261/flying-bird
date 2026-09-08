@@ -93,8 +93,7 @@ class _StartWidgetState extends State<StartWidget> {
                     game: game,
                     text: game.ads.didGetRewarded ? "continue" : "Start Game",
                   ),
-                  if (game.ads.rewardedAd != null &&
-                      !game.ads.didGetRewarded) ...[
+                  if (game.scorePoint > 0 && !game.ads.didGetRewarded) ...[
                     const SizedBox(height: 15),
                     RewardedAd(
                       game: game,
