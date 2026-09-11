@@ -5,6 +5,7 @@ import 'package:game/configs/const.dart';
 import 'package:game/main.dart';
 
 class Clouds extends ParallaxComponent<MyWorld> {
+  @override
   Future<void> onLoad() async {
     priority = 1;
     final image = await Flame.images.load("clouds.png");
@@ -13,5 +14,11 @@ class Clouds extends ParallaxComponent<MyWorld> {
       ParallaxLayer(ParallaxImage(image, fill: LayerFill.none)),
     ]);
     parallax?.baseVelocity.x = Consts.pipeSpeed;
+  }
+
+  @override
+  void onGameResize(Vector2 size) {
+    super.onGameResize(size);
+    position = Vector2(x, -(size.y - 80));
   }
 }

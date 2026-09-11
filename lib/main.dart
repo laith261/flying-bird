@@ -229,12 +229,11 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     deadTimes++;
     if (deadTimes >= 3) {
       if (newHighest) {
-        // Skip showing the ad on new high score and keep deadTimes = 3
+        // Skip showing the ad on new high score and keep deadTimes >= 3
         // so the interstitial ad is postponed until the next time the player dies.
         return;
       }
-      deadTimes = 0;
-      ads.loadAndShowInterstitialAd();
+      ads.loadInterstitialAd();
     }
   }
 

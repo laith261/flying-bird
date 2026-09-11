@@ -10,6 +10,7 @@ import 'start.dart';
 import 'Widgets/coin_display.dart';
 import 'Widgets/billboard_overlay.dart';
 import 'Widgets/hieh_score.dart';
+import 'Widgets/adaptive_banner.dart';
 
 class MainWidget extends StatefulWidget {
   const MainWidget({super.key, required this.game});
@@ -88,6 +89,7 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
                   ),
                 ),
               ),
+              const AdaptiveBannerWidget(),
             ],
           ),
         ),

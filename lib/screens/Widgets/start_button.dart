@@ -31,8 +31,85 @@ class _StartButtonState extends State<StartButton> {
   }
 
   void _startGame() {
+    if (widget.game.deadTimes >= 3 && !widget.game.newHighest) {
+      _showInterstitialAndStart();
+    } else {
+      _doStartGame();
+    }
+  }
+
+  void _doStartGame() {
     widget.game.overlays.remove("start");
     widget.game.startGame(withRewarded: widget.game.ads.didGetRewarded);
+  }
+
+  Future<void> _showInterstitialAndStart() async {
+    final ads = widget.game.ads;
+
+    if (ads.isInterstitialLoaded) {
+      widget.game.deadTimes = 0;
+      ads.showInterstitialAd(onComplete: _doStartGame);
+      return;
+    }
+
+    if (ads.isInterstitialLoading) {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(color: Colors.orange),
+              SizedBox(height: 16),
+              Text(
+                "Starting next round...",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  decoration: TextDecoration.none,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      bool didTimeout = false;
+      bool didComplete = false;
+
+      // Timeout logic
+      Future.delayed(const Duration(seconds: 2), () {
+        if (didComplete) return;
+        didTimeout = true;
+        if (Navigator.of(context).canPop()) {
+          Navigator.of(context).pop(); // dismiss dialog
+        }
+        _doStartGame();
+      });
+
+      // Poll while loading
+      while (!didTimeout && ads.isInterstitialLoading) {
+        await Future.delayed(const Duration(milliseconds: 100));
+      }
+
+      if (didTimeout) return;
+      didComplete = true;
+      if (Navigator.of(context).canPop()) {
+        Navigator.of(context).pop(); // dismiss dialog
+      }
+
+      if (ads.isInterstitialLoaded) {
+        widget.game.deadTimes = 0;
+        ads.showInterstitialAd(onComplete: _doStartGame);
+      } else {
+        _doStartGame();
+      }
+      return;
+    }
+
+    _doStartGame();
   }
 
   @override

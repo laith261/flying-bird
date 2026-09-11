@@ -15,7 +15,6 @@ import 'shop.dart';
 import 'Widgets/start_button.dart';
 import 'Widgets/power_up_toggles.dart';
 import '../configs/leaderboard_helper.dart';
-import 'Widgets/native_ad.dart';
 
 class StartWidget extends StatefulWidget {
   const StartWidget({super.key, required this.game});
@@ -186,7 +185,6 @@ class _StartWidgetState extends State<StartWidget> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  NativeAdWidget(adUnitId: Consts.NativeAd),
                 ],
               ),
             ),

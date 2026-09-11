@@ -1,9 +1,7 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:game/main.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class AdmobAds {
@@ -57,11 +55,11 @@ class AdmobAds {
     }
   }
 
-  /// Loads and displays an Interstitial ad on-demand at round boundary.
-  Future<void> loadAndShowInterstitialAd({
-    VoidCallback? onAdClosed,
-    VoidCallback? onAdFailed,
-  }) async {
+  bool get isInterstitialLoaded => _interstitialAd != null;
+  bool get isInterstitialLoading => _isInterstitialLoading;
+
+  /// Loads an Interstitial ad in the background.
+  Future<void> loadInterstitialAd() async {
     if (_interstitialAd != null || _isInterstitialLoading) return;
     _isInterstitialLoading = true;
     _isInterstitialCancelled = false;
@@ -76,38 +74,43 @@ class AdmobAds {
           if (_isInterstitialCancelled) {
             ad.dispose();
             _interstitialAd = null;
-            onAdFailed?.call();
             return;
           }
           _interstitialAd = ad;
           _interstitialAd!.setImmersiveMode(true);
-          _interstitialAd!.fullScreenContentCallback =
-              FullScreenContentCallback(
-                onAdDismissedFullScreenContent: (InterstitialAd ad) {
-                  ad.dispose();
-                  _interstitialAd = null;
-                  onAdClosed?.call();
-                },
-                onAdFailedToShowFullScreenContent: (
-                  InterstitialAd ad,
-                  AdError error,
-                ) {
-                  ad.dispose();
-                  _interstitialAd = null;
-                  onAdFailed?.call();
-                },
-              );
-          _interstitialAd!.show();
         },
         onAdFailedToLoad: (LoadAdError error) {
           _isInterstitialLoading = false;
           _interstitialAd = null;
           debugPrint('Failed to load interstitial ad: ${error.message}');
-          onAdFailed?.call();
         },
       ),
       request: const AdRequest(),
     );
+  }
+
+  /// Shows the loaded Interstitial ad, resetting state afterwards.
+  void showInterstitialAd({required VoidCallback onComplete}) {
+    if (_interstitialAd == null) {
+      onComplete();
+      return;
+    }
+
+    _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+      onAdDismissedFullScreenContent: (InterstitialAd ad) {
+        ad.dispose();
+        _interstitialAd = null;
+        onComplete();
+      },
+      onAdFailedToShowFullScreenContent: (InterstitialAd ad, AdError error) {
+        debugPrint('Failed to show interstitial ad: ${error.message}');
+        ad.dispose();
+        _interstitialAd = null;
+        onComplete();
+      },
+    );
+
+    _interstitialAd!.show();
   }
 
   /// Strict user-initiated (on-demand) loading for Rewarded Ads.
