@@ -14,17 +14,62 @@ class StarParams {
 }
 
 class TrailPainterHelper {
+  static final Paint _rectPaint = Paint()..style = PaintingStyle.fill;
+  static final Paint _rectGlowPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+  static final Paint _circlePaint = Paint()..style = PaintingStyle.fill;
+  static final Paint _circleGlowPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+  static final Paint _starPaint = Paint()..style = PaintingStyle.fill;
+  static final Paint _starGlowPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+  static final Paint _lightningPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.5
+    ..strokeCap = StrokeCap.round;
+  static final Paint _lightningGlowPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 6
+    ..strokeCap = StrokeCap.round
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+
+  static final Paint _linePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 6
+    ..strokeCap = StrokeCap.round;
+  static final Paint _lineGlowPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 10
+    ..strokeCap = StrokeCap.round
+    ..color = Colors.orange.withValues(alpha: 0.4)
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
+
+  static final Paint _nonePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2
+    ..color = Colors.grey;
+
+  static final List<Color> _neonColors = [
+    Colors.cyanAccent,
+    Colors.purpleAccent,
+    Colors.pinkAccent,
+    Colors.limeAccent,
+  ];
+
   static void drawRectTrail(
     Canvas canvas,
     Size size,
     Offset center,
     bool isPro,
   ) {
-    final paint = Paint()..style = PaintingStyle.fill;
     final int count = 5;
     final double spacing = 15.0;
-    // Shift center forward to accommodate trail
-    // final Offset drawCenter = center + const Offset(30, 0);
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
@@ -36,19 +81,9 @@ class TrailPainterHelper {
       Offset pos = center + Offset(-i * spacing, 0);
 
       if (isPro) {
-        final neonColors = [
-          Colors.cyanAccent,
-          Colors.purpleAccent,
-          Colors.pinkAccent,
-          Colors.limeAccent,
-        ];
-        Color currentColor = neonColors[i % neonColors.length];
+        Color currentColor = _neonColors[i % _neonColors.length];
 
-        // Glow
-        final glowPaint = Paint()
-          ..style = PaintingStyle.fill
-          ..color = currentColor.withValues(alpha: alpha * 0.4)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        _rectGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
         canvas.save();
         canvas.translate(pos.dx, pos.dy);
@@ -59,13 +94,13 @@ class TrailPainterHelper {
             width: (rectSize * 1.5) + 4,
             height: (rectSize * 1.5) + 4,
           ),
-          glowPaint,
+          _rectGlowPaint,
         );
         canvas.restore();
 
-        paint.color = Colors.white.withValues(alpha: alpha);
+        _rectPaint.color = Colors.white.withValues(alpha: alpha);
       } else {
-        paint.color = Colors.orange.withValues(alpha: alpha);
+        _rectPaint.color = Colors.orange.withValues(alpha: alpha);
       }
 
       canvas.save();
@@ -77,7 +112,7 @@ class TrailPainterHelper {
           width: rectSize * 1.5,
           height: rectSize * 1.5,
         ),
-        paint,
+        _rectPaint,
       );
       canvas.restore();
     }
@@ -89,7 +124,6 @@ class TrailPainterHelper {
     Offset center,
     bool isPro,
   ) {
-    final paint = Paint()..style = PaintingStyle.fill;
     final int count = 6;
     final double spacing = 12.0;
     final Offset drawCenter = center + const Offset(25, 0);
@@ -103,26 +137,17 @@ class TrailPainterHelper {
       Offset pos = drawCenter + Offset(-i * spacing, (i % 2 == 0 ? 5 : -5));
 
       if (isPro) {
-        final neonColors = [
-          Colors.cyanAccent,
-          Colors.purpleAccent,
-          Colors.pinkAccent,
-          Colors.limeAccent,
-        ];
-        Color currentColor = neonColors[i % neonColors.length];
+        Color currentColor = _neonColors[i % _neonColors.length];
 
-        final glowPaint = Paint()
-          ..style = PaintingStyle.fill
-          ..color = currentColor.withValues(alpha: alpha * 0.4)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        _circleGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
-        canvas.drawCircle(pos, radius + 3, glowPaint);
-        paint.color = Colors.white.withValues(alpha: alpha);
+        canvas.drawCircle(pos, radius + 3, _circleGlowPaint);
+        _circlePaint.color = Colors.white.withValues(alpha: alpha);
       } else {
-        paint.color = Colors.orange.withValues(alpha: alpha);
+        _circlePaint.color = Colors.orange.withValues(alpha: alpha);
       }
 
-      canvas.drawCircle(pos, radius * 1.5, paint);
+      canvas.drawCircle(pos, radius * 1.5, _circlePaint);
     }
   }
 
@@ -132,7 +157,6 @@ class TrailPainterHelper {
     Offset center,
     bool isPro,
   ) {
-    final paint = Paint()..style = PaintingStyle.fill;
     final int count = 5;
     final double spacing = 18.0;
     final Offset drawCenter = center + const Offset(35, 0);
@@ -147,33 +171,24 @@ class TrailPainterHelper {
       Offset pos = drawCenter + Offset(-i * spacing, (i % 2 == 0 ? 3 : -3));
 
       if (isPro) {
-        final neonColors = [
-          Colors.cyanAccent,
-          Colors.purpleAccent,
-          Colors.pinkAccent,
-          Colors.limeAccent,
-        ];
-        Color currentColor = neonColors[i % neonColors.length];
+        Color currentColor = _neonColors[i % _neonColors.length];
 
-        final glowPaint = Paint()
-          ..style = PaintingStyle.fill
-          ..color = currentColor.withValues(alpha: alpha * 0.4)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        _starGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
         _drawStarShape(
           canvas,
           StarParams(center: pos, size: starSize + 4, rotation: rotation),
-          glowPaint,
+          _starGlowPaint,
         );
-        paint.color = Colors.white.withValues(alpha: alpha);
+        _starPaint.color = Colors.white.withValues(alpha: alpha);
       } else {
-        paint.color = Colors.orange.withValues(alpha: alpha);
+        _starPaint.color = Colors.orange.withValues(alpha: alpha);
       }
 
       _drawStarShape(
         canvas,
         StarParams(center: pos, size: starSize * 1.5, rotation: rotation),
-        paint,
+        _starPaint,
       );
     }
   }
@@ -184,14 +199,8 @@ class TrailPainterHelper {
     Offset center,
     bool isPro,
   ) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round;
-
     final int count = 3;
     final double spacing = 20.0;
-    // final Offset drawCenter = center + const Offset(20, 0);
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
@@ -206,35 +215,24 @@ class TrailPainterHelper {
       bolt.lineTo(-3 * invProgress, 10 * invProgress);
 
       if (isPro) {
-        final neonColors = [
-          Colors.cyanAccent,
-          Colors.purpleAccent,
-          Colors.pinkAccent,
-          Colors.limeAccent,
-        ];
-        Color currentColor = neonColors[i % neonColors.length];
+        Color currentColor = _neonColors[i % _neonColors.length];
 
-        final glowPaint = Paint()
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 6
-          ..strokeCap = StrokeCap.round
-          ..color = currentColor.withValues(alpha: alpha * 0.4)
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+        _lightningGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
         canvas.save();
         canvas.translate(pos.dx, pos.dy);
-        canvas.drawPath(bolt, glowPaint);
+        canvas.drawPath(bolt, _lightningGlowPaint);
         canvas.restore();
 
-        paint.color = Colors.white.withValues(alpha: alpha);
+        _lightningPaint.color = Colors.white.withValues(alpha: alpha);
       } else {
-        paint.color = Colors.orange.withValues(alpha: alpha);
+        _lightningPaint.color = Colors.orange.withValues(alpha: alpha);
       }
 
       canvas.save();
       canvas.translate(pos.dx, pos.dy);
       canvas.scale(1.5);
-      canvas.drawPath(bolt, paint);
+      canvas.drawPath(bolt, _lightningPaint);
       canvas.restore();
     }
   }
@@ -245,34 +243,23 @@ class TrailPainterHelper {
     Offset center,
     bool isPro,
   ) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6
-      ..strokeCap = StrokeCap.round;
-
     final double length = size.width * 0.7;
     final Offset start = center + Offset(-length / 2, 0);
     final Offset end = center + Offset(length / 2, 0);
 
     if (isPro) {
-      final glowPaint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 10
-        ..strokeCap = StrokeCap.round
-        ..color = Colors.orange.withValues(alpha: 0.4)
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
-
-      canvas.drawLine(start, end, glowPaint);
+      canvas.drawLine(start, end, _lineGlowPaint);
 
       final shader = const LinearGradient(
         colors: Colors.primaries,
       ).createShader(Rect.fromPoints(start, end));
-      paint.shader = shader;
+      _linePaint.shader = shader;
     } else {
-      paint.color = Colors.orange;
+      _linePaint.color = Colors.orange;
+      _linePaint.shader = null;
     }
 
-    canvas.drawLine(start, end, paint);
+    canvas.drawLine(start, end, _linePaint);
   }
 
   static void _drawStarShape(Canvas canvas, StarParams params, Paint paint) {
@@ -299,15 +286,11 @@ class TrailPainterHelper {
   }
 
   static void drawNone(Canvas canvas, Size size, Offset center) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..color = Colors.grey;
-    canvas.drawCircle(center, 15, paint);
+    canvas.drawCircle(center, 15, _nonePaint);
     canvas.drawLine(
       center + const Offset(-10, -10),
       center + const Offset(10, 10),
-      paint,
+      _nonePaint,
     );
   }
 }
