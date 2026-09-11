@@ -35,6 +35,26 @@ class StarTrail extends PositionComponent implements GameTrail {
   double opacity = 1.0;
   final Random _rnd = Random();
 
+  static final Path _starPath = _createStarPath();
+
+  static Path _createStarPath() {
+    final path = Path();
+    double angle = -pi / 2;
+    final double step = pi / 5;
+    final double outerRadius = 0.5;
+    final double innerRadius = 0.25;
+
+    path.moveTo(outerRadius * cos(angle), outerRadius * sin(angle));
+    for (int i = 0; i < 5; i++) {
+      angle += step;
+      path.lineTo(innerRadius * cos(angle), innerRadius * sin(angle));
+      angle += step;
+      path.lineTo(outerRadius * cos(angle), outerRadius * sin(angle));
+    }
+    path.close();
+    return path;
+  }
+
   StarTrail() : super(priority: 1);
 
   void addPoint(Vector2 point) {
@@ -167,25 +187,11 @@ class StarTrail extends PositionComponent implements GameTrail {
       paint.color = options.baseColor.withValues(alpha: alpha);
     }
 
-    final path = Path();
-    double angle = -pi / 2;
-    final double step = pi / 5;
-    final double outerRadius = currentSize / 2;
-    final double innerRadius = currentSize / 4;
-
-    path.moveTo(outerRadius * cos(angle), outerRadius * sin(angle));
-    for (int i = 0; i < 5; i++) {
-      angle += step;
-      path.lineTo(innerRadius * cos(angle), innerRadius * sin(angle));
-      angle += step;
-      path.lineTo(outerRadius * cos(angle), outerRadius * sin(angle));
-    }
-    path.close();
-
     canvas.save();
     canvas.translate(p.position.x, p.position.y);
     canvas.rotate(p.rotation);
-    canvas.drawPath(path, paint);
+    canvas.scale(currentSize);
+    canvas.drawPath(_starPath, paint);
     canvas.restore();
   }
 }
