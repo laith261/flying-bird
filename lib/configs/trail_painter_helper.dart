@@ -275,12 +275,14 @@ class TrailPainterHelper {
     canvas.drawLine(start, end, paint);
   }
 
-  static void _drawStarShape(Canvas canvas, StarParams params, Paint paint) {
+  static final Path _baseStarPath = _createBaseStarPath();
+
+  static Path _createBaseStarPath() {
     final path = Path();
     double angle = -pi / 2;
     final double step = pi / 5;
-    final double outerRadius = params.size / 2;
-    final double innerRadius = params.size / 4;
+    final double outerRadius = 0.5; // Unit size, outer radius
+    final double innerRadius = 0.25; // Unit size, inner radius
 
     path.moveTo(outerRadius * cos(angle), outerRadius * sin(angle));
     for (int i = 0; i < 5; i++) {
@@ -290,11 +292,15 @@ class TrailPainterHelper {
       path.lineTo(outerRadius * cos(angle), outerRadius * sin(angle));
     }
     path.close();
+    return path;
+  }
 
+  static void _drawStarShape(Canvas canvas, StarParams params, Paint paint) {
     canvas.save();
     canvas.translate(params.center.dx, params.center.dy);
     canvas.rotate(params.rotation);
-    canvas.drawPath(path, paint);
+    canvas.scale(params.size, params.size);
+    canvas.drawPath(_baseStarPath, paint);
     canvas.restore();
   }
 
