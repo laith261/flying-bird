@@ -31,6 +31,8 @@ class Wing extends SpriteAnimationComponent
     // Hide or show wing based on skin property
     opacity = game.player.skin.skin.hasWings ? 1 : 0;
 
+    playing = game.isStarted;
+
     super.update(dt);
   }
 }

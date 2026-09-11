@@ -30,16 +30,9 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
           margin: const EdgeInsets.only(bottom: 15, top: 10),
           padding: const EdgeInsets.all(15),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.white.withAlpha(20),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.blue.withAlpha(128), width: 2),
-            boxShadow: const [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 5,
-                offset: Offset(0, 3),
-              ),
-            ],
+            border: Border.all(color: Colors.white.withAlpha(50), width: 1.5),
           ),
           child: Row(
             children: [
@@ -49,7 +42,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                   color: Colors.blue.withAlpha(26),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(powerUp.icon, color: Colors.blue, size: 30),
+                child: Icon(powerUp.icon, color: Colors.lightBlueAccent, size: 30),
               ),
               const SizedBox(width: 15),
               Expanded(
@@ -61,13 +54,13 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                       style: GoogleFonts.luckiestGuy(
                         textStyle: const TextStyle(
                           fontSize: 18,
-                          color: Colors.blue,
+                          color: Colors.white,
                         ),
                       ),
                     ),
                     Text(
                       powerUp.description,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                   ],
                 ),
@@ -78,7 +71,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                     "Owned: $count",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
+                      color: Colors.lightBlueAccent,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -106,7 +99,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                         const SizedBox(width: 4),
                         Text(
                           "${powerUp.price}",
-                          style: GoogleFonts.luckiestGuy(),
+                          style: GoogleFonts.luckiestGuy(textStyle: const TextStyle(color: Colors.white)),
                         ),
                       ],
                     ),

@@ -159,9 +159,14 @@ class _TrailsTabState extends State<TrailsTab> {
     return ListenableBuilder(
       listenable: widget.game.playerData,
       builder: (context, _) {
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          scrollDirection: Axis.horizontal,
+        return GridView.builder(
+          padding: const EdgeInsets.all(20),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 15,
+            crossAxisSpacing: 15,
+            childAspectRatio: 0.85,
+          ),
           itemCount: Trails.values.length,
           itemBuilder: (context, index) {
             final trail = Trails.values[index];
@@ -202,28 +207,19 @@ class _TrailsTabState extends State<TrailsTab> {
                 _selectTrail(trailId);
               },
               child: Container(
-                width: 160,
-                margin: const EdgeInsets.only(right: 15, bottom: 50, top: 20),
                 decoration: BoxDecoration(
                   color: isSelected
                       ? (isTemp
-                            ? Colors.blue.withAlpha(26)
-                            : Colors.orange.withAlpha(26))
-                      : Colors.white,
+                            ? Colors.blue.withAlpha(40)
+                            : Colors.orange.withAlpha(40))
+                      : Colors.white.withAlpha(20),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: isSelected
-                        ? (isTemp ? Colors.blue : Colors.orange)
-                        : Colors.grey.withAlpha(77),
-                    width: isSelected ? 4 : 2,
+                        ? (isTemp ? Colors.blueAccent : Colors.orangeAccent)
+                        : Colors.white.withAlpha(50),
+                    width: isSelected ? 3 : 1.5,
                   ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
                 ),
                 child: Stack(
                   children: [
@@ -256,8 +252,8 @@ class _TrailsTabState extends State<TrailsTab> {
                                   textStyle: TextStyle(
                                     fontSize: 18,
                                     color: isSelected
-                                        ? Colors.orange
-                                        : Colors.grey,
+                                        ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent)
+                                        : Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -268,7 +264,7 @@ class _TrailsTabState extends State<TrailsTab> {
                                   "Score: $requiredScore",
                                   style: const TextStyle(
                                     fontSize: 14,
-                                    color: Colors.orange,
+                                    color: Colors.orangeAccent,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 )
@@ -276,7 +272,7 @@ class _TrailsTabState extends State<TrailsTab> {
                                 const Text(
                                   "TEMP",
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Colors.lightBlueAccent,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
                                   ),
@@ -295,7 +291,7 @@ class _TrailsTabState extends State<TrailsTab> {
                                       "$price",
                                       style: const TextStyle(
                                         fontSize: 14,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -305,7 +301,7 @@ class _TrailsTabState extends State<TrailsTab> {
                                 const Text(
                                   "EQUIPPED",
                                   style: TextStyle(
-                                    color: Colors.green,
+                                    color: Colors.greenAccent,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 12,
                                   ),
@@ -351,7 +347,7 @@ class _TrailsTabState extends State<TrailsTab> {
                         right: 10,
                         child: Icon(
                           Icons.access_time_filled,
-                          color: Colors.blue,
+                          color: Colors.lightBlueAccent,
                           size: 30,
                         ),
                       )
@@ -361,7 +357,7 @@ class _TrailsTabState extends State<TrailsTab> {
                         right: 10,
                         child: Icon(
                           Icons.check_circle,
-                          color: Colors.green,
+                          color: Colors.greenAccent,
                           size: 30,
                         ),
                       ),

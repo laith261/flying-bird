@@ -282,16 +282,13 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                         padding: const EdgeInsets.symmetric(vertical: 12),
                       ),
                       onPressed: () {
+                        // Dismiss the dialog or whatever overlay this is part of?
+                        // Actually, power_up_toggles might be inside an overlay or dialog.
+                        // Let's just remove the current overlay if it's one, or pop if it's a dialog.
+                        // For now we keep the pop, but we add the shop overlay to the game.
                         Navigator.of(context).pop();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ShopScreen(
-                              game: game,
-                              initialTabIndex:
-                                  1, // Opens directly on the Power Ups tab
-                            ),
-                          ),
-                        );
+                        game.shopInitialTabIndex = 1;
+                        game.overlays.add('shop');
                       },
                       child: Text(
                         "Go to Shop",

@@ -29,6 +29,7 @@ class PlayerInfo extends ChangeNotifier {
   DateTime? _lastLoginDate;
   int _rewardProgress;
   String? _playerId;
+  int _gifts;
 
   int get highScore => _highScore;
   int get coins => _coins;
@@ -43,6 +44,7 @@ class PlayerInfo extends ChangeNotifier {
   List<String> get purchasedSkins => List.unmodifiable(_purchasedSkins);
   int get lastModified => _lastModified;
   String? get playerId => _playerId;
+  int get gifts => _gifts;
 
   PlayerInfo({
     int highScore = 0,
@@ -57,6 +59,7 @@ class PlayerInfo extends ChangeNotifier {
     DateTime? lastLoginDate,
     int rewardProgress = 0,
     String? playerId,
+    int gifts = 0,
   }) : _highScore = highScore,
        _coins = coins,
        _selectedTrail = selectedTrail,
@@ -68,7 +71,8 @@ class PlayerInfo extends ChangeNotifier {
        _luckyDay = luckyDay,
        _lastLoginDate = lastLoginDate,
        _rewardProgress = rewardProgress,
-       _playerId = playerId;
+       _playerId = playerId,
+       _gifts = gifts;
 
   // --- Logic Methods ---
 
@@ -94,6 +98,12 @@ class PlayerInfo extends ChangeNotifier {
 
   Future<void> addShield(int amount) async {
     _shields += amount;
+    _lastModified = DateTime.now().millisecondsSinceEpoch;
+    notifyListeners();
+  }
+
+  Future<void> addGift(int amount) async {
+    _gifts += amount;
     _lastModified = DateTime.now().millisecondsSinceEpoch;
     notifyListeners();
   }
@@ -206,6 +216,7 @@ class PlayerInfo extends ChangeNotifier {
     _lastLoginDate = other.lastLoginDate;
     _rewardProgress = other.rewardProgress;
     _playerId = other.playerId;
+    _gifts = other.gifts;
     notifyListeners();
   }
 
@@ -363,6 +374,7 @@ class PlayerInfo extends ChangeNotifier {
           : null,
       rewardProgress: json['rewardProgress'] as int? ?? 0,
       playerId: json['playerId'] as String?,
+      gifts: json['gifts'] as int? ?? 0,
     );
   }
 
@@ -380,6 +392,7 @@ class PlayerInfo extends ChangeNotifier {
       'lastLoginDate': _lastLoginDate?.toIso8601String(),
       'rewardProgress': _rewardProgress,
       'playerId': _playerId,
+      'gifts': _gifts,
     };
   }
 
@@ -396,6 +409,7 @@ class PlayerInfo extends ChangeNotifier {
     Skins? selectedSkin,
     DateTime? lastLoginDate,
     int? rewardProgress,
+    int? gifts,
   }) {
     return PlayerInfo(
       highScore: highScore ?? _highScore,
@@ -410,6 +424,7 @@ class PlayerInfo extends ChangeNotifier {
       lastLoginDate: lastLoginDate ?? _lastLoginDate,
       rewardProgress: rewardProgress ?? _rewardProgress,
       playerId: playerId ?? _playerId,
+      gifts: gifts ?? _gifts,
     );
   }
 }

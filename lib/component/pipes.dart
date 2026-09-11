@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 import 'package:game/component/coin.dart';
+import 'package:game/component/gift.dart';
 import 'package:game/component/pipe.dart';
 
 import '../configs/const.dart';
@@ -53,9 +54,13 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
         Pipe(false, isUp, spaceVal, pipe, false),
       ];
 
-      if (withCoin &&
-          (Random().nextDouble() < 0.3 || game.isLuckyDayActive.value)) {
-        components.add(Coin(position: Vector2(coinX, coinY)));
+      if (withCoin) {
+        if (!game.hasSpawnedGift && game.scorePoint > 25 && Random().nextDouble() < 0.05) {
+          components.add(Gift(position: Vector2(coinX, coinY)));
+          game.hasSpawnedGift = true;
+        } else if (Random().nextDouble() < 0.3 || game.isLuckyDayActive.value) {
+          components.add(Coin(position: Vector2(coinX, coinY)));
+        }
       }
 
       addAll(components);
@@ -65,9 +70,13 @@ class Pipes extends PositionComponent with HasGameReference<MyWorld> {
     }
     // For TwoWay pipe, the gap is in the middle
     add(Pipe(false, false, 0, twoWayPipe, true));
-    if (withCoin &&
-        (Random().nextDouble() < 0.3 || game.isLuckyDayActive.value)) {
-      add(Coin(position: Vector2(coinX, coinY)));
+    if (withCoin) {
+      if (!game.hasSpawnedGift && game.scorePoint > 25 && Random().nextDouble() < 0.05) {
+        add(Gift(position: Vector2(coinX, coinY)));
+        game.hasSpawnedGift = true;
+      } else if (Random().nextDouble() < 0.3 || game.isLuckyDayActive.value) {
+        add(Coin(position: Vector2(coinX, coinY)));
+      }
     }
     isTwoWay = 0;
   }

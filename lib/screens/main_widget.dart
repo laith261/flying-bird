@@ -11,6 +11,8 @@ import 'Widgets/coin_display.dart';
 import 'Widgets/billboard_overlay.dart';
 import 'Widgets/hieh_score.dart';
 import 'Widgets/adaptive_banner.dart';
+import 'Widgets/daily_missions_dialog.dart';
+import 'shop.dart';
 
 class MainWidget extends StatefulWidget {
   const MainWidget({super.key, required this.game});
@@ -73,6 +75,10 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
                         CoinDisplay(game: widget.game),
                     'highest_score': (context, _) =>
                         HighestScore(game: widget.game),
+                    'daily_missions': (context, _) =>
+                        DailyMissionsDialog(game: widget.game),
+                    'shop': (context, _) =>
+                        ShopScreen(game: widget.game, initialTabIndex: widget.game.shopInitialTabIndex),
                   },
                   backgroundBuilder: (context) => Stack(
                     children: [

@@ -4,6 +4,7 @@ import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:game/component/coin.dart';
+import 'package:game/component/gift.dart';
 import 'package:game/component/pipe.dart';
 import 'package:game/component/trailes/circle.dart';
 import 'package:game/component/trailes/line.dart';
@@ -145,6 +146,11 @@ class TheBird extends SpriteComponent
         game.audio.playPoint();
         game.playerData.addCoins(1);
         DailyMissionsManager.instance.trackCoinCollected(1);
+      }
+    } else if (other is Gift) {
+      if (other.collect()) {
+        game.audio.playPoint(); // Or a custom sound if one exists
+        game.playerData.addGift(1);
       }
     }
   }

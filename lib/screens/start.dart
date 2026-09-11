@@ -255,11 +255,11 @@ class _StartWidgetState extends State<StartWidget> {
                 clipBehavior: Clip.none,
                 children: [
                   _buildIconButton(
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (context) =>
-                          DailyMissionsDialog(playerData: game.playerData),
-                    ),
+                    onPressed: () {
+                      if (!game.overlays.isActive('daily_missions')) {
+                        game.overlays.add('daily_missions');
+                      }
+                    },
                     icon: Icons.assignment_turned_in_rounded,
                     color: Colors.pinkAccent,
                   ),
@@ -290,9 +290,10 @@ class _StartWidgetState extends State<StartWidget> {
           ),
           const SizedBox(width: 15),
           _buildIconButton(
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => ShopScreen(game: game)),
-            ),
+            onPressed: () {
+              game.shopInitialTabIndex = 0;
+              game.overlays.add('shop');
+            },
             icon: Icons.store,
             color: Colors.green,
           ),

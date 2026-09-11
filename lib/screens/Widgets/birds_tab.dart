@@ -139,9 +139,14 @@ class _BirdsTabState extends State<BirdsTab> {
   }
 
   Widget _buildListView(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      scrollDirection: Axis.horizontal,
+    return GridView.builder(
+      padding: const EdgeInsets.all(20),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 15,
+        crossAxisSpacing: 15,
+        childAspectRatio: 0.85,
+      ),
       itemCount: Skins.values.length,
       itemBuilder: (context, index) {
         final skin = Skins.values[index];
@@ -186,28 +191,19 @@ class _SkinCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 160,
-        margin: const EdgeInsets.only(right: 15, bottom: 50, top: 20),
         decoration: BoxDecoration(
           color: isSelected
               ? (isTemp
-                    ? Colors.blue.withAlpha(26)
-                    : Colors.orange.withAlpha(26))
-              : Colors.white,
+                    ? Colors.blue.withAlpha(40)
+                    : Colors.orange.withAlpha(40))
+              : Colors.white.withAlpha(20),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isSelected
-                ? (isTemp ? Colors.blue : Colors.orange)
-                : Colors.grey.withAlpha(77),
-            width: isSelected ? 4 : 2,
+                ? (isTemp ? Colors.blueAccent : Colors.orangeAccent)
+                : Colors.white.withAlpha(50),
+            width: isSelected ? 3 : 1.5,
           ),
-          boxShadow: const [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 5),
-            ),
-          ],
         ),
         child: Stack(
           children: [
@@ -239,7 +235,7 @@ class _SkinCard extends StatelessWidget {
                         style: GoogleFonts.luckiestGuy(
                           textStyle: TextStyle(
                             fontSize: 18,
-                            color: isSelected ? Colors.orange : Colors.grey,
+                            color: isSelected ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent) : Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -252,7 +248,7 @@ class _SkinCard extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 10,
-                            color: Colors.grey[600],
+                            color: Colors.white70,
                           ),
                         ),
                       ),
@@ -261,7 +257,7 @@ class _SkinCard extends StatelessWidget {
                         const Text(
                           "TEMP",
                           style: TextStyle(
-                            color: Colors.blue,
+                            color: Colors.lightBlueAccent,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.0,
                             fontSize: 12,
@@ -281,7 +277,7 @@ class _SkinCard extends StatelessWidget {
                               "$price",
                               style: const TextStyle(
                                 fontSize: 14,
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -291,7 +287,7 @@ class _SkinCard extends StatelessWidget {
                         const Text(
                           "EQUIPPED",
                           style: TextStyle(
-                            color: Colors.green,
+                            color: Colors.greenAccent,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.0,
                             fontSize: 12,
@@ -323,7 +319,7 @@ class _SkinCard extends StatelessWidget {
                 right: 10,
                 child: Icon(
                   Icons.access_time_filled,
-                  color: Colors.blue,
+                  color: Colors.lightBlueAccent,
                   size: 30,
                 ),
               )
@@ -331,7 +327,7 @@ class _SkinCard extends StatelessWidget {
               const Positioned(
                 top: 10,
                 right: 10,
-                child: Icon(Icons.check_circle, color: Colors.green, size: 30),
+                child: Icon(Icons.check_circle, color: Colors.greenAccent, size: 30),
               ),
           ],
         ),

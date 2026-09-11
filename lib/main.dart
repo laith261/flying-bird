@@ -65,6 +65,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   // states
   bool newHighest = false;
   bool isStarted = false;
+  bool hasSpawnedGift = false;
   ValueNotifier<bool> isLuckyDayActive = ValueNotifier<bool>(false);
   bool isShieldEnabled = false;
   int scorePoint = 0;
@@ -76,6 +77,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   final ValueNotifier<ChallengeData?> leaderboardChallenge =
       ValueNotifier<ChallengeData?>(null);
   bool hasShownChallengeAnimation = false;
+  int shopInitialTabIndex = 0;
 
   @override
   Future<void> onLoad() async {
@@ -161,6 +163,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     pipes.reset();
     // billboard.reset();
     newHighest = false;
+    hasSpawnedGift = false;
     scorePoint = withRewarded ? scorePoint : 0;
     updateScore();
     isStarted = true;
