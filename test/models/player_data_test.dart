@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:game/models/player_data.dart';
 import 'package:game/models/games_services_wrapper.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +21,7 @@ void main() {
       mockWrapper = MockGamesServicesWrapper();
       PlayerInfo.gamesServicesWrapper = mockWrapper;
       SharedPreferences.setMockInitialValues({});
+      FlutterSecureStorage.setMockInitialValues({});
 
       // Need to avoid init() hitting actual SharedPreferences or GameAuth.
       // We will mock GameAuth channel so init won't hang.
@@ -56,7 +58,11 @@ void main() {
         coins: 10,
         lastModified: 100,
       );
-      prefs.setString('PlayerData', jsonEncode(localData.toJson()));
+      const secureStorage = FlutterSecureStorage();
+      await secureStorage.write(
+        key: 'PlayerData',
+        value: jsonEncode(localData.toJson()),
+      );
 
       final cloudData = PlayerInfo(
         playerId: 'player1',
@@ -93,7 +99,11 @@ void main() {
         coins: 10,
         lastModified: 50,
       );
-      prefs.setString('PlayerData', jsonEncode(localData.toJson()));
+      const secureStorage = FlutterSecureStorage();
+      await secureStorage.write(
+        key: 'PlayerData',
+        value: jsonEncode(localData.toJson()),
+      );
 
       final cloudData = PlayerInfo(
         playerId: 'player1',
@@ -109,7 +119,7 @@ void main() {
       expect(playerInfo.coins, 20); // cloud data wins
 
       // Also verify local is updated
-      final updatedLocalStr = prefs.getString('PlayerData');
+      final updatedLocalStr = await secureStorage.read(key: 'PlayerData');
       expect(updatedLocalStr, isNotNull);
       final updatedLocalData = PlayerInfo.fromJson(
         jsonDecode(updatedLocalStr!),
@@ -125,7 +135,11 @@ void main() {
         coins: 50,
         lastModified: 100,
       );
-      prefs.setString('PlayerData', jsonEncode(localData.toJson()));
+      const secureStorage = FlutterSecureStorage();
+      await secureStorage.write(
+        key: 'PlayerData',
+        value: jsonEncode(localData.toJson()),
+      );
 
       when(
         () => mockWrapper.loadGame(name: any(named: 'name')),
@@ -146,7 +160,11 @@ void main() {
         coins: 50,
         lastModified: 100,
       );
-      prefs.setString('PlayerData', jsonEncode(localData.toJson()));
+      const secureStorage = FlutterSecureStorage();
+      await secureStorage.write(
+        key: 'PlayerData',
+        value: jsonEncode(localData.toJson()),
+      );
 
       when(
         () => mockWrapper.loadGame(name: any(named: 'name')),
