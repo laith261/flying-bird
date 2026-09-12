@@ -71,6 +71,13 @@ class TrailPainterHelper {
     final int count = 5;
     final double spacing = 15.0;
 
+    Paint? glowPaint;
+    if (isPro) {
+      glowPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    }
+
     for (int i = 0; i < count; i++) {
       double progress = i / count;
       double invProgress = 1.0 - progress;
@@ -80,10 +87,11 @@ class TrailPainterHelper {
 
       Offset pos = center + Offset(-i * spacing, 0);
 
-      if (isPro) {
+      if (isPro && glowPaint != null) {
         Color currentColor = _neonColors[i % _neonColors.length];
 
-        _rectGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
+        // Glow
+        glowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
         canvas.save();
         canvas.translate(pos.dx, pos.dy);
@@ -128,6 +136,13 @@ class TrailPainterHelper {
     final double spacing = 12.0;
     final Offset drawCenter = center + const Offset(25, 0);
 
+    Paint? glowPaint;
+    if (isPro) {
+      glowPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    }
+
     for (int i = 0; i < count; i++) {
       double progress = i / count;
       double invProgress = 1.0 - progress;
@@ -136,13 +151,13 @@ class TrailPainterHelper {
 
       Offset pos = drawCenter + Offset(-i * spacing, (i % 2 == 0 ? 5 : -5));
 
-      if (isPro) {
+      if (isPro && glowPaint != null) {
         Color currentColor = _neonColors[i % _neonColors.length];
 
-        _circleGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
+        glowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
-        canvas.drawCircle(pos, radius + 3, _circleGlowPaint);
-        _circlePaint.color = Colors.white.withValues(alpha: alpha);
+        canvas.drawCircle(pos, radius + 3, glowPaint);
+        paint.color = Colors.white.withValues(alpha: alpha);
       } else {
         _circlePaint.color = Colors.orange.withValues(alpha: alpha);
       }
@@ -161,6 +176,13 @@ class TrailPainterHelper {
     final double spacing = 18.0;
     final Offset drawCenter = center + const Offset(35, 0);
 
+    Paint? glowPaint;
+    if (isPro) {
+      glowPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    }
+
     for (int i = 0; i < count; i++) {
       double progress = i / count;
       double invProgress = 1.0 - progress;
@@ -174,6 +196,10 @@ class TrailPainterHelper {
         Color currentColor = _neonColors[i % _neonColors.length];
 
         _starGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
+      if (isPro && glowPaint != null) {
+        Color currentColor = _neonColors[i % _neonColors.length];
+
+        glowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
         _drawStarShape(
           canvas,
@@ -199,8 +225,38 @@ class TrailPainterHelper {
     Offset center,
     bool isPro,
   ) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+
+    Paint? glowPaint;
+    List<Color>? neonColors;
+    if (isPro) {
+      neonColors = [
+        Colors.cyanAccent,
+        Colors.purpleAccent,
+        Colors.pinkAccent,
+        Colors.limeAccent,
+      ];
+      glowPaint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 6
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    }
+
     final int count = 3;
     final double spacing = 20.0;
+
+    Paint? glowPaint;
+    if (isPro) {
+      glowPaint = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 6
+        ..strokeCap = StrokeCap.round
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
+    }
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
@@ -214,10 +270,10 @@ class TrailPainterHelper {
       bolt.lineTo(2 * invProgress, 0);
       bolt.lineTo(-3 * invProgress, 10 * invProgress);
 
-      if (isPro) {
+      if (isPro && glowPaint != null) {
         Color currentColor = _neonColors[i % _neonColors.length];
 
-        _lightningGlowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
+        glowPaint.color = currentColor.withValues(alpha: alpha * 0.4);
 
         canvas.save();
         canvas.translate(pos.dx, pos.dy);
@@ -262,12 +318,14 @@ class TrailPainterHelper {
     canvas.drawLine(start, end, _linePaint);
   }
 
-  static void _drawStarShape(Canvas canvas, StarParams params, Paint paint) {
+  static final Path _baseStarPath = _createBaseStarPath();
+
+  static Path _createBaseStarPath() {
     final path = Path();
     double angle = -pi / 2;
     final double step = pi / 5;
-    final double outerRadius = params.size / 2;
-    final double innerRadius = params.size / 4;
+    final double outerRadius = 0.5; // Unit size, outer radius
+    final double innerRadius = 0.25; // Unit size, inner radius
 
     path.moveTo(outerRadius * cos(angle), outerRadius * sin(angle));
     for (int i = 0; i < 5; i++) {
@@ -277,11 +335,15 @@ class TrailPainterHelper {
       path.lineTo(outerRadius * cos(angle), outerRadius * sin(angle));
     }
     path.close();
+    return path;
+  }
 
+  static void _drawStarShape(Canvas canvas, StarParams params, Paint paint) {
     canvas.save();
     canvas.translate(params.center.dx, params.center.dy);
     canvas.rotate(params.rotation);
-    canvas.drawPath(path, paint);
+    canvas.scale(params.size, params.size);
+    canvas.drawPath(_baseStarPath, paint);
     canvas.restore();
   }
 
