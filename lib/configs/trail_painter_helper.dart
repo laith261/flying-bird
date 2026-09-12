@@ -14,48 +14,7 @@ class StarParams {
 }
 
 class TrailPainterHelper {
-  static final Paint _rectPaint = Paint()..style = PaintingStyle.fill;
-  static final Paint _rectGlowPaint = Paint()
-    ..style = PaintingStyle.fill
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-
-  static final Paint _circlePaint = Paint()..style = PaintingStyle.fill;
-  static final Paint _circleGlowPaint = Paint()
-    ..style = PaintingStyle.fill
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-
-  static final Paint _starPaint = Paint()..style = PaintingStyle.fill;
-  static final Paint _starGlowPaint = Paint()
-    ..style = PaintingStyle.fill
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-
-  static final Paint _lightningPaint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.5
-    ..strokeCap = StrokeCap.round;
-  static final Paint _lightningGlowPaint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 6
-    ..strokeCap = StrokeCap.round
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-
-  static final Paint _linePaint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 6
-    ..strokeCap = StrokeCap.round;
-  static final Paint _lineGlowPaint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 10
-    ..strokeCap = StrokeCap.round
-    ..color = Colors.orange.withValues(alpha: 0.4)
-    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 10);
-
-  static final Paint _nonePaint = Paint()
-    ..style = PaintingStyle.stroke
-    ..strokeWidth = 2
-    ..color = Colors.grey;
-
-  static final List<Color> _neonColors = [
+  static const _neonColors = [
     Colors.cyanAccent,
     Colors.purpleAccent,
     Colors.pinkAccent,
@@ -71,12 +30,11 @@ class TrailPainterHelper {
     final int count = 5;
     final double spacing = 15.0;
 
-    Paint? glowPaint;
-    if (isPro) {
-      glowPaint = Paint()
-        ..style = PaintingStyle.fill
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    }
+    final glowPaint = isPro
+        ? (Paint()
+            ..style = PaintingStyle.fill
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6))
+        : null;
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
@@ -136,12 +94,11 @@ class TrailPainterHelper {
     final double spacing = 12.0;
     final Offset drawCenter = center + const Offset(25, 0);
 
-    Paint? glowPaint;
-    if (isPro) {
-      glowPaint = Paint()
-        ..style = PaintingStyle.fill
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    }
+    final glowPaint = isPro
+        ? (Paint()
+            ..style = PaintingStyle.fill
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6))
+        : null;
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
@@ -176,12 +133,11 @@ class TrailPainterHelper {
     final double spacing = 18.0;
     final Offset drawCenter = center + const Offset(35, 0);
 
-    Paint? glowPaint;
-    if (isPro) {
-      glowPaint = Paint()
-        ..style = PaintingStyle.fill
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    }
+    final glowPaint = isPro
+        ? (Paint()
+            ..style = PaintingStyle.fill
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6))
+        : null;
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
@@ -249,14 +205,13 @@ class TrailPainterHelper {
     final int count = 3;
     final double spacing = 20.0;
 
-    Paint? glowPaint;
-    if (isPro) {
-      glowPaint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 6
-        ..strokeCap = StrokeCap.round
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
-    }
+    final glowPaint = isPro
+        ? (Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 6
+            ..strokeCap = StrokeCap.round
+            ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6))
+        : null;
 
     for (int i = 0; i < count; i++) {
       double progress = i / count;
