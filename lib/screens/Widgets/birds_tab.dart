@@ -210,128 +210,184 @@ class _SkinCard extends StatelessWidget {
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Image.asset(
-                      'assets/images/${skin.image}',
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) => const Icon(
-                        Icons.flutter_dash,
-                        size: 50,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        skin.name,
-                        style: GoogleFonts.luckiestGuy(
-                          textStyle: TextStyle(
-                            fontSize: 18,
-                            color: isSelected ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent) : Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Text(
-                          description,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.white70,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 5),
-                      if (isTemp)
-                        const Text(
-                          "TEMP",
-                          style: TextStyle(
-                            color: Colors.lightBlueAccent,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
-                            fontSize: 12,
-                          ),
-                        )
-                      else if (!isOwned)
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(
-                              Icons.monetization_on,
-                              size: 16,
-                              color: Colors.amber,
-                            ),
-                            const SizedBox(width: 3),
-                            Text(
-                              "$price",
-                              style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        )
-                      else if (isSelected)
-                        const Text(
-                          "EQUIPPED",
-                          style: TextStyle(
-                            color: Colors.greenAccent,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
-                            fontSize: 12,
-                          ),
-                        ),
-                    ],
-                  ),
+                _SkinCardImage(image: skin.image),
+                _SkinCardDetails(
+                  name: skin.name,
+                  description: description,
+                  price: price,
+                  isOwned: isOwned,
+                  isSelected: isSelected,
+                  isTemp: isTemp,
                 ),
               ],
             ),
-            if (!isOwned && !isTemp)
-              Center(
-                child: Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withAlpha(204),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.shopping_cart,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-              ),
-            if (isTemp)
-              const Positioned(
-                top: 10,
-                right: 10,
-                child: Icon(
-                  Icons.access_time_filled,
-                  color: Colors.lightBlueAccent,
-                  size: 30,
-                ),
-              )
-            else if (isSelected)
-              const Positioned(
-                top: 10,
-                right: 10,
-                child: Icon(Icons.check_circle, color: Colors.greenAccent, size: 30),
-              ),
+            if (!isOwned && !isTemp) const _SkinCardUnownedOverlay(),
+            if (isTemp || isSelected)
+              _SkinCardStatusIcon(isTemp: isTemp, isSelected: isSelected),
           ],
         ),
       ),
     );
+  }
+}
+
+class _SkinCardImage extends StatelessWidget {
+  final String image;
+
+  const _SkinCardImage({required this.image});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Image.asset(
+          'assets/images/$image',
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) =>
+              const Icon(Icons.flutter_dash, size: 50, color: Colors.grey),
+        ),
+      ),
+    );
+  }
+}
+
+class _SkinCardDetails extends StatelessWidget {
+  final String name;
+  final String description;
+  final int price;
+  final bool isOwned;
+  final bool isSelected;
+  final bool isTemp;
+
+  const _SkinCardDetails({
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.isOwned,
+    required this.isSelected,
+    required this.isTemp,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 2,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            name,
+            style: GoogleFonts.luckiestGuy(
+              textStyle: TextStyle(
+                fontSize: 18,
+                color: isSelected
+                    ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent)
+                    : Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Text(
+              description,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 10, color: Colors.white70),
+            ),
+          ),
+          const SizedBox(height: 5),
+          if (isTemp)
+            const Text(
+              "TEMP",
+              style: TextStyle(
+                color: Colors.lightBlueAccent,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+                fontSize: 12,
+              ),
+            )
+          else if (!isOwned)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.monetization_on,
+                  size: 16,
+                  color: Colors.amber,
+                ),
+                const SizedBox(width: 3),
+                Text(
+                  "$price",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )
+          else if (isSelected)
+            const Text(
+              "EQUIPPED",
+              style: TextStyle(
+                color: Colors.greenAccent,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.0,
+                fontSize: 12,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SkinCardUnownedOverlay extends StatelessWidget {
+  const _SkinCardUnownedOverlay();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        padding: const EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: Colors.green.withAlpha(204),
+          shape: BoxShape.circle,
+        ),
+        child: const Icon(Icons.shopping_cart, color: Colors.white, size: 40),
+      ),
+    );
+  }
+}
+
+class _SkinCardStatusIcon extends StatelessWidget {
+  final bool isTemp;
+  final bool isSelected;
+
+  const _SkinCardStatusIcon({required this.isTemp, required this.isSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    if (isTemp) {
+      return const Positioned(
+        top: 10,
+        right: 10,
+        child: Icon(
+          Icons.access_time_filled,
+          color: Colors.lightBlueAccent,
+          size: 30,
+        ),
+      );
+    } else if (isSelected) {
+      return const Positioned(
+        top: 10,
+        right: 10,
+        child: Icon(Icons.check_circle, color: Colors.greenAccent, size: 30),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }
