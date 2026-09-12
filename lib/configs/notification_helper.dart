@@ -39,7 +39,7 @@ class NotificationHelper {
       _isInitialized = true;
     } catch (e) {
       if (kDebugMode) {
-        print('Notification initialization error: $e');
+        debugPrint('Notification initialization error: $e');
       }
     }
   }
@@ -86,7 +86,7 @@ class NotificationHelper {
       );
     } catch (e) {
       if (kDebugMode) {
-        print('Error scheduling notification: $e');
+        debugPrint('Error scheduling notification: $e');
       }
     }
   }
