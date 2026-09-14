@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:game/component/skins/skin_enum.dart';
 import 'package:games_services/games_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -223,6 +224,7 @@ class PlayerInfo extends ChangeNotifier {
   // --- Persistence ---
 
   static late SharedPreferences _prefs;
+  static const _secureStorage = FlutterSecureStorage();
 
   static Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -253,7 +255,7 @@ class PlayerInfo extends ChangeNotifier {
 
     final String data = jsonEncode(toJson());
     // Local Save
-    await _prefs.setString(_storageKey, data);
+    await _secureStorage.write(key: _storageKey, value: data);
 
     // Cloud Save
     try {
@@ -275,7 +277,17 @@ class PlayerInfo extends ChangeNotifier {
       }
     }
 
-    String? jsonStr = _prefs.getString(_storageKey);
+    String? jsonStr = await _secureStorage.read(key: _storageKey);
+
+    // Migration from SharedPreferences to Secure Storage
+    if (jsonStr == null) {
+      jsonStr = _prefs.getString(_storageKey);
+      if (jsonStr != null && jsonStr.isNotEmpty) {
+        await _secureStorage.write(key: _storageKey, value: jsonStr);
+        await _prefs.remove(_storageKey);
+      }
+    }
+
     PlayerInfo? localData;
 
     if (jsonStr != null && jsonStr.isNotEmpty) {
@@ -342,7 +354,10 @@ class PlayerInfo extends ChangeNotifier {
       if (kDebugMode) {
         debugPrint('Cloud data is newer. Overwriting Local.');
       }
-      await _prefs.setString(_storageKey, jsonEncode(cloudData.toJson()));
+      await _secureStorage.write(
+        key: _storageKey,
+        value: jsonEncode(cloudData.toJson()),
+      );
       return cloudData;
     }
   }

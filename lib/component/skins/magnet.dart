@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:game/component/coin.dart';
 import 'package:game/component/player.dart';
 import 'package:game/component/skins/skin.dart';
@@ -11,15 +12,26 @@ class Magnet extends Skin {
     if (!game.isStarted) return;
 
     final coins = game.pipes.children.whereType<Coin>();
-    for (final coin in coins) {
-      final playerPos = player.position;
-      final coinPos = game.pipes.toLocal(playerPos);
+    if (coins.isEmpty) return;
 
-      final distanceSquared = coin.position.distanceToSquared(coinPos);
+    final playerPos = player.position;
+    final coinPos = game.pipes.toLocal(playerPos);
+    final cx = coinPos.x;
+    final cy = coinPos.y;
+
+    for (final coin in coins) {
+      final dx = cx - coin.position.x;
+      final dy = cy - coin.position.y;
+      final distanceSquared = dx * dx + dy * dy;
+
       if (distanceSquared < 22500) {
         // 150 * 150
-        final direction = (coinPos - coin.position).normalized();
-        coin.position += direction * 250 * dt;
+        final distance = math.sqrt(distanceSquared);
+        if (distance > 0) {
+          final moveDist = (250 * dt) / distance;
+          coin.position.x += dx * moveDist;
+          coin.position.y += dy * moveDist;
+        }
       }
     }
   }

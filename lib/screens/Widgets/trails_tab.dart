@@ -170,204 +170,230 @@ class _TrailsTabState extends State<TrailsTab> {
           itemCount: Trails.values.length,
           itemBuilder: (context, index) {
             final trail = Trails.values[index];
-            final String baseId = trail.id;
-            final bool isPro = widget.isProMode && baseId != 'none';
-            final String trailId = isPro ? '${baseId}_pro' : baseId;
-            final String name = isPro ? '${trail.name} Pro' : trail.name;
-
-            final int price = ShopHelper.getTrailPrice(trail, isPro);
-            final int requiredScore = trail.requiredScore;
-
-            final bool isSelected = ShopHelper.isTrailSelected(
-              widget.game,
-              trailId,
-            );
-            final bool isTemp = widget.game.tempTrail == trailId;
-            final bool isOwned = ShopHelper.isTrailOwned(widget.game, trailId);
-            final bool isLevelLocked =
-                widget.game.highest.value < requiredScore;
-
-            return GestureDetector(
-              onTap: () {
-                if (isLevelLocked) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Need $requiredScore score to unlock!"),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                  return;
-                }
-
-                if (!isOwned) {
-                  _showPurchaseConfirmation(trailId, name, price);
-                  return;
-                }
-
-                _selectTrail(trailId);
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? (isTemp
-                            ? Colors.blue.withAlpha(40)
-                            : Colors.orange.withAlpha(40))
-                      : Colors.white.withAlpha(20),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: isSelected
-                        ? (isTemp ? Colors.blueAccent : Colors.orangeAccent)
-                        : Colors.white.withAlpha(50),
-                    width: isSelected ? 3 : 1.5,
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          flex: 2,
-                          child: Padding(
-                            padding: EdgeInsets.zero,
-                            child: Opacity(
-                              opacity: isLevelLocked || (!isOwned && !isTemp)
-                                  ? 0.3
-                                  : 1.0,
-                              child: CustomPaint(
-                                painter: TrailPreviewPainter(trailId),
-                                size: Size.infinite,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                name,
-                                style: GoogleFonts.luckiestGuy(
-                                  textStyle: TextStyle(
-                                    fontSize: 18,
-                                    color: isSelected
-                                        ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent)
-                                        : Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 5),
-                              if (isLevelLocked)
-                                Text(
-                                  "Score: $requiredScore",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.orangeAccent,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              else if (isTemp)
-                                const Text(
-                                  "TEMP",
-                                  style: TextStyle(
-                                    color: Colors.lightBlueAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                )
-                              else if (!isOwned)
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(
-                                      Icons.monetization_on,
-                                      size: 16,
-                                      color: Colors.amber,
-                                    ),
-                                    const SizedBox(width: 3),
-                                    Text(
-                                      "$price",
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              else if (isSelected)
-                                const Text(
-                                  "EQUIPPED",
-                                  style: TextStyle(
-                                    color: Colors.greenAccent,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    if (isLevelLocked)
-                      Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.black.withAlpha(128),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.lock,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                        ),
-                      )
-                    else if (!isOwned && !isTemp)
-                      Center(
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.green.withAlpha(204),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.shopping_cart,
-                            color: Colors.white,
-                            size: 40,
-                          ),
-                        ),
-                      ),
-                    if (isTemp)
-                      const Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Icon(
-                          Icons.access_time_filled,
-                          color: Colors.lightBlueAccent,
-                          size: 30,
-                        ),
-                      )
-                    else if (isSelected)
-                      const Positioned(
-                        top: 10,
-                        right: 10,
-                        child: Icon(
-                          Icons.check_circle,
-                          color: Colors.greenAccent,
-                          size: 30,
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+            return _TrailItem(
+              trail: trail,
+              game: widget.game,
+              isProMode: widget.isProMode,
+              onSelect: _selectTrail,
+              onPurchaseConfirmation: _showPurchaseConfirmation,
             );
           },
         );
       },
+    );
+  }
+}
+
+class _TrailItem extends StatelessWidget {
+  final Trails trail;
+  final MyWorld game;
+  final bool isProMode;
+  final void Function(String id) onSelect;
+  final void Function(String trailId, String name, int price) onPurchaseConfirmation;
+
+  const _TrailItem({
+    required this.trail,
+    required this.game,
+    required this.isProMode,
+    required this.onSelect,
+    required this.onPurchaseConfirmation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final String baseId = trail.id;
+    final bool isPro = isProMode && baseId != 'none';
+    final String trailId = isPro ? '${baseId}_pro' : baseId;
+    final String name = isPro ? '${trail.name} Pro' : trail.name;
+
+    final int price = ShopHelper.getTrailPrice(trail, isPro);
+    final int requiredScore = trail.requiredScore;
+
+    final bool isSelected = ShopHelper.isTrailSelected(
+      game,
+      trailId,
+    );
+    final bool isTemp = game.tempTrail == trailId;
+    final bool isOwned = ShopHelper.isTrailOwned(game, trailId);
+    final bool isLevelLocked = game.highest.value < requiredScore;
+
+    return GestureDetector(
+      onTap: () {
+        if (isLevelLocked) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Need $requiredScore score to unlock!"),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+          return;
+        }
+
+        if (!isOwned) {
+          onPurchaseConfirmation(trailId, name, price);
+          return;
+        }
+
+        onSelect(trailId);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: isSelected
+              ? (isTemp
+                    ? Colors.blue.withAlpha(40)
+                    : Colors.orange.withAlpha(40))
+              : Colors.white.withAlpha(20),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isSelected
+                ? (isTemp ? Colors.blueAccent : Colors.orangeAccent)
+                : Colors.white.withAlpha(50),
+            width: isSelected ? 3 : 1.5,
+          ),
+        ),
+        child: Stack(
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Padding(
+                    padding: EdgeInsets.zero,
+                    child: Opacity(
+                      opacity: isLevelLocked || (!isOwned && !isTemp)
+                          ? 0.3
+                          : 1.0,
+                      child: CustomPaint(
+                        painter: TrailPreviewPainter(trailId),
+                        size: Size.infinite,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        name,
+                        style: GoogleFonts.luckiestGuy(
+                          textStyle: TextStyle(
+                            fontSize: 18,
+                            color: isSelected
+                                ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent)
+                                : Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      if (isLevelLocked)
+                        Text(
+                          "Score: $requiredScore",
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.orangeAccent,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      else if (isTemp)
+                        const Text(
+                          "TEMP",
+                          style: TextStyle(
+                            color: Colors.lightBlueAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        )
+                      else if (!isOwned)
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.monetization_on,
+                              size: 16,
+                              color: Colors.amber,
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              "$price",
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        )
+                      else if (isSelected)
+                        const Text(
+                          "EQUIPPED",
+                          style: TextStyle(
+                            color: Colors.greenAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            if (isLevelLocked)
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withAlpha(128),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.lock,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+              )
+            else if (!isOwned && !isTemp)
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withAlpha(204),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.shopping_cart,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+              ),
+            if (isTemp)
+              const Positioned(
+                top: 10,
+                right: 10,
+                child: Icon(
+                  Icons.access_time_filled,
+                  color: Colors.lightBlueAccent,
+                  size: 30,
+                ),
+              )
+            else if (isSelected)
+              const Positioned(
+                top: 10,
+                right: 10,
+                child: Icon(
+                  Icons.check_circle,
+                  color: Colors.greenAccent,
+                  size: 30,
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 }
