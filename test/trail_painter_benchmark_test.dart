@@ -18,7 +18,8 @@ void main() {
       TrailPainterHelper.drawLightningTrail(canvas, size, center, true);
     }
 
-    final stopwatch = Stopwatch()..start();
+    final stopwatch = Stopwatch()
+      ..start();
     for (int i = 0; i < 50000; i++) {
       TrailPainterHelper.drawRectTrail(canvas, size, center, true);
       TrailPainterHelper.drawCircleTrail(canvas, size, center, true);
@@ -28,11 +29,10 @@ void main() {
     stopwatch.stop();
 
     print('Benchmark completed in ${stopwatch.elapsedMilliseconds} ms');
-import 'dart:ui' as ui;
-import 'package:flutter_test/flutter_test.dart';
-import 'package:game/configs/trail_painter_helper.dart';
+  });
+}
 
-void main() {
+void main1() {
   test('Benchmark drawStarTrail', () {
     final recorder = ui.PictureRecorder();
     final canvas = ui.Canvas(recorder);
