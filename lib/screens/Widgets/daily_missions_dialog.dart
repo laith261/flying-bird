@@ -369,7 +369,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
   void _openGift() async {
     int currentGifts = widget.game.playerData.gifts;
     if (currentGifts > 0) {
-      int rand = _random.nextInt(100);
+      int rand = Random.secure().nextInt(100);
       String prizeText = "";
       IconData prizeIcon = Icons.card_giftcard;
       Color prizeColor = Colors.white;
@@ -392,7 +392,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
         List<int> coins = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         List<int> weights = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
         int totalWeight = weights.fold(0, (sum, w) => sum + w);
-        int coinRand = _random.nextInt(totalWeight);
+        int coinRand = Random.secure().nextInt(totalWeight);
         int currentWeight = 0;
         int rewardCoins = 5;
         for (int i = 0; i < coins.length; i++) {
