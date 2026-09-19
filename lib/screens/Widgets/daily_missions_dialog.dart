@@ -15,7 +15,8 @@ class DailyMissionsDialog extends StatefulWidget {
   State<DailyMissionsDialog> createState() => _DailyMissionsDialogState();
 }
 
-class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTickerProviderStateMixin {
+class _DailyMissionsDialogState extends State<DailyMissionsDialog>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -52,7 +53,10 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                 children: [
                   // Header
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 12.0,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -73,7 +77,11 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white, size: 32),
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 32,
+                          ),
                           onPressed: () {
                             widget.game.overlays.remove('daily_missions');
                           },
@@ -128,7 +136,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                               target: 10,
                               claimed: manager.coinsClaimed,
                               reward: 10,
-                              onClaim: () => manager.claimCoinsReward(widget.game.playerData),
+                              onClaim: () => manager.claimCoinsReward(
+                                widget.game.playerData,
+                              ),
                             ),
                             const SizedBox(height: 16),
                             _buildMissionRow(
@@ -141,7 +151,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                               target: 15,
                               claimed: manager.scoreClaimed,
                               reward: 15,
-                              onClaim: () => manager.claimScoreReward(widget.game.playerData),
+                              onClaim: () => manager.claimScoreReward(
+                                widget.game.playerData,
+                              ),
                             ),
                             const SizedBox(height: 16),
                             _buildMissionRow(
@@ -154,7 +166,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                               target: 3,
                               claimed: manager.gamesClaimed,
                               reward: 10,
-                              onClaim: () => manager.claimGamesReward(widget.game.playerData),
+                              onClaim: () => manager.claimGamesReward(
+                                widget.game.playerData,
+                              ),
                             ),
                           ],
                         ),
@@ -180,7 +194,8 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                             _buildMissionRow(
                               context,
                               title: "Daily Login Tracker",
-                              desc: "Consecutive daily login streak (Weekly reset)",
+                              desc:
+                                  "Consecutive daily login streak (Weekly reset)",
                               icon: Icons.calendar_month_rounded,
                               iconColor: Colors.purple,
                               progress: widget.game.playerData.rewardProgress,
@@ -231,7 +246,11 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                       color: Colors.pinkAccent.withAlpha(50),
                       shape: BoxShape.circle,
                     ),
-                    child: const Icon(Icons.card_giftcard, color: Colors.pinkAccent, size: 28),
+                    child: const Icon(
+                      Icons.card_giftcard,
+                      color: Colors.pinkAccent,
+                      size: 28,
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -273,13 +292,19 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                         Text(
                           "Owned: ",
                           style: GoogleFonts.poppins(
-                            textStyle: const TextStyle(color: Colors.white70, fontSize: 14),
+                            textStyle: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                         Text(
                           "$gifts",
                           style: GoogleFonts.luckiestGuy(
-                            textStyle: const TextStyle(color: Colors.pinkAccent, fontSize: 18),
+                            textStyle: const TextStyle(
+                              color: Colors.pinkAccent,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
                       ],
@@ -294,7 +319,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.pinkAccent,
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -303,13 +330,19 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                             child: Text(
                               "Open",
                               style: GoogleFonts.luckiestGuy(
-                                textStyle: const TextStyle(color: Colors.white, fontSize: 14),
+                                textStyle: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ),
                         )
                       : Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white.withAlpha(40),
                             borderRadius: BorderRadius.circular(12),
@@ -335,7 +368,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
   void _openGift() async {
     int currentGifts = widget.game.playerData.gifts;
     if (currentGifts > 0) {
-      int rand = Random().nextInt(100);
+      int rand = Random.secure().nextInt(100);
       String prizeText = "";
       IconData prizeIcon = Icons.card_giftcard;
       Color prizeColor = Colors.white;
@@ -358,7 +391,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
         List<int> coins = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
         List<int> weights = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
         int totalWeight = weights.fold(0, (sum, w) => sum + w);
-        int coinRand = Random().nextInt(totalWeight);
+        int coinRand = Random.secure().nextInt(totalWeight);
         int currentWeight = 0;
         int rewardCoins = 5;
         for (int i = 0; i < coins.length; i++) {
@@ -494,7 +527,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
                       style: GoogleFonts.luckiestGuy(
                         textStyle: TextStyle(
                           fontSize: 14,
-                          color: isCompleted ? Colors.greenAccent : Colors.white70,
+                          color: isCompleted
+                              ? Colors.greenAccent
+                              : Colors.white70,
                         ),
                       ),
                     ),
@@ -551,7 +586,11 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog> with SingleTi
         child: const Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.check_circle_outline, color: Colors.greenAccent, size: 18),
+            Icon(
+              Icons.check_circle_outline,
+              color: Colors.greenAccent,
+              size: 18,
+            ),
             SizedBox(width: 6),
             Text(
               "Claimed",
@@ -637,7 +676,8 @@ class _GiftOpeningOverlay extends StatefulWidget {
   State<_GiftOpeningOverlay> createState() => _GiftOpeningOverlayState();
 }
 
-class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay> with TickerProviderStateMixin {
+class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay>
+    with TickerProviderStateMixin {
   late AnimationController _shakeController;
   late AnimationController _bounceController;
   bool _showPrize = false;
@@ -650,18 +690,22 @@ class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay> with TickerPro
       duration: const Duration(milliseconds: 120),
     )..repeat(reverse: true);
 
-    _bounceController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 600),
-    )..addStatusListener((status) {
-      if (status == AnimationStatus.forward || status == AnimationStatus.reverse) {
-        Vibration.hasVibrator().then((hasVibrator) {
-          if (hasVibrator) {
-            Vibration.vibrate(duration: 30, amplitude: 60);
-          }
-        });
-      }
-    })..repeat(reverse: true);
+    _bounceController =
+        AnimationController(
+            vsync: this,
+            duration: const Duration(milliseconds: 600),
+          )
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.forward ||
+                status == AnimationStatus.reverse) {
+              Vibration.hasVibrator().then((hasVibrator) {
+                if (hasVibrator) {
+                  Vibration.vibrate(duration: 30, amplitude: 60);
+                }
+              });
+            }
+          })
+          ..repeat(reverse: true);
 
     Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
@@ -697,7 +741,10 @@ class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay> with TickerPro
           switchInCurve: Curves.easeOutBack,
           switchOutCurve: Curves.easeIn,
           transitionBuilder: (Widget child, Animation<double> animation) {
-            return ScaleTransition(scale: animation, child: FadeTransition(opacity: animation, child: child));
+            return ScaleTransition(
+              scale: animation,
+              child: FadeTransition(opacity: animation, child: child),
+            );
           },
           child: _showPrize
               ? Column(
@@ -712,7 +759,11 @@ class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay> with TickerPro
                         color: Colors.white,
                         fontSize: 32,
                         shadows: [
-                          const Shadow(color: Colors.black, offset: Offset(2, 2), blurRadius: 4),
+                          const Shadow(
+                            color: Colors.black,
+                            offset: Offset(2, 2),
+                            blurRadius: 4,
+                          ),
                         ],
                       ),
                       textAlign: TextAlign.center,
@@ -722,16 +773,30 @@ class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay> with TickerPro
                       onPressed: () => Navigator.of(context).pop(),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orangeAccent,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 40,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
                       ),
-                      child: Text("Awesome!", style: GoogleFonts.luckiestGuy(color: Colors.white, fontSize: 24)),
+                      child: Text(
+                        "Awesome!",
+                        style: GoogleFonts.luckiestGuy(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
                     ),
                   ],
                 )
               : AnimatedBuilder(
                   key: const ValueKey('gift'),
-                  animation: Listenable.merge([_shakeController, _bounceController]),
+                  animation: Listenable.merge([
+                    _shakeController,
+                    _bounceController,
+                  ]),
                   builder: (context, child) {
                     final dx = sin(_shakeController.value * pi * 2) * 4;
                     final dy = sin(_bounceController.value * pi) * -15;
