@@ -3,6 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:game/component/player.dart';
 
 class ShieldHelper {
+  // Pre-instantiated Paint objects for optimization
+  static final Paint _ringPaint = Paint()
+    ..color = Colors.cyan.withAlpha(38)
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
+
+  static final Paint _trailPaint = Paint();
+  static final Paint _satellitePaint = Paint()
+    ..color = Colors.white
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
+
+  // Pre-calculate trail colors to avoid generating them on the fly inside the loop
+  static final List<Color> _trailColors = List.generate(
+    6, // j ranges from 1 to 5, length 6 handles the indexing nicely
+    (j) => Colors.cyanAccent.withAlpha(((0.5 - (j * 0.08)) * 255).toInt()),
+  );
+
   static void drawShield(
     Canvas canvas,
     TheBird player,
@@ -18,18 +36,12 @@ class ShieldHelper {
     // Enhanced "Orbiting Plasma" Shield with Trails
     double orbitRadius = player.width * 0.75;
 
-    // Draw subtle rotating energy ring
-    final ringPaint = Paint()
-      ..color = Colors.cyan.withAlpha(38)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2);
-
     // Rotate the ring slowly opposite to satellites
     canvas.save();
+
     canvas.translate(player.width / 2, player.height / 2);
     canvas.rotate(-time * 0.5);
-    canvas.drawCircle(Offset.zero, orbitRadius, ringPaint);
+    canvas.drawCircle(Offset.zero, orbitRadius, _ringPaint);
     canvas.restore();
 
     // Draw 3 orbiting satellites with trails
@@ -42,13 +54,11 @@ class ShieldHelper {
         double trailX = (player.width / 2) + orbitRadius * cos(trailAngle);
         double trailY = (player.height / 2) + orbitRadius * sin(trailAngle);
 
+        _trailPaint.color = _trailColors[j];
         canvas.drawCircle(
           Offset(trailX, trailY),
           4.0 - (j * 0.6), // Shrinking size
-          Paint()
-            ..color = Colors.cyanAccent.withAlpha(
-              ((0.5 - (j * 0.08)) * 255).toInt(),
-            ),
+          _trailPaint,
         );
       }
 
@@ -56,13 +66,7 @@ class ShieldHelper {
       double satelliteX = (player.width / 2) + orbitRadius * cos(angleVal);
       double satelliteY = (player.height / 2) + orbitRadius * sin(angleVal);
 
-      canvas.drawCircle(
-        Offset(satelliteX, satelliteY),
-        5,
-        Paint()
-          ..color = Colors.white
-          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3),
-      );
+      canvas.drawCircle(Offset(satelliteX, satelliteY), 5, _satellitePaint);
     }
     canvas.restore(); // Restore counter-rotation
   }

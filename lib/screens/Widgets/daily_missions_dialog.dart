@@ -18,6 +18,7 @@ class DailyMissionsDialog extends StatefulWidget {
 class _DailyMissionsDialogState extends State<DailyMissionsDialog>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final Random _random = Random();
 
   @override
   void initState() {

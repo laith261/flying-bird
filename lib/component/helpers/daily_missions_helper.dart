@@ -97,13 +97,15 @@ class DailyMissionsManager extends ChangeNotifier {
 
   Future<void> _saveData() async {
     if (_prefs == null) return;
-    await _prefs!.setString('dm_date', _date);
-    await _prefs!.setInt('dm_coins', _coinsProgress);
-    await _prefs!.setInt('dm_score', _scoreProgress);
-    await _prefs!.setInt('dm_games', _gamesPlayed);
-    await _prefs!.setBool('dm_coins_claimed', _coinsClaimed);
-    await _prefs!.setBool('dm_score_claimed', _scoreClaimed);
-    await _prefs!.setBool('dm_games_claimed', _gamesClaimed);
+    await Future.wait([
+      _prefs!.setString('dm_date', _date),
+      _prefs!.setInt('dm_coins', _coinsProgress),
+      _prefs!.setInt('dm_score', _scoreProgress),
+      _prefs!.setInt('dm_games', _gamesPlayed),
+      _prefs!.setBool('dm_coins_claimed', _coinsClaimed),
+      _prefs!.setBool('dm_score_claimed', _scoreClaimed),
+      _prefs!.setBool('dm_games_claimed', _gamesClaimed),
+    ]);
   }
 
   void _scheduleSave() {
