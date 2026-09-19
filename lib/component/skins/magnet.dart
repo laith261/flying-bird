@@ -19,16 +19,20 @@ class Magnet extends Skin {
     final cx = coinPos.x;
     final cy = coinPos.y;
 
+    final moveSpeed = 250 * dt;
+
     for (final coin in coins) {
       final dx = cx - coin.position.x;
       final dy = cy - coin.position.y;
-      final distanceSquared = dx * dx + dy * dy;
 
-      if (distanceSquared < 22500) {
-        // 150 * 150
-        final distance = math.sqrt(distanceSquared);
-        if (distance > 0) {
-          final moveDist = (250 * dt) / distance;
+      // Fast bounding box check to avoid expensive multiplication and math.sqrt
+      if (dx > -150 && dx < 150 && dy > -150 && dy < 150) {
+        final distanceSquared = dx * dx + dy * dy;
+
+        if (distanceSquared > 0 && distanceSquared < 22500) {
+          // 150 * 150
+          final distance = math.sqrt(distanceSquared);
+          final moveDist = moveSpeed / distance;
           coin.position.x += dx * moveDist;
           coin.position.y += dy * moveDist;
         }
