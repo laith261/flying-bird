@@ -34,8 +34,6 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
   final Paint _corePaint = Paint()..style = PaintingStyle.fill;
   final Paint _standardPaint = Paint()..style = PaintingStyle.fill;
 
-  final Paint _opacityLayerPaint = Paint();
-
   RotateRectTrail() : super(priority: 1);
 
   void addPoint(Vector2 point) {
@@ -76,7 +74,7 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
     if (opacity < 1.0) {
       canvas.saveLayer(
         null,
-        _opacityLayerPaint..color = Colors.white.withAlpha((opacity * 255).toInt()),
+        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
       );
     }
 
@@ -119,7 +117,7 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
 
       canvas.drawRect(
         Rect.fromCenter(center: Offset.zero, width: size, height: size),
-        _glowPaint,
+        glowPaint,
       );
 
       canvas.restore();
@@ -163,7 +161,7 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
 
       canvas.drawRect(
         Rect.fromCenter(center: Offset.zero, width: size, height: size),
-        _standardPaint,
+        paint,
       );
 
       canvas.restore();
