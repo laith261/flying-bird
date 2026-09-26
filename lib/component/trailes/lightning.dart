@@ -27,6 +27,32 @@ class LightningTrail extends PositionComponent implements GameTrail {
   final Random _rnd = Random();
   double opacity = 1.0;
 
+  final Paint _proGlowPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 8
+    ..strokeCap = StrokeCap.round
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+
+  final Paint _proCorePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2
+    ..strokeCap = StrokeCap.round
+    ..color = Colors.white;
+
+  final Paint _standardGlowPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 4
+    ..strokeCap = StrokeCap.round
+    ..color = Colors.white.withValues(alpha: 0.6);
+
+  final Paint _standardCorePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.5
+    ..strokeCap = StrokeCap.round
+    ..color = Colors.white;
+
+  final Paint _layerPaint = Paint();
+
   LightningTrail() : super(priority: 1);
 
   void addPoint(Vector2 point) {
@@ -74,10 +100,8 @@ class LightningTrail extends PositionComponent implements GameTrail {
     if (_particles.isEmpty) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(
-        null,
-        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
-      );
+      _layerPaint.color = Colors.white.withAlpha((opacity * 255).toInt());
+      canvas.saveLayer(null, _layerPaint);
     }
 
     if (isPro) {
@@ -105,64 +129,40 @@ class LightningTrail extends PositionComponent implements GameTrail {
     double tBr = t - idx1;
     Color currentColor = Color.lerp(neonColors[idx1], neonColors[idx2], tBr)!;
 
-    final glowPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
-      ..strokeCap = StrokeCap.round
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-
-    final corePaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2
-      ..strokeCap = StrokeCap.round
-      ..color = Colors.white;
-
     // Glow Pass
     for (final p in _particles) {
       double alpha = (1 - p.age / p.lifespan).clamp(0.0, 1.0);
-      glowPaint.color = currentColor.withValues(alpha: alpha * 0.6);
+      _proGlowPaint.color = currentColor.withValues(alpha: alpha * 0.6);
 
       canvas.save();
       canvas.translate(p.position.x, p.position.y);
-      canvas.drawPath(p.path, glowPaint);
+      canvas.drawPath(p.path, _proGlowPaint);
       canvas.restore();
     }
 
     // Core Pass
     for (final p in _particles) {
       double alpha = (1 - p.age / p.lifespan).clamp(0.0, 1.0);
-      corePaint.color = Colors.white.withValues(alpha: alpha);
+      _proCorePaint.color = Colors.white.withValues(alpha: alpha);
 
       canvas.save();
       canvas.translate(p.position.x, p.position.y);
-      canvas.drawPath(p.path, corePaint);
+      canvas.drawPath(p.path, _proCorePaint);
       canvas.restore();
     }
   }
 
   void _renderStandard(Canvas canvas) {
-    final glowPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4
-      ..strokeCap = StrokeCap.round
-      ..color = Colors.white.withValues(alpha: 0.6);
-
-    final corePaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round
-      ..color = Colors.white;
-
     for (final p in _particles) {
       double alpha = (1 - p.age / p.lifespan).clamp(0.0, 1.0);
 
-      glowPaint.color = Colors.white.withValues(alpha: alpha * 0.6);
-      corePaint.color = Colors.white.withValues(alpha: alpha);
+      _standardGlowPaint.color = Colors.white.withValues(alpha: alpha * 0.6);
+      _standardCorePaint.color = Colors.white.withValues(alpha: alpha);
 
       canvas.save();
       canvas.translate(p.position.x, p.position.y);
-      canvas.drawPath(p.path, glowPaint);
-      canvas.drawPath(p.path, corePaint);
+      canvas.drawPath(p.path, _standardGlowPaint);
+      canvas.drawPath(p.path, _standardCorePaint);
       canvas.restore();
     }
   }
