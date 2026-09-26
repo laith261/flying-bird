@@ -27,14 +27,13 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
   double _time = 0;
   double opacity = 1.0;
 
+  final Paint _standardPaint = Paint()..style = PaintingStyle.fill;
   final Paint _glowPaint = Paint()
     ..style = PaintingStyle.fill
     ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-
-  final Paint _corePaint = Paint()..style = PaintingStyle.fill;
-  final Paint _standardPaint = Paint()..style = PaintingStyle.fill;
-
-  final Paint _opacityLayerPaint = Paint();
+  final Paint _corePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = Colors.white;
 
   RotateRectTrail() : super(priority: 1);
 
