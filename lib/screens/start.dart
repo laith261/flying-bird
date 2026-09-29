@@ -317,38 +317,85 @@ class _StartWidgetState extends State<StartWidget> {
             ),
             const SizedBox(width: 12),
 
-            // 6. Language Toggle (Locale utility)
+            // 6. Language Menu (Locale action button menu)
             ValueListenableBuilder<Locale>(
               valueListenable: LanguageManager.currentLocale,
               builder: (context, locale, _) {
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    _buildIconButton(
-                      onPressed: () => LanguageManager.toggleLanguage(),
-                      icon: Icons.language_rounded,
-                      color: Colors.teal,
-                      tooltip: context.l10n.language,
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.teal.withAlpha(77),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: PopupMenuButton<String>(
+                        tooltip: context.l10n.language,
+                        elevation: 8,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        position: PopupMenuPosition.over,
+                        offset: const Offset(0, -160),
+                        onSelected: (code) => LanguageManager.setLanguage(code),
+                        itemBuilder: (context) => [
+                          _buildLanguageMenuItem(
+                            code: 'en',
+                            name: 'English',
+                            isSelected: locale.languageCode == 'en',
+                          ),
+                          _buildLanguageMenuItem(
+                            code: 'ar',
+                            name: 'العربية',
+                            isSelected: locale.languageCode == 'ar',
+                          ),
+                          _buildLanguageMenuItem(
+                            code: 'es',
+                            name: 'Español',
+                            isSelected: locale.languageCode == 'es',
+                          ),
+                        ],
+                        icon: const Icon(
+                          Icons.language_rounded,
+                          color: Colors.teal,
+                          size: 26,
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        constraints: const BoxConstraints(
+                          minWidth: 44,
+                          minHeight: 44,
+                        ),
+                      ),
                     ),
                     PositionedDirectional(
                       bottom: -2,
                       end: -2,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 4,
-                          vertical: 1,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.teal,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.white, width: 1.5),
-                        ),
-                        child: Text(
-                          locale.languageCode.toUpperCase(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 9,
-                            fontWeight: FontWeight.bold,
+                      child: IgnorePointer(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 4,
+                            vertical: 1,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.teal,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.white, width: 1.5),
+                          ),
+                          child: Text(
+                            locale.languageCode.toUpperCase(),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 9,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -359,6 +406,56 @@ class _StartWidgetState extends State<StartWidget> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  PopupMenuItem<String> _buildLanguageMenuItem({
+    required String code,
+    required String name,
+    required bool isSelected,
+  }) {
+    return PopupMenuItem<String>(
+      value: code,
+      height: 44,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.teal : Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            child: Text(
+              code.toUpperCase(),
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.black87,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              name,
+              style: TextStyle(
+                color: isSelected ? Colors.teal.shade800 : Colors.black87,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          if (isSelected) ...[
+            const SizedBox(width: 8),
+            const Icon(
+              Icons.check_circle_rounded,
+              color: Colors.teal,
+              size: 18,
+            ),
+          ],
+        ],
       ),
     );
   }

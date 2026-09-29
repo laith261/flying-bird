@@ -11,6 +11,7 @@ import 'Widgets/coin_display.dart';
 import 'Widgets/hieh_score.dart';
 import 'Widgets/adaptive_banner.dart';
 import 'Widgets/daily_missions_dialog.dart';
+import 'Widgets/score_display.dart';
 import 'shop.dart';
 
 class MainWidget extends StatefulWidget {
@@ -64,6 +65,10 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
       builder: (context, locale, _) {
         return MaterialApp(
           locale: locale,
+          // theme: ThemeData(
+          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+          //   primaryColor: Colors.amber,
+          // ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
@@ -89,6 +94,8 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
                             game: widget.game,
                             initialTabIndex: widget.game.shopInitialTabIndex,
                           ),
+                          'score_display': (context, _) =>
+                              ScoreDisplay(game: widget.game),
                         },
                         backgroundBuilder: (context) => Container(
                           decoration: const BoxDecoration(

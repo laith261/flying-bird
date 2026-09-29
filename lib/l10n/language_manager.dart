@@ -10,10 +10,14 @@ class LanguageManager {
   static final ValueNotifier<Locale> currentLocale =
       ValueNotifier<Locale>(const Locale('en'));
 
+  /// Supported language codes in order.
+  static const List<String> supportedLanguages = ['en', 'ar', 'es'];
+
   /// Text direction mapping for supported language codes.
   static const Map<String, TextDirection> _directions = {
     'ar': TextDirection.rtl,
     'en': TextDirection.ltr,
+    'es': TextDirection.ltr,
   };
 
   /// Returns the [TextDirection] for a given [Locale].
@@ -32,12 +36,12 @@ class LanguageManager {
     try {
       final prefs = await SharedPreferences.getInstance();
       final savedCode = prefs.getString(_prefKey);
-      if (savedCode != null && (savedCode == 'en' || savedCode == 'ar')) {
+      if (savedCode != null && supportedLanguages.contains(savedCode)) {
         currentLocale.value = Locale(savedCode);
       } else {
         final systemCode = PlatformDispatcher.instance.locale.languageCode;
-        if (systemCode == 'ar') {
-          currentLocale.value = const Locale('ar');
+        if (supportedLanguages.contains(systemCode)) {
+          currentLocale.value = Locale(systemCode);
         } else {
           currentLocale.value = const Locale('en');
         }
@@ -49,10 +53,12 @@ class LanguageManager {
     }
   }
 
-  /// Toggles between English and Arabic.
+  /// Cycles through supported languages (English -> Arabic -> Spanish -> English).
   static Future<void> toggleLanguage() async {
-    final nextCode = currentLocale.value.languageCode == 'ar' ? 'en' : 'ar';
-    await setLanguage(nextCode);
+    final currentIndex =
+        supportedLanguages.indexOf(currentLocale.value.languageCode);
+    final nextIndex = (currentIndex + 1) % supportedLanguages.length;
+    await setLanguage(supportedLanguages[nextIndex]);
   }
 
   /// Sets the specified language and saves the preference.

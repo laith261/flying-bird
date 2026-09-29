@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
@@ -10,7 +9,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:game/component/clouds.dart';
 import 'package:game/configs/ads.dart';
 import 'package:games_services/games_services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'component/wing.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -56,7 +54,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   MyWorld() : super();
 
   // objects
-  late TextComponent scores = buildScore();
   final AudioHelper audio = AudioHelper();
   final AdmobAds ads = AdmobAds();
   final TheBird player = TheBird();
@@ -73,6 +70,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   ValueNotifier<bool> isLuckyDayActive = ValueNotifier<bool>(false);
   bool isShieldEnabled = false;
   int scorePoint = 0;
+  final ValueNotifier<int> currentScore = ValueNotifier<int>(0);
   bool sound = true;
   int deadTimes = 0;
   PlayerInfo playerData = PlayerInfo();
@@ -130,33 +128,18 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
 
     addAll({clouds, player, pipes, wing});
     updateScore();
-    LanguageManager.currentLocale.addListener(updateScore);
 
     // Initial overlays
     overlays.add('start');
     overlays.add('coin_display');
     overlays.add('highest_score');
+    overlays.add('score_display');
   }
 
   @override
   void onTapDown(TapDownEvent event) => player.goUp();
 
-  TextComponent buildScore() {
-    return TextComponent(
-      position: Vector2(size.x / 2, size.y / 2 * 0.2),
-      anchor: Anchor.center,
-      priority: 2,
-      textRenderer: TextPaint(
-        style: GoogleFonts.luckiestGuy(
-          textStyle: const TextStyle(
-            color: Colors.orangeAccent,
-            fontSize: 40,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
+
 
   Future<void> getHighest() async => highest.value = playerData.highScore;
 
@@ -172,7 +155,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     scorePoint = withRewarded ? scorePoint : 0;
     updateScore();
     isStarted = true;
-    add(scores);
+    overlays.add('score_display');
     // Check Lucky Day usage
     if (isLuckyDayActive.value) {
       if (playerData.luckyDay > 0) {
@@ -204,7 +187,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   Skins? tempSkin;
 
   void gameOver() {
-    remove(scores);
     // billboard.reset();
     if (tempTrail != null) {
       player.updateTrail(playerData.selectedTrail); // Use saved data
@@ -246,7 +228,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   void updateScore() {
-    scores.text = lookupAppLocalizations(LanguageManager.currentLocale.value)
-        .score(scorePoint);
+    currentScore.value = scorePoint;
   }
 }

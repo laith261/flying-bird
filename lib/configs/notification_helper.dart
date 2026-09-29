@@ -1,9 +1,9 @@
-import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import '../l10n/app_localizations.dart';
+import '../l10n/language_manager.dart';
 
 class NotificationHelper {
   static final NotificationHelper _instance = NotificationHelper._internal();
@@ -78,8 +78,7 @@ class NotificationHelper {
         iOS: darwinDetails,
       );
 
-      final languageCode = PlatformDispatcher.instance.locale.languageCode;
-      final locale = languageCode == 'ar' ? const Locale('ar') : const Locale('en');
+      final locale = LanguageManager.currentLocale.value;
       final l10n = lookupAppLocalizations(locale);
 
       await _notificationsPlugin.zonedSchedule(
