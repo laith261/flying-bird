@@ -77,6 +77,7 @@ class PlayerInfo extends ChangeNotifier {
 
   // --- Logic Methods ---
 
+  // ignore: unused_field
   Timer? _saveTimer;
   bool _savePending = false;
 

@@ -20,12 +20,15 @@ import 'component/player.dart';
 import 'configs/audio_helper.dart';
 import 'configs/functions.dart';
 import 'firebase_options.dart';
+import 'l10n/l10n.dart';
 import 'models/player_data.dart';
 import 'screens/main_widget.dart';
 import 'configs/leaderboard_helper.dart';
 import 'configs/notification_helper.dart';
 import 'component/helpers/daily_missions_helper.dart';
 import 'package:game/component/skins/skin_enum.dart';
+
+export 'l10n/l10n.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -44,6 +47,7 @@ void main() async {
   Flame.device.setPortraitUpOnly();
   await PlayerInfo.init();
   await NotificationHelper().init();
+  await LanguageManager.init();
   final game = MyWorld();
   runApp(MainWidget(game: game));
 }
@@ -126,6 +130,7 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
 
     addAll({clouds, player, pipes, wing});
     updateScore();
+    LanguageManager.currentLocale.addListener(updateScore);
 
     // Initial overlays
     overlays.add('start');
@@ -240,5 +245,8 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     }
   }
 
-  void updateScore() => scores.text = 'Score: $scorePoint';
+  void updateScore() {
+    scores.text = lookupAppLocalizations(LanguageManager.currentLocale.value)
+        .score(scorePoint);
+  }
 }

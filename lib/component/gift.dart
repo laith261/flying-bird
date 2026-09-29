@@ -60,7 +60,7 @@ class Gift extends SpriteComponent with HasGameReference<MyWorld> {
             position: absolutePosition.clone(),
             child: ComputedParticle(
               renderer: (canvas, particle) {
-                final paint = Paint()..color = color.withOpacity(1 - particle.progress);
+                final paint = Paint()..color = color.withValues(alpha: 255 * (1 - particle.progress));
                 canvas.drawRect(Rect.fromLTWH(-4, -4, 8, 8), paint);
               },
             ),

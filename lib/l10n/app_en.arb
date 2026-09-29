@@ -1,0 +1,439 @@
+{
+  "@@locale": "en",
+  "appTitle": "Flying Bird",
+  "@appTitle": {
+    "description": "Title of the game"
+  },
+  "startGame": "Start Game",
+  "@startGame": {
+    "description": "Button text to start a new game"
+  },
+  "continueGame": "continue",
+  "@continueGame": {
+    "description": "Button text to continue game after revival"
+  },
+  "watchAdToContinue": "watch an ad to continue",
+  "@watchAdToContinue": {
+    "description": "Button text on the reward ad revival button"
+  },
+  "score": "Score: {score}",
+  "@score": {
+    "description": "Current game score",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "highScore": "High Score: {score}",
+  "@highScore": {
+    "description": "Player's best high score",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  },
+  "bestScore": "Best: {score}",
+  "@bestScore": {
+    "description": "Best score label",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  },
+  "shop": "Shop",
+  "@shop": {
+    "description": "Shop screen title"
+  },
+  "missions": "Missions",
+  "@missions": {
+    "description": "Missions tab or dialog title"
+  },
+  "daily": "Daily",
+  "@daily": {
+    "description": "Daily tab title"
+  },
+  "weeklyOther": "Weekly / Other",
+  "@weeklyOther": {
+    "description": "Weekly tab title"
+  },
+  "resetsEveryDay": "Resets every day!",
+  "@resetsEveryDay": {
+    "description": "Subtitle indicating daily reset"
+  },
+  "dailyRewards": "Daily Rewards",
+  "@dailyRewards": {
+    "description": "Daily rewards section title"
+  },
+  "dailyProgress": "Daily Progress",
+  "@dailyProgress": {
+    "description": "Daily progress title"
+  },
+  "weeklyRewardClaimed": "Weekly Reward Claimed!",
+  "@weeklyRewardClaimed": {
+    "description": "Weekly reward claimed dialog title"
+  },
+  "trails": "Trails",
+  "@trails": {
+    "description": "Trails tab title in shop"
+  },
+  "powerUps": "Power Ups",
+  "@powerUps": {
+    "description": "Power Ups tab title in shop"
+  },
+  "birds": "Birds",
+  "@birds": {
+    "description": "Birds skins tab title in shop"
+  },
+  "claim": "Claim",
+  "@claim": {
+    "description": "Claim reward button text"
+  },
+  "claimed": "Claimed",
+  "@claimed": {
+    "description": "Label indicating reward was claimed"
+  },
+  "completed": "Completed",
+  "@completed": {
+    "description": "Label indicating a mission is completed"
+  },
+  "equip": "Equip",
+  "@equip": {
+    "description": "Equip item button text"
+  },
+  "equipped": "EQUIPPED",
+  "@equipped": {
+    "description": "Equipped status badge text"
+  },
+  "temp": "TEMP",
+  "@temp": {
+    "description": "Temporary item status badge text"
+  },
+  "buy": "Buy",
+  "@buy": {
+    "description": "Buy item button text"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "confirmPurchase": "Confirm Purchase",
+  "@confirmPurchase": {
+    "description": "Confirm purchase dialog title"
+  },
+  "luckyDay": "Lucky Day",
+  "@luckyDay": {
+    "description": "Lucky Day power-up name"
+  },
+  "shield": "Shield",
+  "@shield": {
+    "description": "Shield power-up name"
+  },
+  "awesome": "Awesome!",
+  "@awesome": {
+    "description": "Awesome exclamation button"
+  },
+  "gotIt": "Got it!",
+  "@gotIt": {
+    "description": "Got it acknowledgement button"
+  },
+  "owned": "Owned: {count}",
+  "@owned": {
+    "description": "Owned count text",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "notificationTitle": "We miss you! 🐦",
+  "@notificationTitle": {
+    "description": "Return reminder notification title"
+  },
+  "notificationBody": "Come back to Flying Bird and beat your high score! 🏆",
+  "@notificationBody": {
+    "description": "Return reminder notification body"
+  },
+  "tryLabel": "Try",
+  "@tryLabel": {
+    "description": "Try item button text"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Open gift button text"
+  },
+  "findOne": "Find one!",
+  "@findOne": {
+    "description": "Find gift button text"
+  },
+  "tracking": "Tracking",
+  "@tracking": {
+    "description": "Status text for ongoing tracker"
+  },
+  "progress": "Progress",
+  "@progress": {
+    "description": "Progress header text"
+  },
+  "goToShop": "Go to Shop",
+  "@goToShop": {
+    "description": "Go to shop button text"
+  },
+  "needSignIn": "You need to sign in first",
+  "@needSignIn": {
+    "description": "Sign in required toast message"
+  },
+  "confirmBuyItem": "Do you want to buy {item} for {price} coins?",
+  "@confirmBuyItem": {
+    "description": "Confirmation message before purchase",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Bird"
+      },
+      "price": {
+        "type": "int",
+        "example": "100"
+      }
+    }
+  },
+  "boughtItem": "Bought {item}!",
+  "@boughtItem": {
+    "description": "Success message after purchasing item",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Bird"
+      }
+    }
+  },
+  "needCoins": "Need {price} coins!",
+  "@needCoins": {
+    "description": "Insufficient coins message",
+    "placeholders": {
+      "price": {
+        "type": "int",
+        "example": "100"
+      }
+    }
+  },
+  "skinEquippedOneLife": "Skin equipped for one life!",
+  "@skinEquippedOneLife": {
+    "description": "Notification when temporary skin is equipped"
+  },
+  "trailEquippedOneLife": "Trail equipped for one life!",
+  "@trailEquippedOneLife": {
+    "description": "Notification when temporary trail is equipped"
+  },
+  "loadingAd": "Loading ad...",
+  "@loadingAd": {
+    "description": "Loading ad message"
+  },
+  "needScoreToUnlock": "Need {score} score to unlock!",
+  "@needScoreToUnlock": {
+    "description": "Score requirement to unlock trail",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  },
+  "outOfPowerUpTitle": "Out of {powerUp}s!",
+  "@outOfPowerUpTitle": {
+    "description": "Title when power-up is exhausted",
+    "placeholders": {
+      "powerUp": {
+        "type": "String",
+        "example": "Shield"
+      }
+    }
+  },
+  "outOfPowerUpDesc": "You don't have any {powerUp}s left to activate. Would you like to buy more from the shop?",
+  "@outOfPowerUpDesc": {
+    "description": "Description when power-up is exhausted",
+    "placeholders": {
+      "powerUp": {
+        "type": "String",
+        "example": "Shield"
+      }
+    }
+  },
+  "shieldDesc": "Protects you from one collision",
+  "@shieldDesc": {
+    "description": "Shield power-up description"
+  },
+  "luckyDayDesc": "Increases chance of finding coins",
+  "@luckyDayDesc": {
+    "description": "Lucky Day power-up description"
+  },
+  "coinCollectorTitle": "Coin Collector",
+  "@coinCollectorTitle": {
+    "description": "Coin Collector mission title"
+  },
+  "coinCollectorDesc": "Collect 10 coins in gameplay",
+  "@coinCollectorDesc": {
+    "description": "Coin Collector mission description"
+  },
+  "highFlyerTitle": "High Flyer",
+  "@highFlyerTitle": {
+    "description": "High Flyer mission title"
+  },
+  "highFlyerDesc": "Reach a score of 15",
+  "@highFlyerDesc": {
+    "description": "High Flyer mission description"
+  },
+  "survivorTitle": "Survivor",
+  "@survivorTitle": {
+    "description": "Survivor mission title"
+  },
+  "survivorDesc": "Play 3 games",
+  "@survivorDesc": {
+    "description": "Survivor mission description"
+  },
+  "longTermTrackers": "Long term trackers",
+  "@longTermTrackers": {
+    "description": "Subtitle for weekly trackers"
+  },
+  "dailyLoginTrackerTitle": "Daily Login Tracker",
+  "@dailyLoginTrackerTitle": {
+    "description": "Daily login tracker title"
+  },
+  "dailyLoginTrackerDesc": "Consecutive daily login streak (Weekly reset)",
+  "@dailyLoginTrackerDesc": {
+    "description": "Daily login tracker description"
+  },
+  "giftInventory": "Gift Inventory",
+  "@giftInventory": {
+    "description": "Gift inventory title"
+  },
+  "giftInventoryDesc": "Open gifts for random coin rewards!",
+  "@giftInventoryDesc": {
+    "description": "Gift inventory description"
+  },
+  "prizeShield": "1x Shield!",
+  "@prizeShield": {
+    "description": "Gift prize shield"
+  },
+  "prizeLuckyDay": "1x Lucky Day!",
+  "@prizeLuckyDay": {
+    "description": "Gift prize lucky day"
+  },
+  "prizeCoins": "{coins} Coins!",
+  "@prizeCoins": {
+    "description": "Gift prize coins",
+    "placeholders": {
+      "coins": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "dailyRewardDay7": "Congratulations!\nYou've reached Day 7 and earned 10 coins!",
+  "@dailyRewardDay7": {
+    "description": "Day 7 daily reward message"
+  },
+  "dailyRewardProgress": "Day {progress} of 7",
+  "@dailyRewardProgress": {
+    "description": "Daily reward progress indicator",
+    "placeholders": {
+      "progress": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "dailyRewardComeBack": "Come back tomorrow for Day {nextDay}!",
+  "@dailyRewardComeBack": {
+    "description": "Come back tomorrow message",
+    "placeholders": {
+      "nextDay": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "leaderboardChallengeText": "You need {score} score to beat {name}",
+  "@leaderboardChallengeText": {
+    "description": "Challenge banner text",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "50"
+      },
+      "name": {
+        "type": "String",
+        "example": "Player"
+      }
+    }
+  },
+  "sound": "Sound",
+  "@sound": {
+    "description": "Sound toggle tooltip"
+  },
+  "leaderboard": "Leaderboard",
+  "@leaderboard": {
+    "description": "Leaderboard tooltip"
+  },
+  "achievements": "Achievements",
+  "@achievements": {
+    "description": "Achievements tooltip"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language toggle tooltip"
+  },
+  "skinBird": "Bird",
+  "@skinBird": {
+    "description": "Classic bird skin name"
+  },
+  "skinMagnet": "Magnet",
+  "@skinMagnet": {
+    "description": "Magnet bird skin name"
+  },
+  "skinGhost": "Ghost",
+  "@skinGhost": {
+    "description": "Ghost bird skin name"
+  },
+  "skinBirdDesc": "The classic bird.",
+  "@skinBirdDesc": {
+    "description": "Classic bird skin description"
+  },
+  "skinMagnetDesc": "Attracts nearby coins!",
+  "@skinMagnetDesc": {
+    "description": "Magnet bird skin description"
+  },
+  "skinGhostDesc": "Can pass through pipes!",
+  "@skinGhostDesc": {
+    "description": "Ghost bird skin description"
+  },
+  "trailNone": "None",
+  "@trailNone": {
+    "description": "No trail name"
+  },
+  "trailBubbles": "Bubbles",
+  "@trailBubbles": {
+    "description": "Bubbles trail name"
+  },
+  "trailLine": "Line",
+  "@trailLine": {
+    "description": "Line trail name"
+  },
+  "trailRects": "Rects",
+  "@trailRects": {
+    "description": "Rects trail name"
+  },
+  "trailStars": "Stars",
+  "@trailStars": {
+    "description": "Stars trail name"
+  },
+  "trailLighting": "Lighting",
+  "@trailLighting": {
+    "description": "Lighting trail name"
+  }
+}

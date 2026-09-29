@@ -25,10 +25,15 @@ class _ShopScreenState extends State<ShopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      initialIndex: widget.initialTabIndex,
-      length: 3,
-      child: Scaffold(
+    return ValueListenableBuilder<Locale>(
+      valueListenable: LanguageManager.currentLocale,
+      builder: (context, locale, _) {
+        return Directionality(
+          textDirection: locale.textDirection,
+          child: DefaultTabController(
+            initialIndex: widget.initialTabIndex,
+            length: 3,
+            child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Container(
           decoration: BoxDecoration(
@@ -51,14 +56,17 @@ class _ShopScreenState extends State<ShopScreen> {
                     children: [
                       IconButton(
                         onPressed: () => widget.game.overlays.remove('shop'),
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.orange,
+                        icon: Transform.flip(
+                          flipX: context.isRtl,
+                          child: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.orange,
+                          ),
                         ),
                       ),
                       Expanded(
                         child: Text(
-                          "Shop",
+                          context.l10n.shop,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.luckiestGuy(
                             textStyle: const TextStyle(
@@ -140,10 +148,10 @@ class _ShopScreenState extends State<ShopScreen> {
                   unselectedLabelColor: Colors.white54,
                   labelStyle: GoogleFonts.luckiestGuy(fontSize: 18),
                   unselectedLabelStyle: GoogleFonts.luckiestGuy(fontSize: 16),
-                  tabs: const [
-                    Tab(text: "Trails"),
-                    Tab(text: "Power Ups"),
-                    Tab(text: "Birds"),
+                  tabs: [
+                    Tab(text: context.l10n.trails),
+                    Tab(text: context.l10n.powerUps),
+                    Tab(text: context.l10n.birds),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -164,6 +172,9 @@ class _ShopScreenState extends State<ShopScreen> {
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+},
+);
+}
 }

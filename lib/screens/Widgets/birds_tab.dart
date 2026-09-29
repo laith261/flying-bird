@@ -20,20 +20,20 @@ class _BirdsTabState extends State<BirdsTab> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          "Confirm Purchase",
+          context.l10n.confirmPurchase,
           style: GoogleFonts.luckiestGuy(
             textStyle: const TextStyle(color: Colors.orange),
           ),
         ),
         content: Text(
-          "Do you want to buy ${skin.name} for $price coins?",
+          context.l10n.confirmBuyItem(skin.localizedName(context), price),
           style: GoogleFonts.luckiestGuy(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              "Cancel",
+              context.l10n.cancel,
               style: GoogleFonts.luckiestGuy(
                 textStyle: const TextStyle(color: Colors.grey),
               ),
@@ -51,9 +51,9 @@ class _BirdsTabState extends State<BirdsTab> {
                   widget.game.playerData.addShield(0);
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Skin equipped for one life!"),
-                      duration: Duration(seconds: 2),
+                    SnackBar(
+                      content: Text(context.l10n.skinEquippedOneLife),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                   widget.game.analytics.logEvent(
@@ -64,9 +64,9 @@ class _BirdsTabState extends State<BirdsTab> {
                 },
                 onLoadingStarted: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Loading ad..."),
-                      duration: Duration(seconds: 1),
+                    SnackBar(
+                      content: Text(context.l10n.loadingAd),
+                      duration: const Duration(seconds: 1),
                     ),
                   );
                 },
@@ -94,7 +94,7 @@ class _BirdsTabState extends State<BirdsTab> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  "Try",
+                  context.l10n.tryLabel,
                   style: GoogleFonts.luckiestGuy(
                     textStyle: const TextStyle(color: Colors.white),
                   ),
@@ -117,7 +117,7 @@ class _BirdsTabState extends State<BirdsTab> {
                   : Colors.grey,
             ),
             child: Text(
-              "Buy",
+              context.l10n.buy,
               style: GoogleFonts.luckiestGuy(
                 textStyle: const TextStyle(color: Colors.white),
               ),
@@ -186,7 +186,6 @@ class _SkinCard extends StatelessWidget {
     final bool isSelected = ShopHelper.isSelected(game, skin);
     final bool isTemp = game.tempSkin == skin;
     final int price = ShopHelper.getPrice(skin);
-    final String description = ShopHelper.getDescription(skin);
 
     return GestureDetector(
       onTap: onTap,
@@ -212,8 +211,8 @@ class _SkinCard extends StatelessWidget {
               children: [
                 _SkinCardImage(image: skin.image),
                 _SkinCardDetails(
-                  name: skin.name,
-                  description: description,
+                  name: skin.localizedName(context),
+                  description: skin.localizedDescription(context),
                   price: price,
                   isOwned: isOwned,
                   isSelected: isSelected,
@@ -300,9 +299,9 @@ class _SkinCardDetails extends StatelessWidget {
           ),
           const SizedBox(height: 5),
           if (isTemp)
-            const Text(
-              "TEMP",
-              style: TextStyle(
+            Text(
+              context.l10n.temp,
+              style: const TextStyle(
                 color: Colors.lightBlueAccent,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.0,
@@ -330,9 +329,9 @@ class _SkinCardDetails extends StatelessWidget {
               ],
             )
           else if (isSelected)
-            const Text(
-              "EQUIPPED",
-              style: TextStyle(
+            Text(
+              context.l10n.equipped,
+              style: const TextStyle(
                 color: Colors.greenAccent,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 1.0,
@@ -372,9 +371,9 @@ class _SkinCardStatusIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isTemp) {
-      return const Positioned(
+      return const PositionedDirectional(
         top: 10,
-        right: 10,
+        end: 10,
         child: Icon(
           Icons.access_time_filled,
           color: Colors.lightBlueAccent,
@@ -382,9 +381,9 @@ class _SkinCardStatusIcon extends StatelessWidget {
         ),
       );
     } else if (isSelected) {
-      return const Positioned(
+      return const PositionedDirectional(
         top: 10,
-        right: 10,
+        end: 10,
         child: Icon(Icons.check_circle, color: Colors.greenAccent, size: 30),
       );
     }

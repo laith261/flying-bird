@@ -1,7 +1,9 @@
+import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import '../l10n/app_localizations.dart';
 
 class NotificationHelper {
   static final NotificationHelper _instance = NotificationHelper._internal();
@@ -76,10 +78,14 @@ class NotificationHelper {
         iOS: darwinDetails,
       );
 
+      final languageCode = PlatformDispatcher.instance.locale.languageCode;
+      final locale = languageCode == 'ar' ? const Locale('ar') : const Locale('en');
+      final l10n = lookupAppLocalizations(locale);
+
       await _notificationsPlugin.zonedSchedule(
         id: retentionNotificationId,
-        title: 'We miss you! 🐦',
-        body: 'Come back to Flying Bird and beat your high score! 🏆',
+        title: l10n.notificationTitle,
+        body: l10n.notificationBody,
         scheduledDate: scheduledDate,
         notificationDetails: notificationDetails,
         androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,

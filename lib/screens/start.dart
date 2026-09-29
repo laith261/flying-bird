@@ -5,13 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../configs/const.dart';
 import '../configs/functions.dart';
 import '../component/helpers/reward_helper.dart';
 import 'Widgets/reword_ad.dart';
-import 'Widgets/daily_missions_dialog.dart';
 import '../component/helpers/daily_missions_helper.dart';
-import 'shop.dart';
 import 'Widgets/start_button.dart';
 import 'Widgets/power_up_toggles.dart';
 import '../configs/leaderboard_helper.dart';
@@ -67,7 +64,7 @@ class _StartWidgetState extends State<StartWidget> {
                 children: [
                   // Title
                   Text(
-                    "Flying Bird",
+                    context.l10n.appTitle,
                     style: GoogleFonts.luckiestGuy(
                       textStyle: const TextStyle(
                         fontSize: 60,
@@ -90,7 +87,9 @@ class _StartWidgetState extends State<StartWidget> {
                   const SizedBox(height: 30),
                   StartButton(
                     game: game,
-                    text: game.ads.didGetRewarded ? "continue" : "Start Game",
+                    text: game.ads.didGetRewarded
+                        ? context.l10n.continueGame
+                        : context.l10n.startGame,
                   ),
                   if (game.scorePoint > 0 && !game.ads.didGetRewarded) ...[
                     const SizedBox(height: 15),
@@ -138,8 +137,8 @@ class _StartWidgetState extends State<StartWidget> {
                                   Colors.orange.withAlpha(204),
                                   Colors.deepOrange.withAlpha(204),
                                 ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                                begin: AlignmentDirectional.topStart,
+                                end: AlignmentDirectional.bottomEnd,
                               ),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
@@ -165,7 +164,10 @@ class _StartWidgetState extends State<StartWidget> {
                                 const SizedBox(width: 10),
                                 Flexible(
                                   child: Text(
-                                    "You need ${challenge.targetScore} score to beat ${challenge.targetName}",
+                                    context.l10n.leaderboardChallengeText(
+                                      challenge.targetScore,
+                                      challenge.targetName,
+                                    ),
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poppins(
                                       textStyle: const TextStyle(
@@ -202,11 +204,11 @@ class _StartWidgetState extends State<StartWidget> {
         ),
       ],
     );
-  }
+}
 
   Widget _buildDockStation() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withAlpha(51),
         borderRadius: BorderRadius.circular(30),
@@ -219,85 +221,144 @@ class _StartWidgetState extends State<StartWidget> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildIconButton(
-            onPressed: () {
-              setState(() {
-                game.sound = !game.sound;
-                game.audio.setSound(game.sound);
-              });
-            },
-            icon: game.sound ? Icons.volume_up : Icons.volume_off,
-            color: Colors.orangeAccent,
-          ),
-          const SizedBox(width: 15),
-          _buildIconButton(
-            onPressed: () => Functions.showScores(),
-            icon: Icons.leaderboard,
-            color: Colors.blueAccent,
-          ),
-          const SizedBox(width: 15),
-          _buildIconButton(
-            onPressed: () => Functions.showAchievements(),
-            icon: Icons.star_rounded,
-            color: Colors.purpleAccent,
-          ),
-          const SizedBox(width: 15),
-          AnimatedBuilder(
-            animation: DailyMissionsManager.instance,
-            builder: (context, child) {
-              final hasBadge =
-                  DailyMissionsManager.instance.hasUnclaimedCompletedMission;
-              return Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  _buildIconButton(
-                    onPressed: () {
-                      if (!game.overlays.isActive('daily_missions')) {
-                        game.overlays.add('daily_missions');
-                      }
-                    },
-                    icon: Icons.assignment_turned_in_rounded,
-                    color: Colors.pinkAccent,
-                  ),
-                  if (hasBadge)
-                    Positioned(
-                      top: -2,
-                      right: -2,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 1. Sound Toggle (Audio utility)
+            _buildIconButton(
+              onPressed: () {
+                setState(() {
+                  game.sound = !game.sound;
+                  game.audio.setSound(game.sound);
+                });
+              },
+              icon: game.sound ? Icons.volume_up : Icons.volume_off,
+              color: Colors.orangeAccent,
+              tooltip: context.l10n.sound,
+            ),
+            const SizedBox(width: 12),
+
+            // 2. Shop
+            _buildIconButton(
+              onPressed: () {
+                game.shopInitialTabIndex = 0;
+                game.overlays.add('shop');
+              },
+              icon: Icons.store,
+              color: Colors.green,
+              tooltip: context.l10n.shop,
+            ),
+            const SizedBox(width: 12),
+
+            // 3. Daily Missions (with badge)
+            AnimatedBuilder(
+              animation: DailyMissionsManager.instance,
+              builder: (context, child) {
+                final hasBadge =
+                    DailyMissionsManager.instance.hasUnclaimedCompletedMission;
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    _buildIconButton(
+                      onPressed: () {
+                        if (!game.overlays.isActive('daily_missions')) {
+                          game.overlays.add('daily_missions');
+                        }
+                      },
+                      icon: Icons.assignment_turned_in_rounded,
+                      color: Colors.pinkAccent,
+                      tooltip: context.l10n.missions,
+                    ),
+                    if (hasBadge)
+                      PositionedDirectional(
+                        top: -2,
+                        end: -2,
+                        child: Container(
+                          width: 14,
+                          height: 14,
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 2),
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
+            const SizedBox(width: 12),
+
+            // 4. Leaderboard
+            _buildIconButton(
+              onPressed: () => Functions.showScores(),
+              icon: Icons.leaderboard,
+              color: Colors.blueAccent,
+              tooltip: context.l10n.leaderboard,
+            ),
+            const SizedBox(width: 12),
+
+            // 5. Achievements
+            _buildIconButton(
+              onPressed: () => Functions.showAchievements(),
+              icon: Icons.star_rounded,
+              color: Colors.purpleAccent,
+              tooltip: context.l10n.achievements,
+            ),
+            const SizedBox(width: 12),
+
+            // 6. Language Toggle (Locale utility)
+            ValueListenableBuilder<Locale>(
+              valueListenable: LanguageManager.currentLocale,
+              builder: (context, locale, _) {
+                return Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    _buildIconButton(
+                      onPressed: () => LanguageManager.toggleLanguage(),
+                      icon: Icons.language_rounded,
+                      color: Colors.teal,
+                      tooltip: context.l10n.language,
+                    ),
+                    PositionedDirectional(
+                      bottom: -2,
+                      end: -2,
                       child: Container(
-                        width: 14,
-                        height: 14,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 1,
+                        ),
                         decoration: BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 2),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 4,
-                              offset: Offset(0, 2),
-                            ),
-                          ],
+                          color: Colors.teal,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.white, width: 1.5),
+                        ),
+                        child: Text(
+                          locale.languageCode.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                ],
-              );
-            },
-          ),
-          const SizedBox(width: 15),
-          _buildIconButton(
-            onPressed: () {
-              game.shopInitialTabIndex = 0;
-              game.overlays.add('shop');
-            },
-            icon: Icons.store,
-            color: Colors.green,
-          ),
-        ],
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -306,6 +367,7 @@ class _StartWidgetState extends State<StartWidget> {
     required VoidCallback onPressed,
     required IconData icon,
     required Color color,
+    String? tooltip,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -322,7 +384,10 @@ class _StartWidgetState extends State<StartWidget> {
       child: IconButton(
         onPressed: onPressed,
         icon: Icon(icon, color: color),
-        iconSize: 28,
+        iconSize: 26,
+        padding: const EdgeInsets.all(8),
+        constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+        tooltip: tooltip,
       ),
     );
   }

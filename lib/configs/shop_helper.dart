@@ -43,7 +43,7 @@ class ShopHelper {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Bought ${skin.name}!"),
+          content: Text(context.l10n.boughtItem(skin.localizedName(context))),
           duration: const Duration(seconds: 1),
         ),
       );
@@ -55,7 +55,7 @@ class ShopHelper {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Need $price coins!"),
+          content: Text(context.l10n.needCoins(price)),
           duration: const Duration(seconds: 1),
         ),
       );
@@ -135,7 +135,7 @@ class ShopHelper {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Bought ${powerUp.displayName}!"),
+          content: Text(context.l10n.boughtItem(powerUp.localizedName(context))),
           duration: const Duration(seconds: 1),
         ),
       );
@@ -147,7 +147,7 @@ class ShopHelper {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Need ${powerUp.price} coins!"),
+          content: Text(context.l10n.needCoins(powerUp.price)),
           duration: const Duration(seconds: 1),
         ),
       );

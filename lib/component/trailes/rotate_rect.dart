@@ -34,6 +34,7 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
   final Paint _corePaint = Paint()
     ..style = PaintingStyle.fill
     ..color = Colors.white;
+  final Paint _opacityLayerPaint = Paint();
 
   RotateRectTrail() : super(priority: 1);
 

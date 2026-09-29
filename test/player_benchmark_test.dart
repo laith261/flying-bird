@@ -1,9 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flame/game.dart';
-import 'package:flame/components.dart';
-import 'package:game/component/player.dart';
-import 'package:game/main.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:game/component/trailes/line.dart';
 import 'package:game/component/trailes/circle.dart';
 import 'package:game/component/trailes/rotate_rect.dart';
@@ -11,65 +6,49 @@ import 'package:game/component/trailes/star.dart';
 import 'package:game/component/trailes/lightning.dart';
 import 'package:game/component/trailes/game_trail.dart';
 
-class MockMyWorld extends Mock implements MyWorld {}
-
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   test('Benchmark player update opacity loop', () async {
-    // Just run the loops over trails instead of full `update` to isolate the problem.
-    final LineTrail _lineTrail = LineTrail();
-    final CircleTrail _circleTrail = CircleTrail();
-    final RotateRectTrail _rotateRectTrail = RotateRectTrail();
-    final StarTrail _starTrail = StarTrail();
-    final LightningTrail _lightningTrail = LightningTrail();
-    final Map<String, GameTrail> _trails = {
-      'line': _lineTrail,
-      'circle': _circleTrail,
-      'rect': _rotateRectTrail,
-      'star': _starTrail,
-      'lightning': _lightningTrail,
+    final lineTrail = LineTrail();
+    final circleTrail = CircleTrail();
+    final rotateRectTrail = RotateRectTrail();
+    final starTrail = StarTrail();
+    final lightningTrail = LightningTrail();
+    final trails = <String, GameTrail>{
+      'line': lineTrail,
+      'circle': circleTrail,
+      'rect': rotateRectTrail,
+      'star': starTrail,
+      'lightning': lightningTrail,
     };
 
-    bool isGhostMode = false;
+    var isGhostMode = false;
 
     // warm up
     for (var i = 0; i < 1000; i++) {
-      double targetOpacity = isGhostMode ? 0.6 : 1.0;
-      for (var trail in _trails.values) {
+      isGhostMode = i.isOdd;
+      final targetOpacity = isGhostMode ? 0.6 : 1.0;
+      for (final trail in trails.values) {
         trail.opacity = targetOpacity;
       }
     }
 
     final stopwatch = Stopwatch()..start();
     for (var i = 0; i < 1000000; i++) {
-      double targetOpacity = isGhostMode ? 0.6 : 1.0;
-      for (var trail in _trails.values) {
+      isGhostMode = i.isOdd;
+      final targetOpacity = isGhostMode ? 0.6 : 1.0;
+      for (final trail in trails.values) {
         trail.opacity = targetOpacity;
       }
     }
     stopwatch.stop();
-    print('Baseline time for 1,000,000 opacity updates (loop): ${stopwatch.elapsedMilliseconds} ms');
+    print(
+      'Baseline time for 1,000,000 opacity updates (loop): ${stopwatch.elapsedMilliseconds} ms',
+    );
   });
 
   test('Benchmark player update opacity fast path', () async {
-    final LineTrail _lineTrail = LineTrail();
-    final CircleTrail _circleTrail = CircleTrail();
-    final RotateRectTrail _rotateRectTrail = RotateRectTrail();
-    final StarTrail _starTrail = StarTrail();
-    final LightningTrail _lightningTrail = LightningTrail();
-    final Map<String, GameTrail> _trails = {
-      'line': _lineTrail,
-      'circle': _circleTrail,
-      'rect': _rotateRectTrail,
-      'star': _starTrail,
-      'lightning': _lightningTrail,
-    };
-
-    bool isGhostMode = false;
-
-    // We can simulate setter change intercept instead of loop.
-
     // warm up
     for (var i = 0; i < 1000; i++) {
       // do nothing if no change
@@ -81,6 +60,8 @@ void main() {
       // but let's assume we do 0 iterations.
     }
     stopwatch.stop();
-    print('Baseline time for 1,000,000 opacity updates (no-op): ${stopwatch.elapsedMilliseconds} ms');
+    print(
+      'Baseline time for 1,000,000 opacity updates (no-op): ${stopwatch.elapsedMilliseconds} ms',
+    );
   });
 }

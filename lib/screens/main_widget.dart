@@ -8,7 +8,6 @@ import '../configs/notification_helper.dart';
 import '../main.dart';
 import 'start.dart';
 import 'Widgets/coin_display.dart';
-import 'Widgets/billboard_overlay.dart';
 import 'Widgets/hieh_score.dart';
 import 'Widgets/adaptive_banner.dart';
 import 'Widgets/daily_missions_dialog.dart';
@@ -60,46 +59,55 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: GameWidget(
-                  game: widget.game,
-                  // initialActiveOverlays handled in MyWorld.onLoad
-                  overlayBuilderMap: {
-                    'start': (context, _) => StartWidget(game: widget.game),
-                    'coin_display': (context, _) =>
-                        CoinDisplay(game: widget.game),
-                    'highest_score': (context, _) =>
-                        HighestScore(game: widget.game),
-                    'daily_missions': (context, _) =>
-                        DailyMissionsDialog(game: widget.game),
-                    'shop': (context, _) =>
-                        ShopScreen(game: widget.game, initialTabIndex: widget.game.shopInitialTabIndex),
-                  },
-                  backgroundBuilder: (context) => Stack(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image: AssetImage("assets/images/bg.png"),
-                            fit: BoxFit.cover,
+    return ValueListenableBuilder<Locale>(
+      valueListenable: LanguageManager.currentLocale,
+      builder: (context, locale, _) {
+        return MaterialApp(
+          locale: locale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Directionality(
+                      textDirection: locale.textDirection,
+                      child: GameWidget(
+                        game: widget.game,
+                        // initialActiveOverlays handled in MyWorld.onLoad
+                        overlayBuilderMap: {
+                          'start': (context, _) =>
+                              StartWidget(game: widget.game),
+                          'coin_display': (context, _) =>
+                              CoinDisplay(game: widget.game),
+                          'highest_score': (context, _) =>
+                              HighestScore(game: widget.game),
+                          'daily_missions': (context, _) =>
+                              DailyMissionsDialog(game: widget.game),
+                          'shop': (context, _) => ShopScreen(
+                            game: widget.game,
+                            initialTabIndex: widget.game.shopInitialTabIndex,
+                          ),
+                        },
+                        backgroundBuilder: (context) => Container(
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/images/bg.png"),
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
-                      BillboardOverlayWidget(game: widget.game),
-                    ],
+                    ),
                   ),
-                ),
+                  const AdaptiveBannerWidget(),
+                ],
               ),
-              const AdaptiveBannerWidget(),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

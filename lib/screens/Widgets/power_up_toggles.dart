@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../main.dart';
-import '../shop.dart';
 
 class PowerUpToggles extends StatefulWidget {
   final MyWorld game;
@@ -110,8 +109,8 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                     Colors.orange.withAlpha(240),
                     Colors.deepOrange.withAlpha(240),
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: AlignmentDirectional.topStart,
+                  end: AlignmentDirectional.bottomEnd,
                 ),
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(
@@ -138,9 +137,9 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
                 ),
               ),
             ),
-            // Badge showing count at top-right corner
-            Positioned(
-              right: -6,
+            // Badge showing count at top corner
+            PositionedDirectional(
+              end: -6,
               top: -6,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -179,131 +178,131 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
   void _showBuyMoreDialog(BuildContext context, String powerUpName) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        backgroundColor: Colors.transparent,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.orange.withAlpha(240),
-                Colors.deepOrange.withAlpha(240),
+      builder: (context) {
+        final localizedPowerUp =
+            powerUpName == "Shield" ? context.l10n.shield : context.l10n.luckyDay;
+        return Dialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          backgroundColor: Colors.transparent,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.orange.withAlpha(240),
+                  Colors.deepOrange.withAlpha(240),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.white, width: 2.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withAlpha(100),
+                  blurRadius: 16,
+                  offset: const Offset(0, 8),
+                ),
               ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
             ),
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: Colors.white, width: 2.5),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withAlpha(100),
-                blurRadius: 16,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                powerUpName == "Shield" ? Icons.security : Icons.stars,
-                color: Colors.white,
-                size: 48,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "Out of ${powerUpName}s!",
-                style: GoogleFonts.luckiestGuy(
-                  textStyle: const TextStyle(
-                    fontSize: 26,
+            child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    powerUpName == "Shield" ? Icons.security : Icons.stars,
                     color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black,
-                        offset: Offset(1, 2),
-                        blurRadius: 2,
+                    size: 48,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    context.l10n.outOfPowerUpTitle(localizedPowerUp),
+                    style: GoogleFonts.luckiestGuy(
+                      textStyle: const TextStyle(
+                        fontSize: 26,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black,
+                            offset: Offset(1, 2),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    context.l10n.outOfPowerUpDesc(localizedPowerUp),
+                    style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white.withAlpha(64),
+                            foregroundColor: Colors.white,
+                            elevation: 0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: BorderSide(color: Colors.white.withAlpha(128)),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () => Navigator.of(context).pop(),
+                          child: Text(
+                            context.l10n.cancel,
+                            style: GoogleFonts.luckiestGuy(
+                              textStyle: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            foregroundColor: Colors.white,
+                            elevation: 4,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              side: const BorderSide(
+                                color: Colors.white,
+                                width: 1.5,
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            game.shopInitialTabIndex = 1;
+                            game.overlays.add('shop');
+                          },
+                          child: Text(
+                            context.l10n.goToShop,
+                            style: GoogleFonts.luckiestGuy(
+                              textStyle: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                "You don't have any ${powerUpName}s left to activate. Would you like to buy more from the shop?",
-                style: GoogleFonts.poppins(
-                  textStyle: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white.withAlpha(64),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: Colors.white.withAlpha(128)),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        "Cancel",
-                        style: GoogleFonts.luckiestGuy(
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: const BorderSide(
-                            color: Colors.white,
-                            width: 1.5,
-                          ),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                      ),
-                      onPressed: () {
-                        // Dismiss the dialog or whatever overlay this is part of?
-                        // Actually, power_up_toggles might be inside an overlay or dialog.
-                        // Let's just remove the current overlay if it's one, or pop if it's a dialog.
-                        // For now we keep the pop, but we add the shop overlay to the game.
-                        Navigator.of(context).pop();
-                        game.shopInitialTabIndex = 1;
-                        game.overlays.add('shop');
-                      },
-                      child: Text(
-                        "Go to Shop",
-                        style: GoogleFonts.luckiestGuy(
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ),
                 ],
               ),
-            ],
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

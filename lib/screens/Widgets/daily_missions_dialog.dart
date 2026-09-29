@@ -18,7 +18,6 @@ class DailyMissionsDialog extends StatefulWidget {
 class _DailyMissionsDialogState extends State<DailyMissionsDialog>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final Random _random = Random();
 
   @override
   void initState() {
@@ -35,188 +34,198 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: AnimatedBuilder(
-        animation: DailyMissionsManager.instance,
-        builder: (context, child) {
-          final manager = DailyMissionsManager.instance;
-          return Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.deepPurple.shade900, Colors.black87],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  // Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0,
-                      vertical: 12.0,
+    return ValueListenableBuilder<Locale>(
+      valueListenable: LanguageManager.currentLocale,
+      builder: (context, locale, _) {
+        return Directionality(
+          textDirection: locale.textDirection,
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: AnimatedBuilder(
+              animation: DailyMissionsManager.instance,
+              builder: (context, child) {
+                final manager = DailyMissionsManager.instance;
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.deepPurple.shade900, Colors.black87],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  child: SafeArea(
+                    child: Column(
                       children: [
-                        Text(
-                          "Missions",
-                          style: GoogleFonts.luckiestGuy(
-                            textStyle: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 36,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black45,
-                                  offset: Offset(2, 2),
-                                  blurRadius: 4,
+                        // Header
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0,
+                            vertical: 12.0,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                context.l10n.missions,
+                                style: GoogleFonts.luckiestGuy(
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 36,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black45,
+                                        offset: Offset(2, 2),
+                                        blurRadius: 4,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
+                              ),
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
+                                onPressed: () {
+                                  widget.game.overlays.remove('daily_missions');
+                                },
+                              ),
+                            ],
                           ),
                         ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 32,
+
+                        // Tab Bar
+                        TabBar(
+                          controller: _tabController,
+                          indicatorColor: Colors.orangeAccent,
+                          indicatorWeight: 4,
+                          labelColor: Colors.orangeAccent,
+                          unselectedLabelColor: Colors.white54,
+                          labelStyle: GoogleFonts.luckiestGuy(fontSize: 20),
+                          unselectedLabelStyle: GoogleFonts.luckiestGuy(
+                            fontSize: 18,
                           ),
-                          onPressed: () {
-                            widget.game.overlays.remove('daily_missions');
-                          },
+                          tabs: [
+                            Tab(text: context.l10n.daily),
+                            Tab(text: context.l10n.weeklyOther),
+                          ],
+                        ),
+
+                        // Tab Content
+                        Expanded(
+                          child: TabBarView(
+                            controller: _tabController,
+                            children: [
+                              // Daily Tab
+                              ListView(
+                                padding: const EdgeInsets.all(16),
+                                children: [
+                                  Text(
+                                    context.l10n.resetsEveryDay,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildMissionRow(
+                                    context,
+                                    title: context.l10n.coinCollectorTitle,
+                                    desc: context.l10n.coinCollectorDesc,
+                                    icon: Icons.monetization_on,
+                                    iconColor: Colors.amber,
+                                    progress: manager.coinsProgress,
+                                    target: 10,
+                                    claimed: manager.coinsClaimed,
+                                    reward: 10,
+                                    onClaim: () => manager.claimCoinsReward(
+                                      widget.game.playerData,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildMissionRow(
+                                    context,
+                                    title: context.l10n.highFlyerTitle,
+                                    desc: context.l10n.highFlyerDesc,
+                                    icon: Icons.emoji_events,
+                                    iconColor: Colors.orange,
+                                    progress: manager.scoreProgress,
+                                    target: 15,
+                                    claimed: manager.scoreClaimed,
+                                    reward: 15,
+                                    onClaim: () => manager.claimScoreReward(
+                                      widget.game.playerData,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildMissionRow(
+                                    context,
+                                    title: context.l10n.survivorTitle,
+                                    desc: context.l10n.survivorDesc,
+                                    icon: Icons.videogame_asset,
+                                    iconColor: Colors.blue,
+                                    progress: manager.gamesPlayed,
+                                    target: 3,
+                                    claimed: manager.gamesClaimed,
+                                    reward: 10,
+                                    onClaim: () => manager.claimGamesReward(
+                                      widget.game.playerData,
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              // Weekly Tab
+                              ListView(
+                                padding: const EdgeInsets.all(16),
+                                children: [
+                                  Text(
+                                    context.l10n.longTermTrackers,
+                                    style: GoogleFonts.poppins(
+                                      textStyle: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 16),
+                                  _buildGiftInventory(context),
+                                  const SizedBox(height: 16),
+                                  _buildMissionRow(
+                                    context,
+                                    title: context.l10n.dailyLoginTrackerTitle,
+                                    desc: context.l10n.dailyLoginTrackerDesc,
+                                    icon: Icons.calendar_month_rounded,
+                                    iconColor: Colors.purple,
+                                    progress:
+                                        widget.game.playerData.rewardProgress,
+                                    target: 7,
+                                    claimed: false,
+                                    reward: 0,
+                                    onClaim: () {},
+                                    isTrackerOnly: true,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
-
-                  // Tab Bar
-                  TabBar(
-                    controller: _tabController,
-                    indicatorColor: Colors.orangeAccent,
-                    indicatorWeight: 4,
-                    labelColor: Colors.orangeAccent,
-                    unselectedLabelColor: Colors.white54,
-                    labelStyle: GoogleFonts.luckiestGuy(fontSize: 20),
-                    unselectedLabelStyle: GoogleFonts.luckiestGuy(fontSize: 18),
-                    tabs: const [
-                      Tab(text: "Daily"),
-                      Tab(text: "Weekly / Other"),
-                    ],
-                  ),
-
-                  // Tab Content
-                  Expanded(
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        // Daily Tab
-                        ListView(
-                          padding: const EdgeInsets.all(16),
-                          children: [
-                            Text(
-                              "Resets every day!",
-                              style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildMissionRow(
-                              context,
-                              title: "Coin Collector",
-                              desc: "Collect 10 coins in gameplay",
-                              icon: Icons.monetization_on,
-                              iconColor: Colors.amber,
-                              progress: manager.coinsProgress,
-                              target: 10,
-                              claimed: manager.coinsClaimed,
-                              reward: 10,
-                              onClaim: () => manager.claimCoinsReward(
-                                widget.game.playerData,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildMissionRow(
-                              context,
-                              title: "High Flyer",
-                              desc: "Reach a score of 15",
-                              icon: Icons.emoji_events,
-                              iconColor: Colors.orange,
-                              progress: manager.scoreProgress,
-                              target: 15,
-                              claimed: manager.scoreClaimed,
-                              reward: 15,
-                              onClaim: () => manager.claimScoreReward(
-                                widget.game.playerData,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildMissionRow(
-                              context,
-                              title: "Survivor",
-                              desc: "Play 3 games",
-                              icon: Icons.videogame_asset,
-                              iconColor: Colors.blue,
-                              progress: manager.gamesPlayed,
-                              target: 3,
-                              claimed: manager.gamesClaimed,
-                              reward: 10,
-                              onClaim: () => manager.claimGamesReward(
-                                widget.game.playerData,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Weekly Tab
-                        ListView(
-                          padding: const EdgeInsets.all(16),
-                          children: [
-                            Text(
-                              "Long term trackers",
-                              style: GoogleFonts.poppins(
-                                textStyle: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            _buildGiftInventory(context),
-                            const SizedBox(height: 16),
-                            _buildMissionRow(
-                              context,
-                              title: "Daily Login Tracker",
-                              desc:
-                                  "Consecutive daily login streak (Weekly reset)",
-                              icon: Icons.calendar_month_rounded,
-                              iconColor: Colors.purple,
-                              progress: widget.game.playerData.rewardProgress,
-                              target: 7,
-                              claimed: false,
-                              reward: 0,
-                              onClaim: () {},
-                              isTrackerOnly: true,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                );
+              },
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
@@ -260,7 +269,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
-                          "Gift Inventory",
+                          context.l10n.giftInventory,
                           style: GoogleFonts.luckiestGuy(
                             textStyle: const TextStyle(
                               fontSize: 18,
@@ -270,7 +279,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
                           ),
                         ),
                         Text(
-                          "Open gifts for random coin rewards!",
+                          context.l10n.giftInventoryDesc,
                           style: GoogleFonts.poppins(
                             textStyle: const TextStyle(
                               fontSize: 12,
@@ -288,27 +297,14 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
               Row(
                 children: [
                   Expanded(
-                    child: Row(
-                      children: [
-                        Text(
-                          "Owned: ",
-                          style: GoogleFonts.poppins(
-                            textStyle: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 14,
-                            ),
-                          ),
+                    child: Text(
+                      context.l10n.owned(gifts),
+                      style: GoogleFonts.luckiestGuy(
+                        textStyle: const TextStyle(
+                          color: Colors.pinkAccent,
+                          fontSize: 18,
                         ),
-                        Text(
-                          "$gifts",
-                          style: GoogleFonts.luckiestGuy(
-                            textStyle: const TextStyle(
-                              color: Colors.pinkAccent,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                   ),
                   gifts > 0
@@ -329,7 +325,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
                               elevation: 4,
                             ),
                             child: Text(
-                              "Open",
+                              context.l10n.open,
                               style: GoogleFonts.luckiestGuy(
                                 textStyle: const TextStyle(
                                   color: Colors.white,
@@ -348,9 +344,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
                             color: Colors.white.withAlpha(40),
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Text(
-                            "Find one!",
-                            style: TextStyle(
+                          child: Text(
+                            context.l10n.findOne,
+                            style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -380,12 +376,12 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
 
       if (rand < 10) {
         actions.add(() => widget.game.playerData.addShield(1));
-        prizeText = "1x Shield!";
+        prizeText = context.l10n.prizeShield;
         prizeIcon = Icons.security;
         prizeColor = Colors.blueAccent;
       } else if (rand < 20) {
         actions.add(() => widget.game.playerData.addLuckyDay(1));
-        prizeText = "1x Lucky Day!";
+        prizeText = context.l10n.prizeLuckyDay;
         prizeIcon = Icons.star;
         prizeColor = Colors.orangeAccent;
       } else {
@@ -403,7 +399,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
           }
         }
         actions.add(() => widget.game.playerData.addCoins(rewardCoins));
-        prizeText = "$rewardCoins Coins!";
+        prizeText = context.l10n.prizeCoins(rewardCoins);
         prizeIcon = Icons.monetization_on;
         prizeColor = Colors.amber;
       }
@@ -549,9 +545,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
                         color: Colors.blue.withAlpha(60),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Text(
-                        "Tracking",
-                        style: TextStyle(
+                      child: Text(
+                        context.l10n.tracking,
+                        style: const TextStyle(
                           color: Colors.lightBlueAccent,
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
@@ -584,7 +580,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
           color: Colors.green.withAlpha(60),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
@@ -594,8 +590,8 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
             ),
             SizedBox(width: 6),
             Text(
-              "Claimed",
-              style: TextStyle(
+              context.l10n.claimed,
+              style: const TextStyle(
                 color: Colors.greenAccent,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
@@ -623,7 +619,7 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Claim",
+                context.l10n.claim,
                 style: GoogleFonts.luckiestGuy(
                   textStyle: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
@@ -650,9 +646,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
         color: Colors.white.withAlpha(40),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: const Text(
-        "Progress",
-        style: TextStyle(
+      child: Text(
+        context.l10n.progress,
+        style: const TextStyle(
           color: Colors.white70,
           fontSize: 12,
           fontWeight: FontWeight.bold,
@@ -783,7 +779,7 @@ class _GiftOpeningOverlayState extends State<_GiftOpeningOverlay>
                         ),
                       ),
                       child: Text(
-                        "Awesome!",
+                        context.l10n.awesome,
                         style: GoogleFonts.luckiestGuy(
                           color: Colors.white,
                           fontSize: 24,

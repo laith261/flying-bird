@@ -61,10 +61,10 @@ class _RewardedAdState extends State<RewardedAd> {
                   ),
                 ),
               )
-            : const StrokeText(
+            : StrokeText(
                 textAlign: TextAlign.center,
-                text: "watch an ad to continue",
-                textStyle: TextStyle(
+                text: context.l10n.watchAdToContinue,
+                textStyle: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,

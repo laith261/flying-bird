@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:games_services/games_services.dart';
 import 'package:vibration/vibration.dart';
+import '../l10n/l10n.dart';
 
 import 'const.dart';
 
@@ -69,7 +70,8 @@ class Functions {
 
   static void singInToast() {
     Fluttertoast.showToast(
-      msg: "you need to sign in first",
+      msg: lookupAppLocalizations(LanguageManager.currentLocale.value)
+          .needSignIn,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.black54,

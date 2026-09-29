@@ -50,7 +50,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      powerUp.displayName,
+                      powerUp.localizedName(context),
                       style: GoogleFonts.luckiestGuy(
                         textStyle: const TextStyle(
                           fontSize: 18,
@@ -59,8 +59,8 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                       ),
                     ),
                     Text(
-                      powerUp.description,
-                      style: TextStyle(fontSize: 12, color: Colors.white70),
+                      powerUp.localizedDescription(context),
+                      style: const TextStyle(fontSize: 12, color: Colors.white70),
                     ),
                   ],
                 ),
@@ -68,7 +68,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
               Column(
                 children: [
                   Text(
-                    "Owned: $count",
+                    context.l10n.owned(count),
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.lightBlueAccent,

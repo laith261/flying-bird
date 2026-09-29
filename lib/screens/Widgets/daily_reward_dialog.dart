@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:game/models/player_data.dart';
+import 'package:game/l10n/l10n.dart';
 
 class DailyRewardDialog extends StatelessWidget {
   final PlayerInfo playerData;
@@ -24,7 +25,9 @@ class DailyRewardDialog extends StatelessWidget {
             borderRadius: BorderRadius.circular(25),
           ),
           title: Text(
-            isRewardDay ? "Weekly Reward Claimed!" : "Daily Progress",
+            isRewardDay
+                ? context.l10n.weeklyRewardClaimed
+                : context.l10n.dailyProgress,
             textAlign: TextAlign.center,
             style: GoogleFonts.luckiestGuy(
               textStyle: TextStyle(
@@ -56,7 +59,7 @@ class DailyRewardDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    "Congratulations!\nYou've reached Day 7 and earned 10 coins!",
+                    context.l10n.dailyRewardDay7,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.luckiestGuy(
                       textStyle: const TextStyle(
@@ -67,7 +70,7 @@ class DailyRewardDialog extends StatelessWidget {
                   ),
                 ] else ...[
                   Text(
-                    "Day $progress of 7",
+                    context.l10n.dailyRewardProgress(progress),
                     style: GoogleFonts.luckiestGuy(
                       textStyle: const TextStyle(
                         fontSize: 22,
@@ -91,7 +94,7 @@ class DailyRewardDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    "Come back tomorrow for Day ${progress + 1}!",
+                    context.l10n.dailyRewardComeBack(progress + 1),
                     textAlign: TextAlign.center,
                     style: GoogleFonts.luckiestGuy(
                       textStyle: const TextStyle(
@@ -119,7 +122,7 @@ class DailyRewardDialog extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  isRewardDay ? "Awesome!" : "Got it!",
+                  isRewardDay ? context.l10n.awesome : context.l10n.gotIt,
                   style: GoogleFonts.luckiestGuy(
                     textStyle: const TextStyle(
                       color: Colors.white,

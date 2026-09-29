@@ -52,20 +52,20 @@ class _TrailsTabState extends State<TrailsTab> {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
-          "Confirm Purchase",
+          context.l10n.confirmPurchase,
           style: GoogleFonts.luckiestGuy(
             textStyle: const TextStyle(color: Colors.orange),
           ),
         ),
         content: Text(
-          "Do you want to buy $trailName for $price coins?",
+          context.l10n.confirmBuyItem(trailName, price),
           style: GoogleFonts.luckiestGuy(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(
-              "Cancel",
+              context.l10n.cancel,
               style: GoogleFonts.luckiestGuy(
                 textStyle: const TextStyle(color: Colors.grey),
               ),
@@ -83,18 +83,18 @@ class _TrailsTabState extends State<TrailsTab> {
                   widget.game.playerData.addShield(0);
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Trail equipped for one life!"),
-                      duration: Duration(seconds: 2),
+                    SnackBar(
+                      content: Text(context.l10n.trailEquippedOneLife),
+                      duration: const Duration(seconds: 2),
                     ),
                   );
                   if (mounted) setState(() {});
                 },
                 onLoadingStarted: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Loading ad..."),
-                      duration: Duration(seconds: 1),
+                    SnackBar(
+                      content: Text(context.l10n.loadingAd),
+                      duration: const Duration(seconds: 1),
                     ),
                   );
                 },
@@ -122,7 +122,7 @@ class _TrailsTabState extends State<TrailsTab> {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  "Try",
+                  context.l10n.tryLabel,
                   style: GoogleFonts.luckiestGuy(
                     textStyle: const TextStyle(color: Colors.white),
                   ),
@@ -143,7 +143,7 @@ class _TrailsTabState extends State<TrailsTab> {
                   : Colors.grey,
             ),
             child: Text(
-              "Buy",
+              context.l10n.buy,
               style: GoogleFonts.luckiestGuy(
                 textStyle: const TextStyle(color: Colors.white),
               ),
@@ -204,7 +204,9 @@ class _TrailItem extends StatelessWidget {
     final String baseId = trail.id;
     final bool isPro = isProMode && baseId != 'none';
     final String trailId = isPro ? '${baseId}_pro' : baseId;
-    final String name = isPro ? '${trail.name} Pro' : trail.name;
+    final String name = isPro
+        ? '${trail.localizedName(context)} Pro'
+        : trail.localizedName(context);
 
     final int price = ShopHelper.getTrailPrice(trail, isPro);
     final int requiredScore = trail.requiredScore;
@@ -222,7 +224,7 @@ class _TrailItem extends StatelessWidget {
         if (isLevelLocked) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text("Need $requiredScore score to unlock!"),
+              content: Text(context.l10n.needScoreToUnlock(requiredScore)),
               duration: const Duration(seconds: 1),
             ),
           );
@@ -291,7 +293,7 @@ class _TrailItem extends StatelessWidget {
                       const SizedBox(height: 5),
                       if (isLevelLocked)
                         Text(
-                          "Score: $requiredScore",
+                          context.l10n.score(requiredScore),
                           style: const TextStyle(
                             fontSize: 14,
                             color: Colors.orangeAccent,
@@ -299,9 +301,9 @@ class _TrailItem extends StatelessWidget {
                           ),
                         )
                       else if (isTemp)
-                        const Text(
-                          "TEMP",
-                          style: TextStyle(
+                        Text(
+                          context.l10n.temp,
+                          style: const TextStyle(
                             color: Colors.lightBlueAccent,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -328,9 +330,9 @@ class _TrailItem extends StatelessWidget {
                           ],
                         )
                       else if (isSelected)
-                        const Text(
-                          "EQUIPPED",
-                          style: TextStyle(
+                        Text(
+                          context.l10n.equipped,
+                          style: const TextStyle(
                             color: Colors.greenAccent,
                             fontWeight: FontWeight.bold,
                             fontSize: 12,
@@ -372,9 +374,9 @@ class _TrailItem extends StatelessWidget {
                 ),
               ),
             if (isTemp)
-              const Positioned(
+              const PositionedDirectional(
                 top: 10,
-                right: 10,
+                end: 10,
                 child: Icon(
                   Icons.access_time_filled,
                   color: Colors.lightBlueAccent,
@@ -382,9 +384,9 @@ class _TrailItem extends StatelessWidget {
                 ),
               )
             else if (isSelected)
-              const Positioned(
+              const PositionedDirectional(
                 top: 10,
-                right: 10,
+                end: 10,
                 child: Icon(
                   Icons.check_circle,
                   color: Colors.greenAccent,

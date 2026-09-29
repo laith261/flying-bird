@@ -1,0 +1,215 @@
+{
+  "@@locale": "ar",
+  "appTitle": "فلاينغ بيرد",
+  "@appTitle": {
+    "description": "Title of the game"
+  },
+  "startGame": "ابدأ اللعبة",
+  "@startGame": {
+    "description": "Button text to start a new game"
+  },
+  "continueGame": "متابعة",
+  "@continueGame": {
+    "description": "Button text to continue game after revival"
+  },
+  "watchAdToContinue": "شاهد إعلاناً للمتابعة",
+  "@watchAdToContinue": {
+    "description": "Button text on the reward ad revival button"
+  },
+  "score": "النتيجة: {score}",
+  "@score": {
+    "description": "Current game score",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "highScore": "أعلى نتيجة: {score}",
+  "@highScore": {
+    "description": "Player's best high score",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  },
+  "bestScore": "أفضل نتيجة: {score}",
+  "@bestScore": {
+    "description": "Best score label",
+    "placeholders": {
+      "score": {
+        "type": "int",
+        "example": "50"
+      }
+    }
+  },
+  "shop": "المتجر",
+  "@shop": {
+    "description": "Shop screen title"
+  },
+  "missions": "المهام",
+  "@missions": {
+    "description": "Missions tab or dialog title"
+  },
+  "daily": "يومية",
+  "@daily": {
+    "description": "Daily tab title"
+  },
+  "weeklyOther": "أسبوعية / أخرى",
+  "@weeklyOther": {
+    "description": "Weekly tab title"
+  },
+  "resetsEveryDay": "تتجدد كل يوم!",
+  "@resetsEveryDay": {
+    "description": "Subtitle indicating daily reset"
+  },
+  "dailyRewards": "المكافآت اليومية",
+  "@dailyRewards": {
+    "description": "Daily rewards section title"
+  },
+  "dailyProgress": "التقدم اليومي",
+  "@dailyProgress": {
+    "description": "Daily progress title"
+  },
+  "weeklyRewardClaimed": "تم استلام المكافأة الأسبوعية!",
+  "@weeklyRewardClaimed": {
+    "description": "Weekly reward claimed dialog title"
+  },
+  "trails": "المسارات",
+  "@trails": {
+    "description": "Trails tab title in shop"
+  },
+  "powerUps": "التعزيزات",
+  "@powerUps": {
+    "description": "Power Ups tab title in shop"
+  },
+  "birds": "الطيور",
+  "@birds": {
+    "description": "Birds skins tab title in shop"
+  },
+  "claim": "استلام",
+  "@claim": {
+    "description": "Claim reward button text"
+  },
+  "claimed": "تم الاستلام",
+  "@claimed": {
+    "description": "Label indicating reward was claimed"
+  },
+  "completed": "مكتمل",
+  "@completed": {
+    "description": "Label indicating a mission is completed"
+  },
+  "equip": "تجهيز",
+  "@equip": {
+    "description": "Equip item button text"
+  },
+  "equipped": "مجهز",
+  "@equipped": {
+    "description": "Equipped status badge text"
+  },
+  "temp": "مؤقت",
+  "@temp": {
+    "description": "Temporary item status badge text"
+  },
+  "buy": "شراء",
+  "@buy": {
+    "description": "Buy item button text"
+  },
+  "cancel": "إلغاء",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  "confirmPurchase": "تأكيد الشراء",
+  "@confirmPurchase": {
+    "description": "Confirm purchase dialog title"
+  },
+  "luckyDay": "يوم الحظ",
+  "@luckyDay": {
+    "description": "Lucky Day power-up name"
+  },
+  "shield": "الدرع",
+  "@shield": {
+    "description": "Shield power-up name"
+  },
+  "awesome": "رائع!",
+  "@awesome": {
+    "description": "Awesome exclamation button"
+  },
+  "gotIt": "حسناً!",
+  "@gotIt": {
+    "description": "Got it acknowledgement button"
+  },
+  "owned": "المملوك: {count}",
+  "@owned": {
+    "description": "Owned count text",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "notificationTitle": "اشتقنا إليك! 🐦",
+  "@notificationTitle": {
+    "description": "Return reminder notification title"
+  },
+  "notificationBody": "عد إلى فلاينغ بيرد وحطم رقمك القياسي! 🏆",
+  "@notificationBody": {
+    "description": "Return reminder notification body"
+  },
+  "tryLabel": "تجربة",
+  "open": "فتح",
+  "findOne": "ابحث عن واحدة!",
+  "tracking": "مستمر",
+  "progress": "التقدم",
+  "goToShop": "الذهاب للمتجر",
+  "needSignIn": "يجب تسجيل الدخول أولاً",
+  "confirmBuyItem": "هل ترغب في شراء {item} مقابل {price} قطعة نقدية؟",
+  "boughtItem": "تم شراء {item}!",
+  "needCoins": "تحتاج إلى {price} عملة!",
+  "skinEquippedOneLife": "تم تجهيز المظهر لمحاولة واحدة!",
+  "trailEquippedOneLife": "تم تجهيز المسار لمحاولة واحدة!",
+  "loadingAd": "جارٍ تحميل الإعلان...",
+  "needScoreToUnlock": "تحتاج إلى نتيجة {score} لإلغاء القفل!",
+  "outOfPowerUpTitle": "نفد {powerUp}!",
+  "outOfPowerUpDesc": "ليس لديك أي {powerUp} متبقٍ للتفعيل. هل ترغب بشراء المزيد من المتجر؟",
+  "shieldDesc": "يحميك من اصطدام واحد",
+  "luckyDayDesc": "يزيد من فرصة العثور على العملات",
+  "coinCollectorTitle": "جامع العملات",
+  "coinCollectorDesc": "اجمع 10 عملات أثناء اللعب",
+  "highFlyerTitle": "محلق عالياً",
+  "highFlyerDesc": "حقق نتيجة 15",
+  "survivorTitle": "الناجي",
+  "survivorDesc": "العب 3 مباريات",
+  "longTermTrackers": "متابعة طويلة المدى",
+  "dailyLoginTrackerTitle": "متابعة تسجيل الدخول اليومي",
+  "dailyLoginTrackerDesc": "أيام تسجيل الدخول المتتالية (تتجدد أسبوعياً)",
+  "giftInventory": "مخزون الهدايا",
+  "giftInventoryDesc": "افتح الهدايا للحصول على عملات عشوائية!",
+  "prizeShield": "1x درع!",
+  "prizeLuckyDay": "1x يوم الحظ!",
+  "prizeCoins": "{coins} عملة!",
+  "dailyRewardDay7": "تهانينا!\nلقد وصلت لليوم 7 وحصلت على 10 عملات!",
+  "dailyRewardProgress": "اليوم {progress} من 7",
+  "dailyRewardComeBack": "عد غداً لليوم {nextDay}!",
+  "leaderboardChallengeText": "تحتاج إلى {score} نقطة لتتفوق على {name}",
+  "sound": "الصوت",
+  "leaderboard": "المتصدرون",
+  "achievements": "الإنجازات",
+  "language": "اللغة",
+  "skinBird": "عصفور",
+  "skinMagnet": "المغناطيس",
+  "skinGhost": "الشبح",
+  "skinBirdDesc": "الطائر الكلاسيكي.",
+  "skinMagnetDesc": "يجذب العملات القريبة!",
+  "skinGhostDesc": "يمكنه المرور عبر الأنابيب!",
+  "trailNone": "بدون",
+  "trailBubbles": "فقاعات",
+  "trailLine": "خط",
+  "trailRects": "مربعات",
+  "trailStars": "نجوم",
+  "trailLighting": "برق"
+}
