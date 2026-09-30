@@ -75,7 +75,7 @@ class _BirdsTabState extends State<BirdsTab> {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(error),
+                        content: Text(context.l10n.rewardedAdUnavailable),
                         duration: const Duration(seconds: 2),
                       ),
                     );

@@ -296,4 +296,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get trailLighting => 'Lighting';
+
+  @override
+  String get newRecordTitle => 'NEW RECORD!';
+
+  @override
+  String get freeGiftEarned => '+1 FREE GIFT!';
+
+  @override
+  String get addedToGiftInventory => 'Added to your Gift Inventory';
+
+  @override
+  String get collect => 'Collect';
+
+  @override
+  String giftCollectedTotal(int count) {
+    return '+1 Gift Collected! Total: $count 🎁';
+  }
+
+  @override
+  String get adLabel => 'AD';
+
+  @override
+  String get rewardedAdUnavailable => 'Rewarded ad is not available right now.';
+
+  @override
+  String get leaderboardTopPlayer =>
+      'You\'re #1 on the leaderboard! Defend your record! 👑';
 }

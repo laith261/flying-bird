@@ -103,7 +103,7 @@ class _TrailsTabState extends State<TrailsTab> {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(error),
+                        content: Text(context.l10n.rewardedAdUnavailable),
                         duration: const Duration(seconds: 2),
                       ),
                     );

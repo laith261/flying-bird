@@ -435,5 +435,43 @@
   "trailLighting": "Lighting",
   "@trailLighting": {
     "description": "Lighting trail name"
+  },
+  "newRecordTitle": "NEW RECORD!",
+  "@newRecordTitle": {
+    "description": "Title displayed when breaking a high score"
+  },
+  "freeGiftEarned": "+1 FREE GIFT!",
+  "@freeGiftEarned": {
+    "description": "Label for earning a free gift"
+  },
+  "addedToGiftInventory": "Added to your Gift Inventory",
+  "@addedToGiftInventory": {
+    "description": "Subtitle stating gift was added to inventory"
+  },
+  "collect": "Collect",
+  "@collect": {
+    "description": "Collect button label"
+  },
+  "giftCollectedTotal": "+1 Gift Collected! Total: {count} 🎁",
+  "@giftCollectedTotal": {
+    "description": "Snackbar message when collecting a gift",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "adLabel": "AD",
+  "@adLabel": {
+    "description": "Short label for advertisement button"
+  },
+  "rewardedAdUnavailable": "Rewarded ad is not available right now.",
+  "@rewardedAdUnavailable": {
+    "description": "Message when rewarded ad cannot be loaded"
+  },
+  "leaderboardTopPlayer": "You're #1 on the leaderboard! Defend your record! 👑",
+  "@leaderboardTopPlayer": {
+    "description": "Message displayed when the player is top of the leaderboard"
   }
 }

@@ -295,4 +295,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get trailLighting => 'برق';
+
+  @override
+  String get newRecordTitle => 'رقم قياسي جديد!';
+
+  @override
+  String get freeGiftEarned => '+1 هدية مجانية!';
+
+  @override
+  String get addedToGiftInventory => 'تمت إضافتها إلى مخزون الهدايا';
+
+  @override
+  String get collect => 'جمع';
+
+  @override
+  String giftCollectedTotal(int count) {
+    return 'تم جمع هدية واحدة! الإجمالي: $count 🎁';
+  }
+
+  @override
+  String get adLabel => 'إعلان';
+
+  @override
+  String get rewardedAdUnavailable => 'إعلان المكافأة غير متوفر حالياً.';
+
+  @override
+  String get leaderboardTopPlayer =>
+      'أنت في المركز الأول على قائمة المتصدرين! دافع عن رقمك! 👑';
 }

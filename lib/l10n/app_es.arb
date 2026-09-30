@@ -85,5 +85,13 @@
   "trailLine": "Línea",
   "trailRects": "Rectángulos",
   "trailStars": "Estrellas",
-  "trailLighting": "Rayo"
+  "trailLighting": "Rayo",
+  "newRecordTitle": "¡NUEVO RÉCORD!",
+  "freeGiftEarned": "¡+1 REGALO GRATIS!",
+  "addedToGiftInventory": "Añadido a tu inventario de regalos",
+  "collect": "Recoger",
+  "giftCollectedTotal": "¡+1 Regalo recogido! Total: {count} 🎁",
+  "adLabel": "Anuncio",
+  "rewardedAdUnavailable": "El anuncio de recompensa no está disponible en este momento.",
+  "leaderboardTopPlayer": "¡Eres el #1 en la clasificación! ¡Defiende tu récord! 👑"
 }

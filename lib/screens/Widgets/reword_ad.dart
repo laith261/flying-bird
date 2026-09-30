@@ -34,7 +34,7 @@ class _RewardedAdState extends State<RewardedAd> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(error),
+              content: Text(context.l10n.rewardedAdUnavailable),
               duration: const Duration(seconds: 2),
             ),
           );

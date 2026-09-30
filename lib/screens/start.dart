@@ -12,6 +12,7 @@ import '../component/helpers/daily_missions_helper.dart';
 import 'Widgets/start_button.dart';
 import 'Widgets/power_up_toggles.dart';
 import '../configs/leaderboard_helper.dart';
+import 'Widgets/record_gift_dialog.dart';
 
 class StartWidget extends StatefulWidget {
   const StartWidget({super.key, required this.game});
@@ -133,22 +134,31 @@ class _StartWidgetState extends State<StartWidget> {
                             ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [
-                                  Colors.orange.withAlpha(204),
-                                  Colors.deepOrange.withAlpha(204),
-                                ],
+                                colors: challenge.isTopPlayer
+                                    ? [
+                                        Colors.amber.shade600.withAlpha(230),
+                                        Colors.deepOrangeAccent.withAlpha(230),
+                                      ]
+                                    : [
+                                        Colors.orange.withAlpha(204),
+                                        Colors.deepOrange.withAlpha(204),
+                                      ],
                                 begin: AlignmentDirectional.topStart,
                                 end: AlignmentDirectional.bottomEnd,
                               ),
                               borderRadius: BorderRadius.circular(20),
                               border: Border.all(
-                                color: Colors.white.withAlpha(128),
-                                width: 1.5,
+                                color: challenge.isTopPlayer
+                                    ? Colors.yellowAccent.withAlpha(200)
+                                    : Colors.white.withAlpha(128),
+                                width: challenge.isTopPlayer ? 2.0 : 1.5,
                               ),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.orange.withAlpha(77),
-                                  blurRadius: 12,
+                                  color: challenge.isTopPlayer
+                                      ? Colors.amber.withAlpha(120)
+                                      : Colors.orange.withAlpha(77),
+                                  blurRadius: challenge.isTopPlayer ? 16 : 12,
                                   offset: const Offset(0, 4),
                                 ),
                               ],
@@ -156,18 +166,24 @@ class _StartWidgetState extends State<StartWidget> {
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(
-                                  Icons.stars_rounded,
-                                  color: Colors.white,
+                                Icon(
+                                  challenge.isTopPlayer
+                                      ? Icons.emoji_events_rounded
+                                      : Icons.stars_rounded,
+                                  color: challenge.isTopPlayer
+                                      ? Colors.yellowAccent
+                                      : Colors.white,
                                   size: 24,
                                 ),
                                 const SizedBox(width: 10),
                                 Flexible(
                                   child: Text(
-                                    context.l10n.leaderboardChallengeText(
-                                      challenge.targetScore,
-                                      challenge.targetName,
-                                    ),
+                                    challenge.isTopPlayer
+                                        ? context.l10n.leaderboardTopPlayer
+                                        : context.l10n.leaderboardChallengeText(
+                                            challenge.targetScore,
+                                            challenge.targetName,
+                                          ),
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.poppins(
                                       textStyle: const TextStyle(
@@ -493,11 +509,19 @@ class _StartWidgetState extends State<StartWidget> {
     if (!game.newHighest) return;
     game.newHighest = false;
     game.audio.playWin();
-    Future.delayed(Duration.zero, () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       if (!mounted) return;
       Confetti.launch(
         context,
         options: const ConfettiOptions(particleCount: 100, spread: 70, y: 0.6),
+      );
+      RecordGiftDialog.show(
+        context,
+        game: game,
+        score: game.highest.value,
+        onCollected: () {
+          if (mounted) setState(() {});
+        },
       );
     });
     Future.delayed(const Duration(milliseconds: 800), () async {

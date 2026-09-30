@@ -615,6 +615,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lighting'**
   String get trailLighting;
+
+  /// Title displayed when breaking a high score
+  ///
+  /// In en, this message translates to:
+  /// **'NEW RECORD!'**
+  String get newRecordTitle;
+
+  /// Label for earning a free gift
+  ///
+  /// In en, this message translates to:
+  /// **'+1 FREE GIFT!'**
+  String get freeGiftEarned;
+
+  /// Subtitle stating gift was added to inventory
+  ///
+  /// In en, this message translates to:
+  /// **'Added to your Gift Inventory'**
+  String get addedToGiftInventory;
+
+  /// Collect button label
+  ///
+  /// In en, this message translates to:
+  /// **'Collect'**
+  String get collect;
+
+  /// Snackbar message when collecting a gift
+  ///
+  /// In en, this message translates to:
+  /// **'+1 Gift Collected! Total: {count} 🎁'**
+  String giftCollectedTotal(int count);
+
+  /// Short label for advertisement button
+  ///
+  /// In en, this message translates to:
+  /// **'AD'**
+  String get adLabel;
+
+  /// Message when rewarded ad cannot be loaded
+  ///
+  /// In en, this message translates to:
+  /// **'Rewarded ad is not available right now.'**
+  String get rewardedAdUnavailable;
+
+  /// Message displayed when the player is top of the leaderboard
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re #1 on the leaderboard! Defend your record! 👑'**
+  String get leaderboardTopPlayer;
 }
 
 class _AppLocalizationsDelegate

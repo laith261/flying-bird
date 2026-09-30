@@ -31,6 +31,7 @@ class PlayerInfo extends ChangeNotifier {
   int _rewardProgress;
   String? _playerId;
   int _gifts;
+  int _giftChance;
 
   int get highScore => _highScore;
   int get coins => _coins;
@@ -46,6 +47,7 @@ class PlayerInfo extends ChangeNotifier {
   int get lastModified => _lastModified;
   String? get playerId => _playerId;
   int get gifts => _gifts;
+  int get giftChance => _giftChance;
 
   PlayerInfo({
     int highScore = 0,
@@ -61,6 +63,7 @@ class PlayerInfo extends ChangeNotifier {
     int rewardProgress = 0,
     String? playerId,
     int gifts = 0,
+    int giftChance = 10,
   }) : _highScore = highScore,
        _coins = coins,
        _selectedTrail = selectedTrail,
@@ -73,7 +76,8 @@ class PlayerInfo extends ChangeNotifier {
        _lastLoginDate = lastLoginDate,
        _rewardProgress = rewardProgress,
        _playerId = playerId,
-       _gifts = gifts;
+       _gifts = gifts,
+       _giftChance = giftChance.clamp(10, 50);
 
   // --- Logic Methods ---
 
@@ -108,6 +112,16 @@ class PlayerInfo extends ChangeNotifier {
     _gifts += amount;
     _lastModified = DateTime.now().millisecondsSinceEpoch;
     notifyListeners();
+    _scheduleSave();
+  }
+
+  Future<void> incrementGiftChance() async {
+    if (_giftChance < 50) {
+      _giftChance = (_giftChance + 1).clamp(10, 50);
+      _lastModified = DateTime.now().millisecondsSinceEpoch;
+      notifyListeners();
+      _scheduleSave();
+    }
   }
 
   Future<bool> useShield() async {
@@ -219,6 +233,7 @@ class PlayerInfo extends ChangeNotifier {
     _rewardProgress = other.rewardProgress;
     _playerId = other.playerId;
     _gifts = other.gifts;
+    _giftChance = other.giftChance;
     notifyListeners();
   }
 
@@ -391,6 +406,7 @@ class PlayerInfo extends ChangeNotifier {
       rewardProgress: json['rewardProgress'] as int? ?? 0,
       playerId: json['playerId'] as String?,
       gifts: json['gifts'] as int? ?? 0,
+      giftChance: json['giftChance'] as int? ?? 10,
     );
   }
 
@@ -409,6 +425,7 @@ class PlayerInfo extends ChangeNotifier {
       'rewardProgress': _rewardProgress,
       'playerId': _playerId,
       'gifts': _gifts,
+      'giftChance': _giftChance,
     };
   }
 
@@ -426,6 +443,7 @@ class PlayerInfo extends ChangeNotifier {
     DateTime? lastLoginDate,
     int? rewardProgress,
     int? gifts,
+    int? giftChance,
   }) {
     return PlayerInfo(
       highScore: highScore ?? _highScore,
@@ -441,6 +459,7 @@ class PlayerInfo extends ChangeNotifier {
       rewardProgress: rewardProgress ?? _rewardProgress,
       playerId: playerId ?? _playerId,
       gifts: gifts ?? _gifts,
+      giftChance: giftChance ?? _giftChance,
     );
   }
 }

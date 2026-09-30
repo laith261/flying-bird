@@ -47,6 +47,7 @@ android {
         targetSdk = 37
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
         manifestPlaceholders["appid"]=appid
         manifestPlaceholders["gmid"]=gmid
     }
@@ -90,4 +91,5 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-analytics")
+     implementation("com.google.ads.mediation:unity:4.12.5.0")
 }

@@ -211,5 +211,13 @@
   "trailLine": "خط",
   "trailRects": "مربعات",
   "trailStars": "نجوم",
-  "trailLighting": "برق"
+  "trailLighting": "برق",
+  "newRecordTitle": "رقم قياسي جديد!",
+  "freeGiftEarned": "+1 هدية مجانية!",
+  "addedToGiftInventory": "تمت إضافتها إلى مخزون الهدايا",
+  "collect": "جمع",
+  "giftCollectedTotal": "تم جمع هدية واحدة! الإجمالي: {count} 🎁",
+  "adLabel": "إعلان",
+  "rewardedAdUnavailable": "إعلان المكافأة غير متوفر حالياً.",
+  "leaderboardTopPlayer": "أنت في المركز الأول على قائمة المتصدرين! دافع عن رقمك! 👑"
 }

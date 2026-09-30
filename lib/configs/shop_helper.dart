@@ -153,4 +153,82 @@ class ShopHelper {
       );
     }
   }
+
+  static Future<void> buyGift(
+    BuildContext context,
+    MyWorld game,
+    VoidCallback onComplete,
+  ) async {
+    const int price = 50;
+    if (game.playerData.coins >= price) {
+      await game.playerData.runBatched([
+        () => game.playerData.subtractCoins(price),
+        () => game.playerData.addGift(1),
+      ]);
+      onComplete();
+
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.boughtItem(context.l10n.giftInventory)),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+      game.analytics.logEvent(
+        name: 'buy_gift',
+        parameters: {'price': price},
+      );
+    } else {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(context.l10n.needCoins(price)),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+    }
+  }
+
+  static void claimGiftViaRewardedAd(
+    BuildContext context,
+    MyWorld game, {
+    required VoidCallback onLoadingStarted,
+    required VoidCallback onLoadingEnded,
+    required VoidCallback onComplete,
+  }) {
+    game.ads.loadAndShowRewardedAd(
+      onRewardEarned: () async {
+        await game.playerData.runBatched([
+          () => game.playerData.addGift(1),
+        ]);
+        onComplete();
+
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.card_giftcard, color: Colors.amberAccent),
+                const SizedBox(width: 8),
+                Text(context.l10n.giftCollectedTotal(game.playerData.gifts)),
+              ],
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+        game.analytics.logEvent(name: 'claim_gift_ad');
+      },
+      onLoadingStarted: onLoadingStarted,
+      onLoadingEnded: onLoadingEnded,
+      onError: (String error) {
+        if (!context.mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(context.l10n.rewardedAdUnavailable),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      },
+    );
+  }
 }

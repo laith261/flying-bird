@@ -65,10 +65,6 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
       builder: (context, locale, _) {
         return MaterialApp(
           locale: locale,
-          // theme: ThemeData(
-          //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-          //   primaryColor: Colors.amber,
-          // ),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(

@@ -8,11 +8,13 @@ class ChallengeData {
   final String targetName;
   final int pointsNeeded;
   final int targetScore;
+  final bool isTopPlayer;
 
   ChallengeData({
-    required this.targetName,
-    required this.pointsNeeded,
-    required this.targetScore,
+    this.targetName = '',
+    this.pointsNeeded = 0,
+    this.targetScore = 0,
+    this.isTopPlayer = false,
   });
 }
 
@@ -90,6 +92,17 @@ class LeaderboardHelper {
         playerRank = scores[rankIndex].rank;
       }
 
+      // If player is rank 1 or their current score matches or exceeds the top score on the leaderboard
+      if (playerRank == 1 ||
+          (currentHighScore > 0 &&
+              scores.isNotEmpty &&
+              currentHighScore >= scores.first.rawScore)) {
+        return ChallengeData(
+          isTopPlayer: true,
+          targetScore: currentHighScore,
+        );
+      }
+
       if (playerRank != null && playerRank > 1) {
         // Target is the person at playerRank - 1
         try {
@@ -100,9 +113,6 @@ class LeaderboardHelper {
         } catch (_) {
           targetScore = scores.first;
         }
-      } else if (playerRank == 1) {
-        // Player is #1!
-        return null;
       } else {
         // Player not found or rank not clear, fallback to targeting the highest person in this list
         targetScore = scores.first;
@@ -113,6 +123,7 @@ class LeaderboardHelper {
           targetName: targetScore.scoreHolder.displayName,
           pointsNeeded: targetScore.rawScore - currentHighScore,
           targetScore: targetScore.rawScore,
+          isTopPlayer: false,
         );
       }
 

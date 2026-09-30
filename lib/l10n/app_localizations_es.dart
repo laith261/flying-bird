@@ -295,4 +295,32 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get trailLighting => 'Rayo';
+
+  @override
+  String get newRecordTitle => '¡NUEVO RÉCORD!';
+
+  @override
+  String get freeGiftEarned => '¡+1 REGALO GRATIS!';
+
+  @override
+  String get addedToGiftInventory => 'Añadido a tu inventario de regalos';
+
+  @override
+  String get collect => 'Recoger';
+
+  @override
+  String giftCollectedTotal(int count) {
+    return '¡+1 Regalo recogido! Total: $count 🎁';
+  }
+
+  @override
+  String get adLabel => 'Anuncio';
+
+  @override
+  String get rewardedAdUnavailable =>
+      'El anuncio de recompensa no está disponible en este momento.';
+
+  @override
+  String get leaderboardTopPlayer =>
+      '¡Eres el #1 en la clasificación! ¡Defiende tu récord! 👑';
 }

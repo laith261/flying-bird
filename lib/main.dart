@@ -72,7 +72,8 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   int scorePoint = 0;
   final ValueNotifier<int> currentScore = ValueNotifier<int>(0);
   bool sound = true;
-  int deadTimes = 0;
+  int get deadTimes => ads.attemptCount;
+  set deadTimes(int val) => ads.attemptCount = val;
   PlayerInfo playerData = PlayerInfo();
   ValueNotifier<int> coins = ValueNotifier<int>(0);
   ValueNotifier<int> highest = ValueNotifier<int>(0);
@@ -146,7 +147,10 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   void setHighest() {} // Deprecated, handled by PlayerData
 
   void startGame({bool withRewarded = false}) {
-    ads.cancelInterstitialAd();
+    ads.initRewardedAdOnFirstStart();
+    if (!withRewarded) {
+      ads.onGameAttemptStarted();
+    }
     player.reset();
     pipes.reset();
     // billboard.reset();
@@ -202,10 +206,21 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     Functions.vibration(isStarted);
     checkHighest();
     DailyMissionsManager.instance.trackGamePlayed(scorePoint);
-    showingAd();
     isStarted = false;
     audio.setStarted(isStarted);
-    overlays.add("start");
+
+    if (ads.isDesignatedRound) {
+      ads.showInterstitialAd(
+        onDismissed: () {
+          overlays.add("start");
+        },
+        onFailed: () {
+          overlays.add("start");
+        },
+      );
+    } else {
+      overlays.add("start");
+    }
   }
 
   void checkHighest() {
@@ -213,18 +228,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     playerData.runBatched([() => playerData.updateHighScore(scorePoint)]);
     highest.value = scorePoint;
     newHighest = true;
-  }
-
-  void showingAd() {
-    deadTimes++;
-    if (deadTimes >= 3) {
-      if (newHighest) {
-        // Skip showing the ad on new high score and keep deadTimes >= 3
-        // so the interstitial ad is postponed until the next time the player dies.
-        return;
-      }
-      ads.loadInterstitialAd();
-    }
   }
 
   void updateScore() {
