@@ -23,6 +23,8 @@ void main() {
       // trackCoinCollected schedules save, but doesn't await it.
     }
     stopwatch.stop();
-    print('Baseline - Track coin collected: ${stopwatch.elapsedMilliseconds} ms');
+    print(
+      'Baseline - Track coin collected: ${stopwatch.elapsedMilliseconds} ms',
+    );
   });
 }

@@ -135,7 +135,9 @@ class ShopHelper {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(context.l10n.boughtItem(powerUp.localizedName(context))),
+          content: Text(
+            context.l10n.boughtItem(powerUp.localizedName(context)),
+          ),
           duration: const Duration(seconds: 1),
         ),
       );
@@ -174,10 +176,7 @@ class ShopHelper {
           duration: const Duration(seconds: 1),
         ),
       );
-      game.analytics.logEvent(
-        name: 'buy_gift',
-        parameters: {'price': price},
-      );
+      game.analytics.logEvent(name: 'buy_gift', parameters: {'price': price});
     } else {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -198,9 +197,7 @@ class ShopHelper {
   }) {
     game.ads.loadAndShowRewardedAd(
       onRewardEarned: () async {
-        await game.playerData.runBatched([
-          () => game.playerData.addGift(1),
-        ]);
+        await game.playerData.runBatched([() => game.playerData.addGift(1)]);
         onComplete();
 
         if (!context.mounted) return;

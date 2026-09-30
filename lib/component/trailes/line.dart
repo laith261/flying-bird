@@ -9,6 +9,26 @@ class LineTrail extends PositionComponent implements GameTrail {
   bool isPro = false;
   double opacity = 1.0;
 
+  final Paint _layerPaint = Paint();
+
+  final Paint _glowPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 10
+    ..strokeCap = StrokeCap.round
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+
+  final Paint _corePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 4
+    ..strokeCap = StrokeCap.round
+    ..color = Colors.white;
+
+  final Paint _standardPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 5
+    ..strokeCap = StrokeCap.round
+    ..color = Colors.white;
+
   LineTrail() : super(priority: 1);
 
   void addPoint(Vector2 point) {
@@ -41,10 +61,8 @@ class LineTrail extends PositionComponent implements GameTrail {
     if (_points.isEmpty || _points.length < 2) return;
 
     if (opacity < 1.0) {
-      canvas.saveLayer(
-        null,
-        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
-      );
+      _layerPaint.color = Colors.white.withAlpha((opacity * 255).toInt());
+      canvas.saveLayer(null, _layerPaint);
     }
 
     if (isPro) {
@@ -74,52 +92,38 @@ class LineTrail extends PositionComponent implements GameTrail {
     double tBr = t - idx1;
     Color currentColor = Color.lerp(neonColors[idx1], neonColors[idx2], tBr)!;
 
-    final glowPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 10
-      ..strokeCap = StrokeCap.round
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-
-    final corePaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4
-      ..strokeCap = StrokeCap.round
-      ..color = Colors.white;
-
     // Draw Glow Pass
     for (int i = 0; i < _points.length - 1; i++) {
       double opacity = (i / _points.length).clamp(0.0, 1.0);
-      glowPaint.color = currentColor.withValues(alpha: opacity * 0.8);
+      _glowPaint.color = currentColor.withValues(alpha: opacity * 0.8);
       canvas.drawLine(
         _points[i].toOffset(),
         _points[i + 1].toOffset(),
-        glowPaint,
+        _glowPaint,
       );
     }
 
     // Draw Core Pass
     for (int i = 0; i < _points.length - 1; i++) {
       double opacity = (i / _points.length).clamp(0.0, 1.0);
-      corePaint.color = Colors.white.withValues(alpha: opacity);
+      _corePaint.color = Colors.white.withValues(alpha: opacity);
       canvas.drawLine(
         _points[i].toOffset(),
         _points[i + 1].toOffset(),
-        corePaint,
+        _corePaint,
       );
     }
   }
 
   void _renderStandard(Canvas canvas) {
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round
-      ..color = Colors.white;
-
     for (int i = 0; i < _points.length - 1; i++) {
       double opacity = (i / _points.length).clamp(0.0, 1.0);
-      paint.color = Colors.white.withValues(alpha: opacity);
-      canvas.drawLine(_points[i].toOffset(), _points[i + 1].toOffset(), paint);
+      _standardPaint.color = Colors.white.withValues(alpha: opacity);
+      canvas.drawLine(
+        _points[i].toOffset(),
+        _points[i + 1].toOffset(),
+        _standardPaint,
+      );
     }
   }
 }

@@ -18,8 +18,7 @@ void main() {
       TrailPainterHelper.drawLightningTrail(canvas, size, center, true);
     }
 
-    final stopwatch = Stopwatch()
-      ..start();
+    final stopwatch = Stopwatch()..start();
     for (int i = 0; i < 50000; i++) {
       TrailPainterHelper.drawRectTrail(canvas, size, center, true);
       TrailPainterHelper.drawCircleTrail(canvas, size, center, true);

@@ -41,10 +41,7 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Colors.purple.withAlpha(50),
-            Colors.amber.withAlpha(30),
-          ],
+          colors: [Colors.purple.withAlpha(50), Colors.amber.withAlpha(30)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -127,7 +124,10 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                         Text(
                           "50",
                           style: GoogleFonts.luckiestGuy(
-                            textStyle: const TextStyle(color: Colors.white, fontSize: 13),
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 13,
+                            ),
                           ),
                         ),
                       ],
@@ -166,7 +166,10 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                               Text(
                                 context.l10n.adLabel,
                                 style: GoogleFonts.luckiestGuy(
-                                  textStyle: const TextStyle(color: Colors.white, fontSize: 13),
+                                  textStyle: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ),
                             ],
@@ -208,7 +211,11 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                     color: Colors.blue.withAlpha(26),
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(powerUp.icon, color: Colors.lightBlueAccent, size: 30),
+                  child: Icon(
+                    powerUp.icon,
+                    color: Colors.lightBlueAccent,
+                    size: 30,
+                  ),
                 ),
                 const SizedBox(width: 15),
                 Expanded(
@@ -226,7 +233,10 @@ class _PowerUpsTabState extends State<PowerUpsTab> {
                       ),
                       Text(
                         powerUp.localizedDescription(context),
-                        style: const TextStyle(fontSize: 12, color: Colors.white70),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white70,
+                        ),
                       ),
                     ],
                   ),

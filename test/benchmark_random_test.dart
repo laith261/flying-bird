@@ -24,6 +24,8 @@ void main() {
 
     print('Time with new instances: ${timeWithNewInstances}ms');
     print('Time with cached instance: ${timeWithCachedInstance}ms');
-    print('Improvement: ${(timeWithNewInstances - timeWithCachedInstance) / timeWithNewInstances * 100}%');
+    print(
+      'Improvement: ${(timeWithNewInstances - timeWithCachedInstance) / timeWithNewInstances * 100}%',
+    );
   });
 }

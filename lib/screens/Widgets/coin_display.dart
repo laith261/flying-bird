@@ -67,10 +67,10 @@ class CoinDisplay extends StatelessWidget {
                                 height: 24,
                                 errorBuilder: (context, error, stackTrace) =>
                                     const Icon(
-                                  Icons.monetization_on,
-                                  color: Colors.yellow,
-                                  size: 24,
-                                ),
+                                      Icons.monetization_on,
+                                      color: Colors.yellow,
+                                      size: 24,
+                                    ),
                               ),
                               const SizedBox(width: 8),
                               Transform.translate(

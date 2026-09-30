@@ -118,10 +118,7 @@ class AdmobAds {
     VoidCallback? onFailed,
   }) async {
     if (_interstitialAd != null) {
-      _showLoadedInterstitial(
-        onDismissed: onDismissed,
-        onFailed: onFailed,
-      );
+      _showLoadedInterstitial(onDismissed: onDismissed, onFailed: onFailed);
 
       return;
     }
@@ -135,10 +132,7 @@ class AdmobAds {
       }
 
       if (_interstitialAd != null) {
-        _showLoadedInterstitial(
-          onDismissed: onDismissed,
-          onFailed: onFailed,
-        );
+        _showLoadedInterstitial(onDismissed: onDismissed, onFailed: onFailed);
 
         return;
       }
@@ -167,13 +161,14 @@ class AdmobAds {
         resetAttemptCount();
         onDismissed();
       },
-      onAdFailedToShowFullScreenContent: (InterstitialAd failedAd, AdError error) {
-        debugPrint('Failed to show interstitial ad: ${error.message}');
-        failedAd.dispose();
-        _interstitialAd = null;
-        resetAttemptCount();
-        onFailed != null ? onFailed() : onDismissed();
-      },
+      onAdFailedToShowFullScreenContent:
+          (InterstitialAd failedAd, AdError error) {
+            debugPrint('Failed to show interstitial ad: ${error.message}');
+            failedAd.dispose();
+            _interstitialAd = null;
+            resetAttemptCount();
+            onFailed != null ? onFailed() : onDismissed();
+          },
     );
 
     ad.show();
@@ -205,7 +200,8 @@ class AdmobAds {
     try {
       await RewardedAd.load(
         adUnitId:
-            dotenv.env['RewardedAd'] ?? 'ca-app-pub-3940256099942544/5224354917',
+            dotenv.env['RewardedAd'] ??
+            'ca-app-pub-3940256099942544/5224354917',
         request: const AdRequest(),
         rewardedAdLoadCallback: RewardedAdLoadCallback(
           onAdLoaded: (RewardedAd ad) {
@@ -324,4 +320,3 @@ class AdmobAds {
     );
   }
 }
-

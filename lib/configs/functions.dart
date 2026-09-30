@@ -70,8 +70,9 @@ class Functions {
 
   static void singInToast() {
     Fluttertoast.showToast(
-      msg: lookupAppLocalizations(LanguageManager.currentLocale.value)
-          .needSignIn,
+      msg: lookupAppLocalizations(
+        LanguageManager.currentLocale.value,
+      ).needSignIn,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.black54,

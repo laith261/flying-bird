@@ -179,10 +179,13 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
     showDialog(
       context: context,
       builder: (context) {
-        final localizedPowerUp =
-            powerUpName == "Shield" ? context.l10n.shield : context.l10n.luckyDay;
+        final localizedPowerUp = powerUpName == "Shield"
+            ? context.l10n.shield
+            : context.l10n.luckyDay;
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           backgroundColor: Colors.transparent,
           child: Container(
             padding: const EdgeInsets.all(24),
@@ -206,100 +209,102 @@ class _PowerUpTogglesState extends State<PowerUpToggles> {
               ],
             ),
             child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    powerUpName == "Shield" ? Icons.security : Icons.stars,
-                    color: Colors.white,
-                    size: 48,
-                  ),
-                  const SizedBox(height: 12),
-                  Text(
-                    context.l10n.outOfPowerUpTitle(localizedPowerUp),
-                    style: GoogleFonts.luckiestGuy(
-                      textStyle: const TextStyle(
-                        fontSize: 26,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black,
-                            offset: Offset(1, 2),
-                            blurRadius: 2,
-                          ),
-                        ],
-                      ),
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  powerUpName == "Shield" ? Icons.security : Icons.stars,
+                  color: Colors.white,
+                  size: 48,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  context.l10n.outOfPowerUpTitle(localizedPowerUp),
+                  style: GoogleFonts.luckiestGuy(
+                    textStyle: const TextStyle(
+                      fontSize: 26,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black,
+                          offset: Offset(1, 2),
+                          blurRadius: 2,
+                        ),
+                      ],
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 12),
-                  Text(
-                    context.l10n.outOfPowerUpDesc(localizedPowerUp),
-                    style: GoogleFonts.poppins(
-                      textStyle: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.white,
-                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  context.l10n.outOfPowerUpDesc(localizedPowerUp),
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withAlpha(64),
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              side: BorderSide(color: Colors.white.withAlpha(128)),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white.withAlpha(64),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: BorderSide(
+                              color: Colors.white.withAlpha(128),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
-                          onPressed: () => Navigator.of(context).pop(),
-                          child: Text(
-                            context.l10n.cancel,
-                            style: GoogleFonts.luckiestGuy(
-                              textStyle: const TextStyle(fontSize: 16),
-                            ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: Text(
+                          context.l10n.cancel,
+                          style: GoogleFonts.luckiestGuy(
+                            textStyle: const TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
-                            foregroundColor: Colors.white,
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              side: const BorderSide(
-                                color: Colors.white,
-                                width: 1.5,
-                              ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: const BorderSide(
+                              color: Colors.white,
+                              width: 1.5,
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            game.shopInitialTabIndex = 1;
-                            game.overlays.add('shop');
-                          },
-                          child: Text(
-                            context.l10n.goToShop,
-                            style: GoogleFonts.luckiestGuy(
-                              textStyle: const TextStyle(fontSize: 16),
-                            ),
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          game.shopInitialTabIndex = 1;
+                          game.overlays.add('shop');
+                        },
+                        child: Text(
+                          context.l10n.goToShop,
+                          style: GoogleFonts.luckiestGuy(
+                            textStyle: const TextStyle(fontSize: 16),
                           ),
                         ),
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },

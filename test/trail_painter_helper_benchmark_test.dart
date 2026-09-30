@@ -22,6 +22,8 @@ void main() {
       TrailPainterHelper.drawCircleTrail(canvas, size, center, true);
     }
     stopwatch.stop();
-    print('drawCircleTrail 100,000 iterations: ${stopwatch.elapsedMilliseconds} ms / ${stopwatch.elapsedMicroseconds} us');
+    print(
+      'drawCircleTrail 100,000 iterations: ${stopwatch.elapsedMilliseconds} ms / ${stopwatch.elapsedMicroseconds} us',
+    );
   });
 }

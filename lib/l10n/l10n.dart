@@ -87,4 +87,3 @@ extension LocalizedPowerUps on PowerUps {
     }
   }
 }
-

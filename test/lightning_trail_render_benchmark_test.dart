@@ -30,7 +30,9 @@ void main() {
     }
     stopwatch.stop();
 
-    print('LightningTrail.render (Standard) benchmark: ${stopwatch.elapsedMilliseconds} ms');
+    print(
+      'LightningTrail.render (Standard) benchmark: ${stopwatch.elapsedMilliseconds} ms',
+    );
 
     trail.isPro = true;
 
@@ -45,6 +47,8 @@ void main() {
     }
     stopwatchPro.stop();
 
-    print('LightningTrail.render (Pro) benchmark: ${stopwatchPro.elapsedMilliseconds} ms');
+    print(
+      'LightningTrail.render (Pro) benchmark: ${stopwatchPro.elapsedMilliseconds} ms',
+    );
   });
 }

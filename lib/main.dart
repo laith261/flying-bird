@@ -140,8 +140,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   @override
   void onTapDown(TapDownEvent event) => player.goUp();
 
-
-
   Future<void> getHighest() async => highest.value = playerData.highScore;
 
   void setHighest() {} // Deprecated, handled by PlayerData
