@@ -18,6 +18,13 @@ class CircleTrail extends PositionComponent implements GameTrail {
   double _time = 0;
   double opacity = 1.0;
 
+  final Paint _layerPaint = Paint();
+  final Paint _standardPaint = Paint()..style = PaintingStyle.fill;
+  final Paint _glowPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+  final Paint _corePaint = Paint()..style = PaintingStyle.fill;
+
   CircleTrail() : super(priority: 1);
 
   void addPoint(Vector2 point) {
@@ -53,9 +60,10 @@ class CircleTrail extends PositionComponent implements GameTrail {
     if (_particles.isEmpty) return;
 
     if (opacity < 1.0) {
+      _layerPaint.color = Colors.white.withAlpha((opacity * 255).toInt());
       canvas.saveLayer(
         null,
-        Paint()..color = Colors.white.withAlpha((opacity * 255).toInt()),
+        _layerPaint,
       );
     }
 
@@ -85,51 +93,43 @@ class CircleTrail extends PositionComponent implements GameTrail {
     double tBr = t - idx1;
     Color currentColor = Color.lerp(neonColors[idx1], neonColors[idx2], tBr)!;
 
-    // Paints
-    final glowPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-
-    final corePaint = Paint()..style = PaintingStyle.fill;
-
     // Batch 1: Glows
     for (final p in _particles) {
       double progress = p.age / p.lifespan;
       double alpha = (1 - progress).clamp(0.0, 1.0);
 
-      glowPaint.color = currentColor.withValues(alpha: alpha * 0.5);
+      _glowPaint.color = currentColor.withValues(alpha: alpha * 0.5);
 
       // Draw Center only
       canvas.drawCircle(
         p.position.toOffset(),
         (10 * (1 - progress)) + 4,
-        glowPaint,
+        _glowPaint,
       );
     }
 
     // Batch 2: Cores
-    corePaint.color = Colors.white;
+    _corePaint.color = Colors.white;
     for (final p in _particles) {
       double progress = p.age / p.lifespan;
       double alpha = (1 - progress).clamp(0.0, 1.0);
 
-      corePaint.color = Colors.white.withValues(alpha: alpha);
+      _corePaint.color = Colors.white.withValues(alpha: alpha);
 
       // Draw Center only
-      canvas.drawCircle(p.position.toOffset(), 10 * (1 - progress), corePaint);
+      canvas.drawCircle(p.position.toOffset(), 10 * (1 - progress), _corePaint);
     }
   }
 
   void _renderStandard(Canvas canvas) {
-    final paint = Paint()..style = PaintingStyle.fill;
     final colors = [Colors.white, Colors.white, Colors.white];
 
     for (final p in _particles) {
       double progress = p.age / p.lifespan;
 
       // Draw 1 circle (Center)
-      paint.color = colors[1].withValues(alpha: (1 - progress) * 0.8);
-      canvas.drawCircle(p.position.toOffset(), 10 * (1 - progress), paint);
+      _standardPaint.color = colors[1].withValues(alpha: (1 - progress) * 0.8);
+      canvas.drawCircle(p.position.toOffset(), 10 * (1 - progress), _standardPaint);
     }
   }
 }
