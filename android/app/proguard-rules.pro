@@ -54,9 +54,21 @@
 -keep class io.flutter.plugins.sharedpreferences.** { *; }
 -keep class com.benjaminabel.vibration.** { *; }
 
+# Unity Ads SDK & Mediation Adapter
+-keep class com.unity3d.ads.** { *; }
+-keep interface com.unity3d.ads.** { *; }
+-keep class com.unity3d.services.** { *; }
+-keep interface com.unity3d.services.** { *; }
+-dontwarn com.unity3d.ads.**
+-dontwarn com.unity3d.services.**
+
+-keep class com.google.ads.mediation.unity.** { *; }
+-dontwarn com.google.ads.mediation.unity.**
+
 # General Java / Kotlin Attributes for Reflection and Serialization
 -keepattributes *Annotation*
 -keepattributes Signature
 -keepattributes Exceptions
 -keepattributes InnerClasses
 -keepattributes EnclosingMethod
+

@@ -91,5 +91,6 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation("com.google.firebase:firebase-analytics")
-     implementation("com.google.ads.mediation:unity:4.12.5.0")
+    implementation("com.unity3d.ads:unity-ads:4.12.5")
+    implementation("com.google.ads.mediation:unity:4.12.5.0")
 }
