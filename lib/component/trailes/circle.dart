@@ -24,6 +24,7 @@ class CircleTrail extends PositionComponent implements GameTrail {
     ..style = PaintingStyle.fill
     ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
   final Paint _corePaint = Paint()..style = PaintingStyle.fill;
+  final Paint _standardPaint = Paint()..style = PaintingStyle.fill;
 
   CircleTrail() : super(priority: 1);
 
@@ -109,7 +110,6 @@ class CircleTrail extends PositionComponent implements GameTrail {
     }
 
     // Batch 2: Cores
-    _corePaint.color = Colors.white;
     for (final p in _particles) {
       double progress = p.age / p.lifespan;
       double alpha = (1 - progress).clamp(0.0, 1.0);
