@@ -7,8 +7,9 @@ class LanguageManager {
   static const String _prefKey = 'app_language';
 
   /// ValueNotifier holding the currently active [Locale].
-  static final ValueNotifier<Locale> currentLocale =
-      ValueNotifier<Locale>(const Locale('en'));
+  static final ValueNotifier<Locale> currentLocale = ValueNotifier<Locale>(
+    const Locale('en'),
+  );
 
   /// Supported language codes in order.
   static const List<String> supportedLanguages = ['en', 'ar', 'es'];
@@ -55,8 +56,9 @@ class LanguageManager {
 
   /// Cycles through supported languages (English -> Arabic -> Spanish -> English).
   static Future<void> toggleLanguage() async {
-    final currentIndex =
-        supportedLanguages.indexOf(currentLocale.value.languageCode);
+    final currentIndex = supportedLanguages.indexOf(
+      currentLocale.value.languageCode,
+    );
     final nextIndex = (currentIndex + 1) % supportedLanguages.length;
     await setLanguage(supportedLanguages[nextIndex]);
   }
@@ -80,4 +82,3 @@ extension LocaleDirection on Locale {
   TextDirection get textDirection => LanguageManager.directionOf(this);
   bool get isRtl => textDirection == TextDirection.rtl;
 }
-

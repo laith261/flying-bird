@@ -27,11 +27,8 @@ class RecordGiftDialog extends StatefulWidget {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
-      builder: (context) => RecordGiftDialog(
-        game: game,
-        score: score,
-        onCollected: onCollected,
-      ),
+      builder: (context) =>
+          RecordGiftDialog(game: game, score: score, onCollected: onCollected),
     );
   }
 
@@ -178,10 +175,7 @@ class _RecordGiftDialogState extends State<RecordGiftDialog>
 
                       return Transform.translate(
                         offset: Offset(0, offset),
-                        child: Transform.scale(
-                          scale: scale,
-                          child: child,
-                        ),
+                        child: Transform.scale(scale: scale, child: child),
                       );
                     },
                     child: Image.asset(
@@ -221,10 +215,7 @@ class _RecordGiftDialogState extends State<RecordGiftDialog>
                   Text(
                     context.l10n.addedToGiftInventory,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.white70,
-                    ),
+                    style: const TextStyle(fontSize: 13, color: Colors.white70),
                   ),
                   const SizedBox(height: 24),
 
@@ -241,10 +232,7 @@ class _RecordGiftDialogState extends State<RecordGiftDialog>
                         borderRadius: BorderRadius.circular(18),
                         border: Border.all(color: Colors.black, width: 3),
                         boxShadow: const [
-                          BoxShadow(
-                            color: Colors.black,
-                            offset: Offset(0, 4),
-                          ),
+                          BoxShadow(color: Colors.black, offset: Offset(0, 4)),
                         ],
                       ),
                       child: Text(

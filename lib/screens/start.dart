@@ -220,7 +220,7 @@ class _StartWidgetState extends State<StartWidget> {
         ),
       ],
     );
-}
+  }
 
   Widget _buildDockStation() {
     return Container(

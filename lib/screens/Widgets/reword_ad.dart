@@ -76,4 +76,3 @@ class _RewardedAdState extends State<RewardedAd> {
     );
   }
 }
-

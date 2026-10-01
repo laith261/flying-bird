@@ -29,7 +29,9 @@ void main() {
     }
     stopwatch.stop();
 
-    print('Baseline time for 10000 renders of RotateRectTrail (isPro=true): ${stopwatch.elapsedMilliseconds} ms');
+    print(
+      'Baseline time for 10000 renders of RotateRectTrail (isPro=true): ${stopwatch.elapsedMilliseconds} ms',
+    );
 
     trail.isPro = false;
     final stopwatch2 = Stopwatch()..start();
@@ -37,6 +39,8 @@ void main() {
       trail.render(canvas);
     }
     stopwatch2.stop();
-    print('Baseline time for 10000 renders of RotateRectTrail (isPro=false): ${stopwatch2.elapsedMilliseconds} ms');
+    print(
+      'Baseline time for 10000 renders of RotateRectTrail (isPro=false): ${stopwatch2.elapsedMilliseconds} ms',
+    );
   });
 }

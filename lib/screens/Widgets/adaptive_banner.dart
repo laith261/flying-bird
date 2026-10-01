@@ -25,8 +25,8 @@ class _AdaptiveBannerWidgetState extends State<AdaptiveBannerWidget> {
     // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
     final AnchoredAdaptiveBannerAdSize? size =
         await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
-      MediaQuery.of(context).size.width.truncate(),
-    );
+          MediaQuery.of(context).size.width.truncate(),
+        );
 
     if (size == null) {
       debugPrint('Unable to get height of anchored banner.');
@@ -34,7 +34,8 @@ class _AdaptiveBannerWidgetState extends State<AdaptiveBannerWidget> {
     }
 
     _bannerAd = BannerAd(
-      adUnitId: dotenv.env['BannerAd'] ?? 'ca-app-pub-1226999690478326/7054606628',
+      adUnitId:
+          dotenv.env['BannerAd'] ?? 'ca-app-pub-1226999690478326/7054606628',
       size: size,
       request: const AdRequest(),
       listener: BannerAdListener(

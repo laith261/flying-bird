@@ -24,6 +24,8 @@ void main() {
       trail1.update(0.016);
     }
     stopwatch.stop();
-    print('LineTrail updates with massive point additions: ${stopwatch.elapsedMilliseconds} ms / ${stopwatch.elapsedMicroseconds} us');
+    print(
+      'LineTrail updates with massive point additions: ${stopwatch.elapsedMilliseconds} ms / ${stopwatch.elapsedMicroseconds} us',
+    );
   });
 }

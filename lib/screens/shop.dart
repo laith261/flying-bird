@@ -34,147 +34,151 @@ class _ShopScreenState extends State<ShopScreen> {
             initialIndex: widget.initialTabIndex,
             length: 3,
             child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.deepPurple.shade900, Colors.black87],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                // Custom App Bar equivalent
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 8.0,
+              backgroundColor: Colors.transparent,
+              body: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colors.deepPurple.shade900, Colors.black87],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  child: Row(
+                ),
+                child: SafeArea(
+                  child: Column(
                     children: [
-                      IconButton(
-                        onPressed: () => widget.game.overlays.remove('shop'),
-                        icon: Transform.flip(
-                          flipX: context.isRtl,
-                          child: const Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.orange,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          context.l10n.shop,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.luckiestGuy(
-                            textStyle: const TextStyle(
-                              fontSize: 28,
-                              color: Colors.white,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black45,
-                                  offset: Offset(2, 2),
-                                  blurRadius: 4,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
+                      // Custom App Bar equivalent
+                      Padding(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange.withAlpha(26),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.orange),
+                          horizontal: 8.0,
+                          vertical: 8.0,
                         ),
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            Image.asset(
-                              'assets/images/coin_no_bg.png',
-                              width: 20,
-                              height: 20,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(
-                                Icons.monetization_on,
-                                color: Colors.yellow,
-                                size: 20,
+                            IconButton(
+                              onPressed: () =>
+                                  widget.game.overlays.remove('shop'),
+                              icon: Transform.flip(
+                                flipX: context.isRtl,
+                                child: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.orange,
+                                ),
                               ),
                             ),
-                            const SizedBox(width: 4),
-                            ValueListenableBuilder<int>(
-                              valueListenable: widget.game.coins,
-                              builder: (context, coins, _) {
-                                return Transform.translate(
-                                  offset: const Offset(0, 2),
-                                  child: Text(
-                                    coins.toString(),
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.luckiestGuy(
-                                      textStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black,
-                                            offset: Offset(1, 1),
-                                            blurRadius: 2,
-                                          ),
-                                        ],
+                            Expanded(
+                              child: Text(
+                                context.l10n.shop,
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.luckiestGuy(
+                                  textStyle: const TextStyle(
+                                    fontSize: 28,
+                                    color: Colors.white,
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black45,
+                                        offset: Offset(2, 2),
+                                        blurRadius: 4,
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                );
-                              },
+                                ),
+                              ),
                             ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.orange.withAlpha(26),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Colors.orange),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/coin_no_bg.png',
+                                    width: 20,
+                                    height: 20,
+                                    errorBuilder:
+                                        (context, error, stackTrace) =>
+                                            const Icon(
+                                              Icons.monetization_on,
+                                              color: Colors.yellow,
+                                              size: 20,
+                                            ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  ValueListenableBuilder<int>(
+                                    valueListenable: widget.game.coins,
+                                    builder: (context, coins, _) {
+                                      return Transform.translate(
+                                        offset: const Offset(0, 2),
+                                        child: Text(
+                                          coins.toString(),
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.luckiestGuy(
+                                            textStyle: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              shadows: [
+                                                Shadow(
+                                                  color: Colors.black,
+                                                  offset: Offset(1, 1),
+                                                  blurRadius: 2,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TabBar(
+                        dividerColor: Colors.transparent,
+                        indicatorColor: Colors.orangeAccent,
+                        indicatorWeight: 4,
+                        labelColor: Colors.orangeAccent,
+                        unselectedLabelColor: Colors.white54,
+                        labelStyle: GoogleFonts.luckiestGuy(fontSize: 18),
+                        unselectedLabelStyle: GoogleFonts.luckiestGuy(
+                          fontSize: 16,
+                        ),
+                        tabs: [
+                          Tab(text: context.l10n.trails),
+                          Tab(text: context.l10n.powerUps),
+                          Tab(text: context.l10n.birds),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            // Trails Tab
+                            TrailsTab(game: widget.game, isProMode: isProMode),
+                            // Power Ups Tab
+                            PowerUpsTab(game: widget.game),
+                            // Birds Tab
+                            BirdsTab(game: widget.game),
                           ],
                         ),
                       ),
                     ],
                   ),
                 ),
-                TabBar(
-                  dividerColor: Colors.transparent,
-                  indicatorColor: Colors.orangeAccent,
-                  indicatorWeight: 4,
-                  labelColor: Colors.orangeAccent,
-                  unselectedLabelColor: Colors.white54,
-                  labelStyle: GoogleFonts.luckiestGuy(fontSize: 18),
-                  unselectedLabelStyle: GoogleFonts.luckiestGuy(fontSize: 16),
-                  tabs: [
-                    Tab(text: context.l10n.trails),
-                    Tab(text: context.l10n.powerUps),
-                    Tab(text: context.l10n.birds),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Expanded(
-                  child: TabBarView(
-                    children: [
-                      // Trails Tab
-                      TrailsTab(game: widget.game, isProMode: isProMode),
-                      // Power Ups Tab
-                      PowerUpsTab(game: widget.game),
-                      // Birds Tab
-                      BirdsTab(game: widget.game),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    ),
-  );
-},
-);
-}
+        );
+      },
+    );
+  }
 }

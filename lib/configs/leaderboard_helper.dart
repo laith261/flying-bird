@@ -97,10 +97,7 @@ class LeaderboardHelper {
           (currentHighScore > 0 &&
               scores.isNotEmpty &&
               currentHighScore >= scores.first.rawScore)) {
-        return ChallengeData(
-          isTopPlayer: true,
-          targetScore: currentHighScore,
-        );
+        return ChallengeData(isTopPlayer: true, targetScore: currentHighScore);
       }
 
       if (playerRank != null && playerRank > 1) {

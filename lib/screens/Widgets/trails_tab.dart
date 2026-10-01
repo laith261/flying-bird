@@ -189,7 +189,8 @@ class _TrailItem extends StatelessWidget {
   final MyWorld game;
   final bool isProMode;
   final void Function(String id) onSelect;
-  final void Function(String trailId, String name, int price) onPurchaseConfirmation;
+  final void Function(String trailId, String name, int price)
+  onPurchaseConfirmation;
 
   const _TrailItem({
     required this.trail,
@@ -211,10 +212,7 @@ class _TrailItem extends StatelessWidget {
     final int price = ShopHelper.getTrailPrice(trail, isPro);
     final int requiredScore = trail.requiredScore;
 
-    final bool isSelected = ShopHelper.isTrailSelected(
-      game,
-      trailId,
-    );
+    final bool isSelected = ShopHelper.isTrailSelected(game, trailId);
     final bool isTemp = game.tempTrail == trailId;
     final bool isOwned = ShopHelper.isTrailOwned(game, trailId);
     final bool isLevelLocked = game.highest.value < requiredScore;
@@ -284,7 +282,9 @@ class _TrailItem extends StatelessWidget {
                           textStyle: TextStyle(
                             fontSize: 18,
                             color: isSelected
-                                ? (isTemp ? Colors.lightBlueAccent : Colors.orangeAccent)
+                                ? (isTemp
+                                      ? Colors.lightBlueAccent
+                                      : Colors.orangeAccent)
                                 : Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -351,11 +351,7 @@ class _TrailItem extends StatelessWidget {
                     color: Colors.black.withAlpha(128),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(
-                    Icons.lock,
-                    color: Colors.white,
-                    size: 40,
-                  ),
+                  child: const Icon(Icons.lock, color: Colors.white, size: 40),
                 ),
               )
             else if (!isOwned && !isTemp)

@@ -116,7 +116,11 @@ class LineTrail extends PositionComponent implements GameTrail {
     for (int i = 0; i < _points.length - 1; i++) {
       double opacity = (i / _points.length).clamp(0.0, 1.0);
       _standardPaint.color = Colors.white.withValues(alpha: opacity);
-      canvas.drawLine(_points[i].toOffset(), _points[i + 1].toOffset(), _standardPaint);
+      canvas.drawLine(
+        _points[i].toOffset(),
+        _points[i + 1].toOffset(),
+        _standardPaint,
+      );
     }
   }
 }

@@ -76,7 +76,8 @@ class RotateRectTrail extends PositionComponent implements GameTrail {
     if (opacity < 1.0) {
       canvas.saveLayer(
         null,
-        _opacityLayerPaint..color = Colors.white.withAlpha((opacity * 255).toInt()),
+        _opacityLayerPaint
+          ..color = Colors.white.withAlpha((opacity * 255).toInt()),
       );
     }
 

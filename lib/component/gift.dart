@@ -50,7 +50,13 @@ class Gift extends SpriteComponent with HasGameReference<MyWorld> {
         count: 10,
         lifespan: 1.0,
         generator: (i) {
-          final color = [Colors.red, Colors.blue, Colors.green, Colors.yellow, Colors.purple][random.nextInt(5)];
+          final color = [
+            Colors.red,
+            Colors.blue,
+            Colors.green,
+            Colors.yellow,
+            Colors.purple,
+          ][random.nextInt(5)];
           return AcceleratedParticle(
             acceleration: Vector2(0, 400),
             speed: Vector2(
@@ -60,7 +66,10 @@ class Gift extends SpriteComponent with HasGameReference<MyWorld> {
             position: absolutePosition.clone(),
             child: ComputedParticle(
               renderer: (canvas, particle) {
-                final paint = Paint()..color = color.withValues(alpha: 255 * (1 - particle.progress));
+                final paint = Paint()
+                  ..color = color.withValues(
+                    alpha: 255 * (1 - particle.progress),
+                  );
                 canvas.drawRect(Rect.fromLTWH(-4, -4, 8, 8), paint);
               },
             ),
