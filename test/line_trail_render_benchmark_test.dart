@@ -1,6 +1,6 @@
-import 'dart:ui';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flame/components.dart';
+import 'dart:ui';
 import 'package:game/component/trailes/line.dart';
 
 void main() {

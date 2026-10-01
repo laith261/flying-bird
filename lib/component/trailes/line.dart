@@ -10,19 +10,16 @@ class LineTrail extends PositionComponent implements GameTrail {
   double opacity = 1.0;
 
   final Paint _layerPaint = Paint();
-
   final Paint _glowPaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 10
     ..strokeCap = StrokeCap.round
     ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
-
   final Paint _corePaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 4
     ..strokeCap = StrokeCap.round
     ..color = Colors.white;
-
   final Paint _standardPaint = Paint()
     ..style = PaintingStyle.stroke
     ..strokeWidth = 5
