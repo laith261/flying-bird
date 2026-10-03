@@ -149,7 +149,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
     }
     player.reset();
     pipes.reset();
-    // billboard.reset();
     newHighest = false;
     hasSpawnedGift = false;
     scorePoint = withRewarded ? scorePoint : 0;
@@ -187,7 +186,6 @@ class MyWorld extends FlameGame with TapCallbacks, HasCollisionDetection {
   Skins? tempSkin;
 
   void gameOver() {
-    // billboard.reset();
     if (tempTrail != null) {
       player.updateTrail(playerData.selectedTrail); // Use saved data
       tempTrail = null;
