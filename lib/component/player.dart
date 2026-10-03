@@ -172,7 +172,6 @@ class TheBird extends SpriteComponent
     setPlayerPosition();
     _resetAllTrails();
     isInvincible = false;
-    // hasActiveShield = false; // Logic handled in startGame
   }
 
   @override
