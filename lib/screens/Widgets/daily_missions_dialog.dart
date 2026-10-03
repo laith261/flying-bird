@@ -385,9 +385,9 @@ class _DailyMissionsDialogState extends State<DailyMissionsDialog>
         prizeIcon = Icons.star;
         prizeColor = Colors.orangeAccent;
       } else {
-        List<int> coins = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
-        List<int> weights = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
-        int totalWeight = weights.fold(0, (sum, w) => sum + w);
+        const List<int> coins = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+        const List<int> weights = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+        const int totalWeight = 55;
         int coinRand = Random.secure().nextInt(totalWeight);
         int currentWeight = 0;
         int rewardCoins = 5;
