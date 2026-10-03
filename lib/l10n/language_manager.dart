@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Manages application language state and persistence.
 class LanguageManager {
   static const String _prefKey = 'app_language';
+  static SharedPreferences? _prefs;
 
   /// ValueNotifier holding the currently active [Locale].
   static final ValueNotifier<Locale> currentLocale = ValueNotifier<Locale>(
@@ -35,8 +36,8 @@ class LanguageManager {
   /// Initializes language preference from local storage or system locale.
   static Future<void> init() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final savedCode = prefs.getString(_prefKey);
+      _prefs = await SharedPreferences.getInstance();
+      final savedCode = _prefs!.getString(_prefKey);
       if (savedCode != null && supportedLanguages.contains(savedCode)) {
         currentLocale.value = Locale(savedCode);
       } else {
@@ -67,8 +68,8 @@ class LanguageManager {
   static Future<void> setLanguage(String code) async {
     try {
       currentLocale.value = Locale(code);
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(_prefKey, code);
+      _prefs ??= await SharedPreferences.getInstance();
+      await _prefs!.setString(_prefKey, code);
     } catch (e) {
       if (kDebugMode) {
         debugPrint('LanguageManager.setLanguage failed: $e');

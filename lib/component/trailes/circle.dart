@@ -24,7 +24,6 @@ class CircleTrail extends PositionComponent implements GameTrail {
     ..style = PaintingStyle.fill
     ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
   final Paint _corePaint = Paint()..style = PaintingStyle.fill;
-  final Paint _standardPaint = Paint()..style = PaintingStyle.fill;
 
   CircleTrail() : super(priority: 1);
 
